@@ -25,6 +25,15 @@ node mul { ... }
 #     name: string
 # }
 
+node exp {
+    input i1: number
+    input i2: number
+
+    output o: number
+
+    send i1 to o
+}
+
 node inc {
     input i: number
     optional s: number(1.0)
