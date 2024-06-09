@@ -1,60 +1,162 @@
 use std::fs;
-use std::error::Error;
+use std::result;
 
 mod lexer;
 use lexer::Lexer;
+use regex::Error;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone)]
 enum TokenType {
-    Word,
-
-    NumberLiteral,
-    StringLiteral,
+    VariableLiteral,
     
     Plus,
-    
-    Equal,
-    Less,
-    More,
+    // Multiplication,
+    // Minus,
 
-    Comma,
+    Equal,
     
-    Minus,
     OpenParan,
     ClosenParan,
-
-    OpenBracket,
-    ClosenBracket,
-
     Semicolon
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+struct Parser {
+    head: usize
+}
+
+type Result<T> = result::Result<T, ()>;
+
+impl Parser {
+    fn new() -> Self {
+        Parser {
+            head: 0
+        }
+    }
+
+    fn sigma(&mut self, tokens: &Vec<(TokenType, String)>) -> Result<()> {
+        println!("sigma");
+        return  Ok(());
+    }
+
+    fn accept(&mut self, tokens: &Vec<(TokenType, String)>, symbol: char) -> Result<()> {
+        println!("accept {:?}", symbol);
+        
+        if self.head >= tokens.len() {
+            return Err(())
+        }
+
+        let cur: char = tokens[self.head].1.chars().next().unwrap();
+
+        if cur == symbol {
+            self.head += 1;
+            return Ok(());
+        }
+
+        Err(())
+    }
+
+    // # No left recursion
+    // <expressions> ::= <expression> ';'
+    // <expression> ::= <term> '=' <term>
+    // <term> ::= <term_prefix> <term_sufix>
+    // <term_sufix> ::= '+' <term_prefix> <term_sufix> | ε
+    // <term_prefix> ::= '(' <term> ')' | 'x'| 'y'
+
+    fn parse_term_sufix(&mut self, tokens: &Vec<(TokenType, String)>) -> Result<()> { 
+        println!("parse_term_sufix");
+        
+        let backup: usize = self.head;
+
+        if self.accept(tokens, '+').is_ok() && self.parse_term_prefix(tokens).is_ok() && self.parse_term_sufix(tokens).is_ok() {
+            return Ok(());
+        } else {
+            self.head = backup;
+        }
+
+        if self.sigma(tokens).is_ok() {
+            return Ok(());
+        } else {
+            self.head = backup;
+        }
+
+        Err(())
+    }
+
+    fn parse_term_prefix(&mut self, tokens: &Vec<(TokenType, String)>) -> Result<()> {
+        println!("parse_term_prefix");
+        
+        let backup: usize = self.head;
+
+        if self.accept(tokens, '(').is_ok() && self.parse_term(tokens).is_ok() && self.accept(tokens, ')').is_ok() {
+            return Ok(());
+        } else {
+            self.head = backup;
+        }
+
+        if self.accept(tokens, 'x').is_ok() {
+            return Ok(());
+        } else {
+            self.head = backup;
+        }
+        
+        if self.accept(tokens, 'y').is_ok() {
+            return Ok(());
+        } else {
+            self.head = backup;
+        }
+
+        Err(())
+    }
+
+    fn parse_term(&mut self, tokens: &Vec<(TokenType, String)>) -> Result<()> {
+        println!("parse_term");
+        
+        let backup: usize = self.head;
+
+        if self.parse_term_prefix(tokens).is_ok() && self.parse_term_sufix(tokens).is_ok() {
+            return Ok(())
+        } else {
+            self.head = backup;
+        }
+
+        Err(())
+    }
+
+    fn parse_expression(&mut self, tokens: &Vec<(TokenType, String)>) -> Result<()> {
+        println!("parse_expression");
+
+        let backup: usize = self.head;
+
+        if self.parse_term(tokens).is_ok() && self.accept(tokens, '=').is_ok() && self.parse_term(tokens).is_ok() {
+            return Ok(())
+        } else {
+            self.head = backup;
+        }
+
+        Err(())
+    }
+}
+
+
+
+fn main() {
     let rules = vec![
-        (r"[A-Za-z]+",              TokenType::Word),
-        (r"[0-9]+",                 TokenType::NumberLiteral),
-        ("\"([^\"\\\\]|\\\\.)*\"",  TokenType::StringLiteral),
+        (r"[A-Za-z]+",              TokenType::VariableLiteral),
         (r"\+",                     TokenType::Plus),
+        // (r"\-",                     TokenType::Minus),
+
         (r"\=",                     TokenType::Equal),
-        
-        (r"<",                      TokenType::Less),
-        (r">",                      TokenType::More),
-        
-        (r"\-",                     TokenType::Minus),
+
         (r"\(",                     TokenType::OpenParan),
         (r"\)",                     TokenType::ClosenParan),
-        
         (r"\;",                     TokenType::Semicolon),
-        (r"\,",                     TokenType::Comma),
-        (r"\{",                     TokenType::OpenBracket),
-        (r"\}",                     TokenType::ClosenBracket),
     ];
 
-    let input: String = fs::read_to_string("test.txt")?;
-    let tokens = Lexer::new(rules, input)?.lex();
+    let input: String = fs::read_to_string("test.txt").unwrap();
 
+    let tokens: Vec<(TokenType, String)> = Lexer::new(rules, "((x+(x+y))+(x+y)+(x+y+x))+x+((x+(x+y))+(x+y)+(x+y+x))=((x+y)+(x+y)+(x+y+x))".to_string()).unwrap().lex().unwrap();
     println!("{:?}", tokens);
 
-    Ok(())
+    println!("{:?}", Parser::new().parse_expression(&tokens));    
 }
 
