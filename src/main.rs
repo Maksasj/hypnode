@@ -3,6 +3,11 @@ use std::result;
 
 mod lexer;
 use lexer::Lexer;
+
+#[macro_use]
+mod bnf;
+use bnf::*;
+
 use regex::Error;
 
 #[derive(Debug, Copy, Clone)]
@@ -54,13 +59,6 @@ impl Parser {
 
         Err(())
     }
-
-    // # No left recursion
-    // <expressions> ::= <expression> ';'
-    // <expression> ::= <term> '=' <term>
-    // <term> ::= <term_prefix> <term_sufix>
-    // <term_sufix> ::= '+' <term_prefix> <term_sufix> | ε
-    // <term_prefix> ::= '(' <term> ')' | 'x'| 'y'
 
     fn parse_term_sufix(&mut self, tokens: &Vec<(TokenType, String)>) -> Result<()> { 
         println!("parse_term_sufix");
@@ -137,8 +135,6 @@ impl Parser {
     }
 }
 
-
-
 fn main() {
     let rules = vec![
         (r"[A-Za-z]+",              TokenType::VariableLiteral),
@@ -152,11 +148,27 @@ fn main() {
         (r"\;",                     TokenType::Semicolon),
     ];
 
-    let input: String = fs::read_to_string("test.txt").unwrap();
+    let g0 = make_productions![
+        ("expression"  => ("term", TokenType::Equal, "term")),
+        ("term"        => ("term_prefix", "term_sufix")),
+        ("term_sufix"  => (TokenType::Plus, "term_prefix", "term_sufix")),
+        ("term_prefix" => (TokenType::OpenParan, "term", TokenType::ClosenParan))
+    ];
 
-    let tokens: Vec<(TokenType, String)> = Lexer::new(rules, "((x+(x+y))+(x+y)+(x+y+x))+x+((x+(x+y))+(x+y)+(x+y+x))=((x+y)+(x+y)+(x+y+x))".to_string()).unwrap().lex().unwrap();
-    println!("{:?}", tokens);
+    println!("{:?}\n", g0);
 
-    println!("{:?}", Parser::new().parse_expression(&tokens));    
+    // // # No left recursion
+    // // <expressions> ::= <expression> ';'
+    // // <expression> ::= <term> '=' <term>
+    // // <term> ::= <term_prefix> <term_sufix>
+    // // <term_sufix> ::= '+' <term_prefix> <term_sufix> | ε
+    // // <term_prefix> ::= '(' <term> ')' | 'x'| 'y'
+// 
+    // let input: String = fs::read_to_string("test.txt").unwrap();
+// 
+    // let tokens: Vec<(TokenType, String)> = Lexer::new(rules, "((x+(x+y))+(x+y)+(x+y+x))+x+((x+(x+y))+(x+y)+(x+y+x))=((x+y)+(x+y)+(x+y+x))".to_string()).unwrap().lex().unwrap();
+    // println!("{:?}", tokens);
+// 
+    // println!("{:?}", Parser::new().parse_expression(&tokens));    
 }
 
