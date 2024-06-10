@@ -11,12 +11,15 @@ pub struct Production<T> {
     pub right: Vec<Vec<GrammaSymbols<T>>>
 }
 
+macro_rules! sigma {
+    () => {
+        GrammaSymbols::Sigma
+    };
+}
+
 macro_rules! sym {
     ($label:literal) => {
         GrammaSymbols::NonTerminal($label.to_string())
-    };
-    ($label:ident) => {
-        GrammaSymbols::NonTerminal(stringify!($label).to_string())
     };
     ($terminal:expr) => {
         GrammaSymbols::Terminal($terminal)

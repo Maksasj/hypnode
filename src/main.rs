@@ -39,13 +39,10 @@ impl Parser {
     }
 
     fn sigma(&mut self, tokens: &Vec<(TokenType, String)>) -> Result<()> {
-        println!("sigma");
-        return  Ok(());
+        return Ok(());
     }
 
     fn accept(&mut self, tokens: &Vec<(TokenType, String)>, symbol: char) -> Result<()> {
-        println!("accept {:?}", symbol);
-        
         if self.head >= tokens.len() {
             return Err(())
         }
@@ -61,8 +58,6 @@ impl Parser {
     }
 
     fn parse_term_sufix(&mut self, tokens: &Vec<(TokenType, String)>) -> Result<()> { 
-        println!("parse_term_sufix");
-        
         let backup: usize = self.head;
 
         if self.accept(tokens, '+').is_ok() && self.parse_term_prefix(tokens).is_ok() && self.parse_term_sufix(tokens).is_ok() {
@@ -81,8 +76,6 @@ impl Parser {
     }
 
     fn parse_term_prefix(&mut self, tokens: &Vec<(TokenType, String)>) -> Result<()> {
-        println!("parse_term_prefix");
-        
         let backup: usize = self.head;
 
         if self.accept(tokens, '(').is_ok() && self.parse_term(tokens).is_ok() && self.accept(tokens, ')').is_ok() {
@@ -107,8 +100,6 @@ impl Parser {
     }
 
     fn parse_term(&mut self, tokens: &Vec<(TokenType, String)>) -> Result<()> {
-        println!("parse_term");
-        
         let backup: usize = self.head;
 
         if self.parse_term_prefix(tokens).is_ok() && self.parse_term_sufix(tokens).is_ok() {
@@ -121,8 +112,6 @@ impl Parser {
     }
 
     fn parse_expression(&mut self, tokens: &Vec<(TokenType, String)>) -> Result<()> {
-        println!("parse_expression");
-
         let backup: usize = self.head;
 
         if self.parse_term(tokens).is_ok() && self.accept(tokens, '=').is_ok() && self.parse_term(tokens).is_ok() {
@@ -148,14 +137,44 @@ fn main() {
         (r"\;",                     TokenType::Semicolon),
     ];
 
-    let g0 = make_productions![
-        ("expression"  => ("term", TokenType::Equal, "term")),
-        ("term"        => ("term_prefix", "term_sufix")),
-        ("term_sufix"  => (TokenType::Plus, "term_prefix", "term_sufix")),
-        ("term_prefix" => (TokenType::OpenParan, "term", TokenType::ClosenParan))
+    let grammar = vec![
+        Production {
+            left: sym!("expression"),
+            right: vec![ 
+                vec![ sym!("term"), sym!(TokenType::Equal), sym!("term"), ]
+            ]
+        },
+        Production {
+            left: sym!("term"),
+            right: vec![ 
+                vec![ sym!("term_prefix"), sym!("term_sufix"), ]
+            ]
+        },
+        Production {
+            left: sym!("term_sufix"),
+            right: vec![ 
+                vec![ sym!(TokenType::Plus), sym!("term_prefix"), sym!("term_sufix") ],
+                vec![ sigma!() ]
+            ]
+        },
+        Production {
+            left: sym!("term_prefix"),
+            right: vec![ 
+                vec![ sym!(TokenType::OpenParan), sym!("term"), sym!(TokenType::ClosenParan) ],
+                vec![ sym!(TokenType::VariableLiteral)]
+            ]
+        }
     ];
 
-    println!("{:?}\n", g0);
+    println!("{:?}\n", grammar);
+
+    // let g0 = make_productions![
+    //     ("expression"  => ("term", TokenType::Equal, "term")),
+    //     ("term"        => ("term_prefix", "term_sufix")),
+    //     ("term_sufix"  => (TokenType::Plus, "term_prefix", "term_sufix")),
+    //     ("term_prefix" => (TokenType::OpenParan, "term", TokenType::ClosenParan))
+    // ];
+
 
     // // # No left recursion
     // // <expressions> ::= <expression> ';'
@@ -166,9 +185,9 @@ fn main() {
 // 
     // let input: String = fs::read_to_string("test.txt").unwrap();
 // 
-    // let tokens: Vec<(TokenType, String)> = Lexer::new(rules, "((x+(x+y))+(x+y)+(x+y+x))+x+((x+(x+y))+(x+y)+(x+y+x))=((x+y)+(x+y)+(x+y+x))".to_string()).unwrap().lex().unwrap();
-    // println!("{:?}", tokens);
+    let tokens: Vec<(TokenType, String)> = Lexer::new(rules, "((x+(x+y))+(x+y)+(x+y+x))+x+((x+(x+y))+(x+y)+(x+y+x))=((x+y)+(x+y)+(x+y+x))".to_string()).unwrap().lex().unwrap();
+    println!("{:?}", tokens);
 // 
-    // println!("{:?}", Parser::new().parse_expression(&tokens));    
+    println!("{:?}", Parser::new().parse_expression(&tokens));    
 }
 
