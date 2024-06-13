@@ -1,14 +1,24 @@
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum GrammaSymbols<T> {
     NonTerminal(String),
     Terminal(T),
     Sigma
 }
 
-#[derive(Debug)]
+impl<T> GrammaSymbols<T> {
+    pub fn get_string(&self) -> &str {
+        match self {
+            GrammaSymbols::<T>::NonTerminal(s) => s,
+            GrammaSymbols::<T>::Terminal(_) => "Terminal",
+            GrammaSymbols::<T>::Sigma => "Sigma",
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct Production<T> {
     pub left: GrammaSymbols<T>,
-    pub right: Vec<Vec<GrammaSymbols<T>>>
+    pub right: ( Vec<GrammaSymbols<T>>, Vec<GrammaSymbols<T>> ),
 }
 
 macro_rules! sigma {
