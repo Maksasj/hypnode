@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 regex = "1.10.4"
+
+[dependencies.uroboros]
+path = "../uroboros"
