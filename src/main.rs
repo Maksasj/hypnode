@@ -2,7 +2,7 @@ mod lexer;
 use lexer::Lexer;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
-enum TokenType {
+enum Token {
     VariableLiteral,
     
     Plus,
@@ -13,39 +13,41 @@ enum TokenType {
     Semicolon
 }
 
-use uroboros::{gram, grammar::*, parser::{ll_grammar_parser::*, Parser}, sym};
+use uroboros::{ gram, grammar::*, parser::{llgparser::*, Parser}, sym };
 
 fn main() {
     let rules = vec![
-        (r"[A-Za-z]+",              TokenType::VariableLiteral),
-
-        (r"\+",                     TokenType::Plus),
-        (r"\=",                     TokenType::Equal),
-
-        (r"\(",                     TokenType::OpenParan),
-        (r"\)",                     TokenType::ClosenParan),
-        (r"\;",                     TokenType::Semicolon),
+        (r"[A-Za-z]+", Token::VariableLiteral),
+        (r"\+",        Token::Plus),
+        (r"\=",        Token::Equal),
+        (r"\(",        Token::OpenParan),
+        (r"\)",        Token::ClosenParan),
+        (r"\;",        Token::Semicolon),
     ];
 
-    let grammar: Grammar<TokenType> = gram![
-        ("expr" => ("term", TokenType::Equal, "term")),
-        ("term" => ("term", TokenType::Plus, "num") | ("num")),
-        ("num" => (TokenType::VariableLiteral))
+    let grammar: Grammar<Token> = gram![
+        ("expr" => ("term", Token::Equal, "term")),
+        ("term" => ("term", Token::Plus, Token::VariableLiteral) | (Token::VariableLiteral))
     ].remove_left_recursion();
 
     grammar.debug_log();
 
-    let tokens: Vec<(TokenType, String)> = 
-        Lexer::new(rules, "x = x;".to_string())
+    let tokens: Vec<Token> = 
+        Lexer::new(rules, "x = x + x + x;".to_string())
         .unwrap()
         .lex()
-        .unwrap();
-   
-    let result = LLGrammarParser::new(grammar, sym!("expr")).parse(&tokens);
+        .unwrap()
+        .iter()
+        .map(|x| x.0)
+        .collect();
 
-    println!("{:?}", result);
+    println!("{:?}\n", tokens);
 
-    match result.unwrap() {
+    let result = LLGParser::new(grammar, sym!("expr")).parse(&tokens);
+
+    println!("{:?}\n", result);
+
+    match result.unwrap().tree {
         Some(tree) => (*tree).debug_log(),
         None => todo!(),
     }    
