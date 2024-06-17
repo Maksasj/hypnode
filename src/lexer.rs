@@ -15,7 +15,7 @@ impl<T : Clone> Lexer<T> {
         })
     } 
 
-    pub fn skip_whitespace(&mut self) {
+    fn skip_whitespace(&mut self) {
         let mut i = self.input[self.position..].chars();
 
         while let Some(ch) = i.next()     {
@@ -29,7 +29,7 @@ impl<T : Clone> Lexer<T> {
         }
     }
 
-    pub fn next_token(&mut self) -> Result<Option<(T, String)>, (String, String)> {
+    fn next_token(&mut self) -> Result<Option<(T, String)>, (String, String)> {
         self.skip_whitespace();
 
         if self.position >= self.input.len() {

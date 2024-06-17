@@ -43,12 +43,13 @@ fn main() {
 
     println!("{:?}\n", tokens);
 
-    let result = LLGParser::new(grammar, sym!("expr")).parse(&tokens);
+        let result = LLGParser::new(grammar, sym!("expr")).parse(&tokens).unwrap();
 
-    println!("{:?}\n", result);
-
-    match result.unwrap().tree {
-        Some(tree) => (*tree).debug_log(),
+    match result.tree {
+        Some(tree) => {
+            println!("{:?}", result.consumed);
+            (*tree).debug_log()
+        },
         None => todo!(),
     }    
 }
