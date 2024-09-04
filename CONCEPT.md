@@ -30,8 +30,14 @@ type Student = {
     scores: u32[]
 }
 
+type HTTPRequest {
+    ...
+}
+
+@native node RequestHandler
+
 # Custom node declaration
-node NiceMark {
+node NiceMark = {
     # Node I/O declaration
     input sti: Student
     output sto: Student
@@ -42,7 +48,9 @@ node NiceMark {
     sto <- sti
 }
 
-node University {
+# node University declaration
+# = { ... } implemetation, same as wit types
+node University = {
     input sti: Student
     output sto: Student
 
