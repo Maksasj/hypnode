@@ -2,24 +2,12 @@
 
 ## Syntax example
 ```python
-@native type u8
-@native type u16
-@native type u32
-@native type u64
-
-@native type i8
-@native type i16
-@native type i32
-@native type i64
-
+# Basic types ...
 @native type f32
-@native type f64
-
-@native type byte
+@native type char
 @native type string
 
 # We support arrays
-type ByteArray = byte[]
 type StringArray = string[]
 type Matrix = f32[][]
 
@@ -30,33 +18,57 @@ type Student = {
     scores: u32[]
 }
 
-type HTTPRequest {
-    ...
+# Node declartion
+node MyNode () => ();
+
+# Node declaration, but implemetation 
+# is provided by native runtime
+@native 
+node printf (message: string) => (res: ResultT);
+
+# Node declaration, but without implemetation 
+@native
+node sum (a: f32, b: f32) => (res: f32);
+
+# Native/Export node
+@native
+@export("Σ")
+node Σ(i: f32[]) => (o: f32);
+
+# Hello world example
+@export("entrypoint")
+node main(argv: string[], argc: f32) => () {
+    # Child nodes
+    using [ p: printf ]
+
+    p.message : "Hello world !"
 }
 
-@native node RequestHandler
+# Fibonacci sequence
+@export("entrypoint")
+node main(argv: string[], argc: i33) => () {
+    using [ print: printf ] # i/o
+    using [ s: sum, d: delay ] # operations
 
-# Custom node declaration
-node NiceMark = {
-    # Node I/O declaration
-    input sti: Student
-    output sto: Student
+    s.a : 0, s.res
+    s.b : 1, d.res
+    d.i : s.res
 
-    # Rest of the logic
-
-    sti.mark <- 10
-    sto <- sti
+    print.message : s.res
 }
+```
 
-# node University declaration
-# = { ... } implemetation, same as wit types
-node University = {
-    input sti: Student
-    output sto: Student
+### Thought
+We need some sort of attribute, that will allow us to mark when node should amit new signal
 
-    node m: NiceMark
-    m.sti <- sti
-    sto <- m.sto
-}
+### Thought
+Actually native nodes could be directly linked with C dll
 
+## Attributes
+```python
+@native 
+# notifies compliler that node/type implementation should be provided by runtime
+
+@export("name")
+# exposes node by explicit name to runtime
 ```
