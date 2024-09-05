@@ -115,3 +115,53 @@ Actually native nodes could be directly linked with C dll
 @export("name")
 # exposes node by explicit name to runtime
 ```
+
+```python
+@export("entrypoint")
+node main (argv: string[], argc: i32) => () {
+    using s = sum (a: 1, b: 2)
+    using r = sum (a: 1, b: 2).res
+
+    using d = sum (
+        a: sum (a: 1, b: 1).res
+        b: sum (a: 2, b: 2).res
+    );
+}
+```
+
+```python
+# default node implementation
+node () => () { /**/ }
+
+# using with node declaration Ф
+using some = node () => () { ... }
+
+# using with node declaration, and port reference
+using some = node () => () { ... }.res
+
+type Student = {
+    mark: int = undefined
+    name: str = default
+}
+
+# undefined - value is undefined | sets type fields default value as undefined
+# default - basically value is default (zero for int, "" for str, etc.)
+
+@export("entrypoint")
+node main (argv: string[], argc: i32) => () {
+    using print = printf ( ...: [] ).format
+
+    print: "Hello world"
+    print: "Message test"
+    print: "Another"
+
+    type Pair = {
+        a: int
+        b: inta
+    }
+
+    using + = sum
+
+    using three = +(1, 2).res
+}
+```
