@@ -14,7 +14,7 @@ def build_std_native():
 def run_runtime():
     print("Running runtime")
 
-    subprocess.call("./a.out") 
+    subprocess.call(["./a.out", "./printf.so"]) 
 
 build_runtime()
 build_std_native()

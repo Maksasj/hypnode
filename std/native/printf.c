@@ -11,6 +11,8 @@ struct _node_printf_struct {
 
 void _node_printf_callback(void* _self) {
     struct _node_printf_struct* self = _self;
+
+    printf("Hello world !\n");
 }
 
 // Node life-cycle functions
@@ -28,6 +30,9 @@ void _node_printf_dispose(void* _node) {
 
 void _node_printf_trigger(void* _node) {
     struct _node_printf_struct* node = _node;
+
+    // for now we do not do any checks
+    node->_callback(_node);
 }
 
 // Node specific meta information
@@ -35,10 +40,20 @@ void _node_printf_trigger(void* _node) {
 
 // Module meta information
 // Exported nodes, etc...
-struct _meta_export_symbol {
-    char* _name;
+struct _meta_export_node {
+    char* _init;
+    char* _dispose;
+    char* _trigger;
 };
 
-struct _meta_export_symbol* _meta_export_symbols() {
-    return NULL;    
+static struct _meta_export_node _export_symbols[] = {
+    (struct _meta_export_node) {
+        ._init = "_node_printf_init",
+        ._dispose = "_node_printf_dispose",
+        ._trigger = "_node_printf_trigger" 
+    }
+};
+
+struct _meta_export_node* _meta_export_nodes() {
+    return _export_symbols;    
 }
