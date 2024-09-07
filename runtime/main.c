@@ -21,6 +21,5 @@ int main() {
     }
 
     (*fun)("Hello from plugin");
-
     return 0;
 }

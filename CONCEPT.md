@@ -76,14 +76,13 @@ node main(argv: string[], argc: i32) => () {
 @native type i32
 @native type i16
 @native type i8
-
 @native type u64
 @native type u32
 @native type u16
 @native type u8
-
-@native type char
 @native type string
+@native type f32
+@native type f64
 
 type iany = i64 | i32 | i16 | i8
 type uany = u64 | u32 | u16 | u8
@@ -133,7 +132,7 @@ node main (argv: string[], argc: i32) => () {
 # default node implementation
 node () => () { /**/ }
 
-# using with node declaration Ф
+# using with node declaration
 using some = node () => () { ... }
 
 # using with node declaration, and port reference
@@ -165,3 +164,18 @@ node main (argv: string[], argc: i32) => () {
     using three = +(1, 2).res
 }
 ```
+
+### Probably we need this
+- static nodes
+
+### C module
+- node definitions
+    - node struct
+    - node callback function
+    - node **init**/**dispose**/**trigger** functions
+    - node meta data function
+- module meta data functions
+    - exported symbols
+        - static nodes instances
+            - static ports
+        - node definitions 

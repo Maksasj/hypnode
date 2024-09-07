@@ -1,0 +1,29 @@
+type FibState = {
+    a: i32
+    b: i32
+}
+
+node fib = {
+    input in_state: FibState;
+    output on_state: FibState;
+
+    let s: sum;
+    s.a <- state.a;
+    s.b <- state.b;
+
+    on_state.a <- in_state.b;
+    on_state.b <- s.c;
+}
+
+@export("entrypoint")
+node main {
+    input argv: string[];
+    output argc: i32;
+
+    let f: fib;
+    
+    f.state.a <- @once(0);
+    f.state.b <- @once(1);
+
+    f.state <- f.state;
+}
