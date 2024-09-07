@@ -1,4 +1,5 @@
 import subprocess 
+import os
 
 def build_runtime():
     print("Building runtime")
@@ -8,8 +9,18 @@ def build_runtime():
 def build_std_native():
     print("Building native std modules")
 
-    subprocess.call(["gcc", "-c", "-Wall", "-fpic", "./std/native/printf.c"]) 
-    subprocess.call(["gcc", "-shared", "-o", "printf.so", "printf.o"]) 
+    modules = [ "printf", "arithmetic" ]
+
+    for module in modules:
+        subprocess.call(["gcc", "-c", "-Wall", "-fpic", "./std/native/" + module + ".c"]) 
+        subprocess.call(["gcc", "-shared", "-o", module + ".so", module + ".o"]) 
+
+def clean_build():
+    print("Cleaning build")
+
+    for file in os.listdir("./"):
+        if file.endswith(".o"):
+            os.remove(file)
 
 def run_runtime():
     print("Running runtime")
@@ -18,5 +29,7 @@ def run_runtime():
 
 build_runtime()
 build_std_native()
+
+clean_build()
 
 run_runtime()

@@ -4,6 +4,34 @@
 
 #include "hypnode.h"
 
+int load_node(const char* file_name, void* module, _meta_export_node export_node) {
+    _node_init init = dlsym(module, export_node._init);
+    if(init == NULL) {
+        fprintf(stderr, "ERROR: could not find symbol in %s: %s", file_name, dlerror());
+        return 1;
+    }
+
+    _node_dispose dispose = dlsym(module, export_node._dispose);
+    if(dispose == NULL) {
+        fprintf(stderr, "ERROR: could not find symbol in %s: %s", file_name, dlerror());
+        return 1;
+    }
+
+    _node_trigger trigger = dlsym(module, export_node._trigger);
+    if(trigger == NULL) {
+        fprintf(stderr, "ERROR: could not find symbol in %s: %s", file_name, dlerror());
+        return 1;
+    }
+
+    void* node = init();
+
+    trigger(node);
+
+    dispose(node);
+
+    return 0;
+}
+
 int main(int argc, char* argv[]) {
     if(argc < 2) {
         fprintf(stderr, "Usage: hne [FILE]");
@@ -32,29 +60,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    _node_init init = dlsym(module, export_node->_init);
-    if(init == NULL) {
-        fprintf(stderr, "ERROR: could not find symbol in %s: %s", file_name, dlerror());
+    if(load_node(file_name, module, export_node[0]) == 1) {
+        fprintf(stderr, "ERROR: failed to load node from module %s", file_name);
         return 1;
     }
-
-    _node_dispose dispose = dlsym(module, export_node->_dispose);
-    if(dispose == NULL) {
-        fprintf(stderr, "ERROR: could not find symbol in %s: %s", file_name, dlerror());
-        return 1;
-    }
-
-    _node_trigger trigger = dlsym(module, export_node->_trigger);
-    if(trigger == NULL) {
-        fprintf(stderr, "ERROR: could not find symbol in %s: %s", file_name, dlerror());
-        return 1;
-    }
-
-    void* node = init();
-
-    trigger(node);
-
-    dispose(node);
 
     return 0;
 }
