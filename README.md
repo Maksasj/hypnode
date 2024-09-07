@@ -29,12 +29,13 @@ node based programming language
 <node_name> ::= ...
 ```
 
-## Testing 💊
-
-## Documentation 📑
+## Testing
 *Todo*
 
-## Contribution 🫶
+## Documentation
+*Todo*
+
+## Contribution
 *Todo*
 
 ## License
