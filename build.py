@@ -15,6 +15,11 @@ def build_std_native():
         subprocess.call(["gcc", "-c", "-Wall", "-fpic", "./std/native/" + module + ".c"]) 
         subprocess.call(["gcc", "-shared", "-o", module + ".so", module + ".o"]) 
 
+def build_tools():
+    print("Building tools")
+
+    subprocess.call(["go", "build," "./tools/cli.go"]) 
+
 def clean_build():
     print("Cleaning build")
 
@@ -29,6 +34,7 @@ def run_runtime():
 
 build_runtime()
 build_std_native()
+build_tools()
 
 clean_build()
 
