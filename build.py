@@ -16,12 +16,12 @@ def create_folders():
         if os.path.isdir(folder) == False:
             os.mkdir(folder)
 
-def build_runtime():
-    print("Building runtime")
+def build_daemon():
+    print("Building daemon")
 
-    subprocess.call(["gcc", "./runtime/main.c", "-o", "hne"]) 
+    subprocess.call(["gcc", "./daemon/main.c", "-o", "hne"]) 
 
-    # move runtime executable to target folder
+    # move daemon executable to target folder
     shutil.move("hne", "target/hne")
 
 def build_std_native():
@@ -53,17 +53,17 @@ def clean_build():
         if file.endswith(".o"):
             os.remove(file)
 
-def run_runtime():
-    print("Running runtime")
+def run_daemon():
+    print("Running daemon")
 
     subprocess.call(["./target/hne", "./target/std/native/printf.so"]) 
 
 create_folders()
 
-build_runtime()
+build_daemon()
 build_std_native()
 build_tools()
 
 clean_build()
 
-run_runtime()
+run_daemon()
