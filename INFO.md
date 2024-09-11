@@ -41,6 +41,41 @@ struct _type_info_struct {
 
 ### Node
 
+Required native nodes
+
+Arithmetic Operators
+- `+` Addition
+- `-` Subtraction
+- `*` Multiplication
+- `/` Division with Modulus
+
+Comparison Operators
+- `==` Equal to
+- `>` Greater than
+- `<` Less than
+
+Logical Operators
+- `&&` And
+- `||` Or
+- `!` Not
+
+```lua
+@native node + (a: i32, b: i32) => (c: i32);
+@native node - (a: i32, b: i32) => (c: i32);
+@native node * (a: i32, b: i32) => (c: i32);
+@native node / (a: i32, b: i32) => (c: i32);
+
+@native node == (a: bool, b: bool) => (c: bool);
+@native node > (a: bool, b: bool) => (c: bool);
+@native node < (a: bool, b: bool) => (c: bool);
+
+@native node && (a: bool, b: bool) => (c: bool);
+@native node || (a: bool, b: bool) => (c: bool);
+@native node ! (a: bool) => (c: bool);
+```
+
+```@native``` means that node callback is provided by daemon
+
 Node C interface
 
 ```c
