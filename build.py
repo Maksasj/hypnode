@@ -27,9 +27,15 @@ def build_daemon():
 def build_std_native():
     print("Building native std modules")
 
-    modules = [ "printf", "arithmetic" ]
+    modules = [ 
+        "printf", 
+        "arithmetic", 
+        "experimental" 
+    ]
 
-    for module in modules:
+    for module in modules: 
+        print("    Building " + module + " module")
+        
         subprocess.call(["gcc", "-c", "-Wall", "-fpic", "./std/native/" + module + ".c"]) 
         subprocess.call(["gcc", "-shared", "-o", module + ".so", module + ".o"]) 
 

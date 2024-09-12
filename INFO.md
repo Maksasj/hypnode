@@ -27,7 +27,7 @@ type Type2 = { ... };
 type Type3 = { ... };
 
 type Union = Type1 | Type2 | Type3;
-
+ 
 type Type11 = any as Type1; 
 ```
 
@@ -144,5 +144,40 @@ static struct _meta_export_node _export_symbols[] = {
 
 struct _meta_export_node* _meta_export_nodes() {
     return _export_symbols;    
+}
+```
+
+one file -> one module
+basically ...
+
+```lua
+# -- arithmetic.hn
+
+# -- implementation of this node is written in C
+@native node sum (a: i32, b: i32) => (c: i32);
+```
+
+```lua
+@include "module_name" # -- includes module source code
+
+@import "node_name" # -- pulls node implementation from daemon environment
+@export "node_name" # -- makes node visible to daemon environment
+
+@native # -- node implementation callback should be linked separately 
+```
+
+### ```@import```
+With @import attribute we can defined node as usuall. But implementation callback should be provided by daemon.
+
+```lua
+node anlog (message: string) => () = { ... }
+
+# -- Since this implementation is imported from native C code, we still need to specify node interface, to be able to compiles this module
+node mylog (message: string) => () = @import "std_experimental_log"
+
+@export "my_entrypoint"
+node main = {
+    let l: mylog;
+    l.message <- "Hello world !\n";
 }
 ```
