@@ -175,7 +175,7 @@ node anlog (message: string) => () = { ... }
 # -- Since this implementation is imported from native C code, we still need to specify node interface, to be able to compiles this module
 node mylog (message: string) => () = @import "std_experimental_log"
 
-@export "my_entrypoint"
+@export "entrypoint"
 node main = {
     let l: mylog;
     l.message <- "Hello world !\n";

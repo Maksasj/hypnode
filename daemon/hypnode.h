@@ -2,9 +2,11 @@
 #define HYPNODE_H
 
 typedef struct {
-    char* _init;
-    char* _dispose;
-    char* _trigger;
+    const char* _name;
+
+    const char* _init;
+    const char* _dispose;
+    const char* _trigger;
 } _meta_export_node;
 
 typedef _meta_export_node* (*_meta_export_nodes)();

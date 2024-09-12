@@ -5,6 +5,8 @@
 struct _node_log_struct {
     // Ports
     
+    // Child nodes
+
     // Callback
     void (*_callback)(void* self);
 };
@@ -41,13 +43,17 @@ void _node_log_trigger(void* _node) {
 // Module meta information
 // Exported nodes, etc...
 struct _meta_export_node {
-    char* _init;
-    char* _dispose;
-    char* _trigger;
+    const char* _name;
+
+    const char* _init;
+    const char* _dispose;
+    const char* _trigger;
 };
 
 static struct _meta_export_node _export_symbols[] = {
     (struct _meta_export_node) {
+        ._name = "std_experimental_log",
+
         ._init = "_node_log_init",
         ._dispose = "_node_log_dispose",
         ._trigger = "_node_log_trigger" 
