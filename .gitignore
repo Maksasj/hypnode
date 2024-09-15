@@ -7,3 +7,4 @@ nhe
 *.out
 cli
 target
+*.test.txt

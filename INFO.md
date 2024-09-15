@@ -172,7 +172,7 @@ With @import attribute we can defined node as usuall. But implementation callbac
 ```lua
 node anlog (message: string) => () = { ... }
 
-# -- Since this implementation is imported from native C code, we still need to specify node interface, to be able to compiles this module
+# -- Since this implementation is imported from native C code, we still need to specify node interface, to be able to compile this module
 node mylog (message: string) => () = @import "std_experimental_log"
 
 @export "entrypoint"

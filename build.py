@@ -1,15 +1,20 @@
 import subprocess 
 import shutil
 import os
+import sys
 
 def create_folders():
     print("Creating folders")
 
     folders = [
+        # General
         "target",
         "target/tools",
         "target/std",
-        "target/std/native"
+        "target/std/native",
+
+        # Tests
+        "target/tests"
     ]
 
     for folder in folders:
@@ -19,10 +24,31 @@ def create_folders():
 def build_daemon():
     print("Building daemon")
 
-    subprocess.call(["gcc", "./daemon/main.c", "-o", "hne"]) 
+    subprocess.call(["gcc", "./daemon/daemon.c", "-Wall","-o", "hne"]) 
 
     # move daemon executable to target folder
     shutil.move("hne", "target/hne")
+
+def build_tests():
+    print("Building tests")
+
+    print("    Deleted old tests")
+    for file in os.listdir("./target/tests"):
+        if file.endswith(".test"):
+            os.remove("./target/tests/" + file)
+
+    print("    Building daemon tests")
+    for file in os.listdir("./tests/daemon"):
+        if file.endswith(".test.c"):
+            length = len(file)
+            file = file[0:length - 7]
+
+            subprocess.call(["gcc", "./tests/daemon/" + file + ".test.c", "-Wall", "-o", file + ".test"]) 
+
+    # Copy all dtests to target folder
+    for file in os.listdir("./"):
+        if file.endswith(".test"):
+            shutil.move(file, 'target/tests')
 
 def build_std_native():
     print("Building native std modules")
@@ -70,6 +96,9 @@ build_daemon()
 build_std_native()
 build_tools()
 
+build_tests()
+
 clean_build()
 
-run_daemon()
+if len(sys.argv) <= 1:
+    run_daemon()
