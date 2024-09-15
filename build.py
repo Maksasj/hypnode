@@ -24,7 +24,7 @@ def create_folders():
 def build_daemon():
     print("Building daemon")
 
-    os.system("gcc daemon/*.c -o target/hne")  
+    os.system("gcc daemon/lib/*.c daemon/*.c -o target/hne")  
 
 def build_tests():
     print("Building tests")
@@ -40,12 +40,7 @@ def build_tests():
             length = len(file)
             file = file[0:length - 7]
 
-            subprocess.call(["gcc", "./tests/daemon/" + file + ".test.c", "-Wall", "-o", file + ".test"]) 
-
-    # Copy all dtests to target folder
-    for file in os.listdir("./"):
-        if file.endswith(".test"):
-            shutil.move(file, 'target/tests')
+            os.system("gcc daemon/lib/*.c  tests/daemon/" + file + ".test.c -I daemon/lib -o target/tests/" + file + ".test")  
 
 def build_std_native():
     print("Building native std modules")

@@ -12,9 +12,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "hypnode.h"
-
-#include "queue.h"
+#include "lib/hypnode.h"
+#include "lib/queue.h"
 
 int load_node(const char* file_name, void* module, _meta_export_node export_node) {
     _node_init init = dlsym(module, export_node._init);
