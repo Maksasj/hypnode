@@ -24,10 +24,7 @@ def create_folders():
 def build_daemon():
     print("Building daemon")
 
-    subprocess.call(["gcc", "./daemon/daemon.c", "-Wall","-o", "hne"]) 
-
-    # move daemon executable to target folder
-    shutil.move("hne", "target/hne")
+    os.system("gcc daemon/*.c -o target/hne")  
 
 def build_tests():
     print("Building tests")

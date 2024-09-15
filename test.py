@@ -3,8 +3,6 @@ import shutil
 import os
 
 def build_everything():
-    print("Creating folders")
-
     subprocess.call(["python3", "build.py", "--no-run"]) 
 
 def clean_tests():
