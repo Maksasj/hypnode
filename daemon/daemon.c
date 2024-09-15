@@ -12,8 +12,8 @@
 #include <string.h>
 #include <unistd.h>
 
+#define DAEMON_BUILD
 #include "lib/hypnode.h"
-#include "lib/queue.h"
 
 int load_node(const char* file_name, void* module, _meta_export_node export_node) {
     _node_init init = dlsym(module, export_node._init);
@@ -137,15 +137,11 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-
     pthread_t tcp_interface_thread_id;
     pthread_create(&tcp_interface_thread_id, NULL, tcp_interface_thread_fun, NULL);
 
-    Queue q;
-    create_queue(&q, 100);
-
     while(1) {
-
+        // Running
     }
 
     pthread_join(tcp_interface_thread_id, NULL);

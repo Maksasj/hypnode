@@ -4,7 +4,7 @@
 // Node type and callback declaration
 struct _node_main_struct {
     // Ports
-    
+
     // Child nodes
 
     // Callback

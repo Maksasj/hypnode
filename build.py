@@ -54,7 +54,7 @@ def build_std_native():
     for module in modules: 
         print("    Building " + module + " module")
 
-        subprocess.call(["gcc", "-c", "-Wall", "-fpic", "./std/native/" + module + ".hn.c"]) 
+        os.system("gcc -c -Wall -fpic ./std/native/" + module + ".hn.c ./daemon/*.c  -Idaemon/lib")
         subprocess.call(["gcc", "-shared", "-o", module + ".so", module + ".hn.o"]) 
 
     # Copy all native modules to target folder
