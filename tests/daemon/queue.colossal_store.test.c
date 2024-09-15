@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
+#include "test.h"
 #include "queue.h"
 
 int main() {
@@ -14,15 +12,15 @@ int main() {
         queue_push(&queue, item);
     }
 
-    printf("%d %d\n", queue_capacity(&queue), 1310720);
+    TEST_EQUAL(queue_capacity(&queue), 1310720);
 
     for(int i = 999999; i >= 0; --i) {
         int* item = (int*) queue_pop(&queue);
 
-        printf("%d %d\n", *item, i);
+        TEST_EQUAL(*item, i);
     }
 
-    printf("%d %d\n", queue_capacity(&queue), 20);
+    TEST_EQUAL(queue_capacity(&queue), 20);
 
     free_queue_content(&queue);
     free_queue(&queue);

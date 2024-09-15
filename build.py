@@ -40,7 +40,7 @@ def build_tests():
             length = len(file)
             file = file[0:length - 7]
 
-            os.system("gcc daemon/lib/*.c  tests/daemon/" + file + ".test.c -I daemon/lib -o target/tests/" + file + ".test")  
+            os.system("gcc daemon/lib/*.c  tests/daemon/" + file + ".test.c -I daemon/lib -I tests -o target/tests/" + file + ".test")  
 
 def build_std_native():
     print("Building native std modules 📜")

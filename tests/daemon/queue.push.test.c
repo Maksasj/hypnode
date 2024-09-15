@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
+#include "test.h"
 #include "queue.h"
 
 int main() {
@@ -16,7 +14,7 @@ int main() {
 
     unsigned int size = queue_size(&queue);
 
-    printf("%d %d\n", 100, size);
+    TEST_EQUAL(100, size);
 
     free_queue(&queue);
 
