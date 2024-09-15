@@ -2,7 +2,29 @@
 
 node based programming language
 
-## BNF (Backus–Naur form)
+> **hypnode** is probably a new javascript framework, but i am not sure
+
+Cool looking widgets
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Maksasj/hypnode/test.yml?logo=github&label=build)
+![GitHub License](https://img.shields.io/github/license/Maksasj/hypnode)
+![GitHub Repo stars](https://img.shields.io/github/stars/Maksasj/hypnode?style=flat)
+
+### Links
+1. Source code available at [github.com/Maksasj/hypnode](https://github.com/Maksasj/hypnode)
+
+## Architecture
+*Todo*
+
+## Features
+*Todo*
+
+## Build
+*Todo*
+
+
+## Language
+
+### BNF (Backus–Naur form)
 ```bnf
 <program> ::= ( <node_definition> | <type_definition> )*
 
@@ -32,3 +54,5 @@ node based programming language
 ## License
 hypnode is free, open source programming language. All code in this repository is licensed under
 - MIT License ([LICENSE.md](https://github.com/Maksasj/hypnode/blob/master/LICENSE.md) or https://opensource.org/license/mit/)
+
+Copyright 2024 © Maksim Jaroslavcevas, Aleksandras Šukelovič 
