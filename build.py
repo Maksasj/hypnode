@@ -1,22 +1,101 @@
 import subprocess 
+import shutil
+import os
+import sys
 
-def build_runtime():
-    print("Building runtime")
+def create_folders():
+    print("Creating folders")
 
-    subprocess.call(["gcc", "./runtime/main.c"]) 
+    folders = [
+        # General
+        "target",
+        "target/tools",
+        "target/std",
+        "target/std/native",
+
+        # Tests
+        "target/tests"
+    ]
+
+    for folder in folders:
+        if os.path.isdir(folder) == False:
+            os.mkdir(folder)
+
+def build_daemon():
+    print("Building daemon")
+
+    os.system("gcc daemon/*.c -o target/hne")  
+
+def build_tests():
+    print("Building tests")
+
+    print("    Deleted old tests")
+    for file in os.listdir("./target/tests"):
+        if file.endswith(".test"):
+            os.remove("./target/tests/" + file)
+
+    print("    Building daemon tests")
+    for file in os.listdir("./tests/daemon"):
+        if file.endswith(".test.c"):
+            length = len(file)
+            file = file[0:length - 7]
+
+            subprocess.call(["gcc", "./tests/daemon/" + file + ".test.c", "-Wall", "-o", file + ".test"]) 
+
+    # Copy all dtests to target folder
+    for file in os.listdir("./"):
+        if file.endswith(".test"):
+            shutil.move(file, 'target/tests')
 
 def build_std_native():
     print("Building native std modules")
 
-    subprocess.call(["gcc", "-c", "-Wall", "-fpic", "./std/native/printf.c"]) 
-    subprocess.call(["gcc", "-shared", "-o", "printf.so", "printf.o"]) 
+    modules = [ 
+        "printf", 
+        "arithmetic", 
+        "experimental" 
+    ]
 
-def run_runtime():
-    print("Running runtime")
+    for module in modules: 
+        print("    Building " + module + " module")
 
-    subprocess.call("./a.out") 
+        subprocess.call(["gcc", "-c", "-Wall", "-fpic", "./std/native/" + module + ".hn.c"]) 
+        subprocess.call(["gcc", "-shared", "-o", module + ".so", module + ".hn.o"]) 
 
-build_runtime()
+    # Copy all native modules to target folder
+    for file in os.listdir("./"):
+        if file.endswith(".so"):
+            shutil.move(file, 'target/std/native/' + file)
+
+def build_tools():
+    print("Building tools")
+
+    subprocess.call(["go", "build", "./tools/hncli.go"]) 
+
+    # move hncli executable to target folder
+    shutil.move("hncli", "target/tools/hncli")
+
+def clean_build():
+    print("Cleaning build")
+
+    for file in os.listdir("./"):
+        if file.endswith(".o"):
+            os.remove(file)
+
+def run_daemon():
+    print("Running daemon")
+
+    subprocess.call(["./target/hne", "./target/std/native/printf.so"]) 
+
+create_folders()
+
+build_daemon()
 build_std_native()
+build_tools()
 
-run_runtime()
+build_tests()
+
+clean_build()
+
+if len(sys.argv) <= 1:
+    run_daemon()

@@ -22,7 +22,7 @@ type Student = {
 node MyNode () => ()
 
 # Node declaration, but implemetation 
-# is provided by native runtime
+# is provided by native daemon
 @native 
 node printf (message: string) => (res: ResultT)
 
@@ -109,10 +109,10 @@ Actually native nodes could be directly linked with C dll
 ## Attributes
 ```python
 @native 
-# notifies compliler that node/type implementation should be provided by runtime
+# notifies compliler that node/type implementation should be provided by daemon
 
 @export("name")
-# exposes node by explicit name to runtime
+# exposes node by explicit name to daemon
 ```
 
 ```python

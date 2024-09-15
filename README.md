@@ -36,16 +36,6 @@ node based programming language
 <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 ```
 
-## Testing 💊
-
-## Documentation 📑
-
-_Todo_
-
-## Contribution 🫶
-
-_Todo_
-
 ## License
 
 hypnode is free, open source programming language. All code in this repository is licensed under
