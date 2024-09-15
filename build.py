@@ -22,12 +22,12 @@ def create_folders():
             os.mkdir(folder)
 
 def build_daemon():
-    print("Building daemon")
+    print("Building daemon 🤖")
 
     os.system("gcc daemon/lib/*.c daemon/*.c -o target/hne")  
 
 def build_tests():
-    print("Building tests")
+    print("Building tests 🧪")
 
     print("    Deleted old tests")
     for file in os.listdir("./target/tests"):
@@ -43,7 +43,7 @@ def build_tests():
             os.system("gcc daemon/lib/*.c  tests/daemon/" + file + ".test.c -I daemon/lib -o target/tests/" + file + ".test")  
 
 def build_std_native():
-    print("Building native std modules")
+    print("Building native std modules 📜")
 
     modules = [ 
         "printf", 
@@ -63,7 +63,7 @@ def build_std_native():
             shutil.move(file, 'target/std/native/' + file)
 
 def build_tools():
-    print("Building tools")
+    print("Building tools 🛠")
 
     subprocess.call(["go", "build", "./tools/hncli.go"]) 
 
