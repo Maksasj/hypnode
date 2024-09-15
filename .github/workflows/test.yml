@@ -12,8 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Restore dependencies
-      run: apt install python  
+    - uses: actions/setup-python@v5 
 
     - name: Test
-      run: python3 test.py
+      run: python test.py
