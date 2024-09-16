@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "hypnode.h"
+
 // Node type and callback declaration
 struct _node_main_struct {
     // Ports
@@ -11,17 +13,29 @@ struct _node_main_struct {
     void (*_callback)(void* self);
 };
 
-void _node_main_callback(void* _self) {
-    struct _node_main_struct* self = _self;
+// Node life-cycle functions
+void* _node_main_init();
+void _node_main_dispose(void* _node);
+void _node_main_callback(void* _self);
+void _node_main_trigger(void* _node);
 
-    // Create node mylog
-    // send packet
+// Module meta information
+// Exported nodes, etc...
+static _meta_export_node _export_symbols[] = {
+    (_meta_export_node) {
+        ._name = "entrypoint",
+        
+        ._init = "_node_main_init",
+        ._dispose = "_node_main_dispose",
+        ._trigger = "_node_main_trigger" 
+    }
+};
 
-    /*
-    let l: mylog;
-    l.message <- "Hello world !\n";
-    */
-}
+_meta_export_node* _meta_export_nodes();
+//_meta_export_node* _meta_export_types();
+
+#define INCLUDE_IMPLEMENTATION
+#ifdef INCLUDE_IMPLEMENTATION
 
 // Node life-cycle functions
 void* _node_main_init() {
@@ -38,6 +52,18 @@ void _node_main_dispose(void* _node) {
     free(_node);
 }
 
+void _node_main_callback(void* _self) {
+    struct _node_main_struct* self = _self;
+
+    // Create node mylog
+    // send packet
+
+    /*
+    let l: mylog;
+    l.message <- "Hello world !\n";
+    */
+}
+
 void _node_main_trigger(void* _node) {
     struct _node_main_struct* node = _node;
 
@@ -45,29 +71,8 @@ void _node_main_trigger(void* _node) {
     node->_callback(_node);
 }
 
-// Node specific meta information
-// ...
-
-// Module meta information
-// Exported nodes, etc...
-struct _meta_export_node {
-    const char* _name;
-
-    const char* _init;
-    const char* _dispose;
-    const char* _trigger;
-};
-
-static struct _meta_export_node _export_symbols[] = {
-    (struct _meta_export_node) {
-        ._name = "entrypoint",
-        
-        ._init = "_node_main_init",
-        ._dispose = "_node_main_dispose",
-        ._trigger = "_node_main_trigger" 
-    }
-};
-
-struct _meta_export_node* _meta_export_nodes() {
+_meta_export_node* _meta_export_nodes() {
     return _export_symbols;    
 }
+
+#endif

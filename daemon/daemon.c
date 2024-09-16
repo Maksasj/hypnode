@@ -15,6 +15,8 @@
 #define DAEMON_BUILD
 #include "lib/hypnode.h"
 
+#include "logger.h"
+
 int load_node(const char* file_name, void* module, _meta_export_node export_node) {
     _node_init init = dlsym(module, export_node._init);
     if(init == NULL) {
@@ -105,6 +107,8 @@ void* tcp_interface_thread_fun(void* vargp) {
 }
 
 int main(int argc, char* argv[]) {
+    DAEMON_LOG(INFO, "Started daemon");
+
     if(argc < 2) {
         fprintf(stderr, "Usage: hne [FILE]");
         return 1;
