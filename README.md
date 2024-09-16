@@ -21,7 +21,6 @@ Cool looking widgets
 ## Build
 *Todo*
 
-
 ## Language
 
 ### BNF (Backus–Naur form)
