@@ -24,7 +24,7 @@ void _node_printf_trigger(void* _node);
 // Exported nodes, etc...
 static _meta_export_node _export_symbols[] = {
     (_meta_export_node) {
-        ._name = "std_experimental_printf",
+        ._name = "std_printf",
 
         ._init = "_node_printf_init",
         ._dispose = "_node_printf_dispose",

@@ -22,7 +22,7 @@ void _node_sum_trigger(void* _node);
 // Exported nodes, etc...
 static _meta_export_node _export_symbols[] = {
     (_meta_export_node) {
-        ._name = "std_experimental_sum",
+        ._name = "std_sum",
         
         ._init = "_node_sum_init",
         ._dispose = "_node_sum_dispose",

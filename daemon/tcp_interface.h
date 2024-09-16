@@ -11,6 +11,7 @@
 #include <unistd.h>
 
 #include "logger.h"
+#include "environment.h"
 
 void* tcp_interface_thread_fun(void* vargp);
 

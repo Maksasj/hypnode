@@ -1,6 +1,8 @@
 #include "tcp_interface.h"
 
 void* tcp_interface_thread_fun(void* vargp) {
+    Environment* env = (Environment*) vargp;
+
     DAEMON_LOG(INFO, "Started TCP interface thread");
 
     unsigned int port = 8170;
@@ -50,7 +52,10 @@ void* tcp_interface_thread_fun(void* vargp) {
 
         s_len = recv(c_socket,buffer,sizeof(buffer),0);
 
-        printf("IP: %s Received: %d bytes, Message %s\n", inet_ntoa(clientaddr.sin_addr), s_len, buffer + 4);
+        DAEMON_LOG(INFO, "IP: %s Received: %d bytes, Message %s", inet_ntoa(clientaddr.sin_addr), s_len, buffer + 4);
+
+        load_module(env, "./target/std/native/printf.so");
+
         close(c_socket);
     }
 
