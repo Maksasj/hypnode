@@ -1,7 +1,9 @@
 #include "node_worker.h"
 
 typedef struct {
-
+    // Src Address
+    // Dst Address
+    // Payload Address
 } Packet;
 
 void* node_worker_thread_fun(void* vargp) {
@@ -14,7 +16,6 @@ void* node_worker_thread_fun(void* vargp) {
         while (!queue_empty(packet_queue)) {
             Packet* packet = (Packet*) queue_pop(packet_queue);
 
-            DAEMON_LOG(INFO, "Processing packet");
         }
     }   
 

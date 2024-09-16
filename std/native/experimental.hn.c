@@ -28,7 +28,7 @@ static _meta_export_node _export_symbols[] = {
         ._init = "_node_log_init",
         ._dispose = "_node_log_dispose",
         ._trigger = "_node_log_trigger" 
-    }
+    },
 };
 
 _meta_export_node* _meta_export_nodes();
@@ -50,7 +50,6 @@ void _node_log_dispose(void* _node) {
     free(_node);
 }
 
-
 void _node_log_callback(void* _self) {
     // struct _node_log_struct* self = _self;
 
@@ -67,6 +66,5 @@ void _node_log_trigger(void* _node) {
 _meta_export_node* _meta_export_nodes() {
     return _export_symbols;    
 }
-
 
 #endif

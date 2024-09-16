@@ -1,6 +1,7 @@
 import subprocess 
 import shutil
 import os
+import sys
 
 def build_everything():
     subprocess.call(["python3", "build.py", "--no-run"]) 
@@ -14,6 +15,9 @@ def clean_tests():
 
 def run_tests():
     print("Running tests")
+
+    total_success = 0
+    total_failed = 0
 
     for file in os.listdir("./target/tests"):
         if file.endswith(".test"):
@@ -47,12 +51,20 @@ def run_tests():
                     total_count += 1
                     line_number += 1
 
+            total_success += success_count
+            total_failed += fail_count
+
             if fail_count != 0:
                 print(f"        ❌ Test failed {success_count}/{total_count}")
             else:
                 print(f"        ✅ Test passed {success_count}/{total_count}")
 
+    return (total_success, total_failed)
+
 build_everything()
 clean_tests()
 
-run_tests()
+(total_success, total_failed) = run_tests()
+
+if total_failed != 0:
+    sys.exit('❌ Tests failed')

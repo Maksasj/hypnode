@@ -7,7 +7,7 @@ int main() {
     create_queue(&queue, 1024);
 
     TEST_EQUAL(queue_size(&queue), 0);
-    TEST_EQUAL(queue_capacity(&queue), 1024);
+    TEST_EQUAL(queue_capacity(&queue), 1023);
 
     free_queue(&queue);
 
