@@ -46,6 +46,8 @@ int load_node(const char* file_name, void* module, _meta_export_node export_node
 }
 
 void* tcp_interface_thread_fun(void* vargp) {
+    DAEMON_LOG(INFO, "Started tcp interface thread");
+
     unsigned int port = 8170;
     int l_socket;
     int c_socket;
@@ -60,7 +62,7 @@ void* tcp_interface_thread_fun(void* vargp) {
     char buffer[65536];
 
     if ((l_socket = socket(AF_INET, SOCK_STREAM,0))< 0){
-        fprintf(stderr,"ERROR #2: cannot create listening socket.\n");
+        DAEMON_LOG(ERROR, "tcp interface thread: cannot create listening socket");
         exit(1);
     }
     
@@ -71,23 +73,24 @@ void* tcp_interface_thread_fun(void* vargp) {
     servaddr.sin_port = htons(port); // nurodomas portas
     
     if (bind (l_socket, (struct sockaddr *)&servaddr,sizeof(servaddr))<0){
-        fprintf(stderr,"ERROR #3: bind listening socket.\n");
+        DAEMON_LOG(ERROR, "tcp interface thread: bind listening socket");
         exit(1);
     }
 
     if (listen(l_socket, 5) <0){
-        fprintf(stderr,"ERROR #4: error in listen().\n");
+        DAEMON_LOG(ERROR, "tcp interface thread: error in listen()");
         exit(1);
     }
+
+    DAEMON_LOG(INFO, "TCP interface listens on port: %d", port);
 
     for(;;) {
         memset(&clientaddr,0, sizeof(clientaddr));
         memset(&buffer,0,sizeof(buffer));
 
         clientaddrlen = sizeof(struct sockaddr);
-        if ((c_socket = accept(l_socket,
-            (struct sockaddr*)&clientaddr,&clientaddrlen))<0){
-            fprintf(stderr,"ERROR #5: error occured accepting connection.\n");
+        if ((c_socket = accept(l_socket,(struct sockaddr*)&clientaddr,&clientaddrlen)) < 0){
+            DAEMON_LOG(ERROR, "tcp interface thread: error occured accepting connection");
             exit(1);
         }
 
@@ -95,12 +98,18 @@ void* tcp_interface_thread_fun(void* vargp) {
 
         // r_len = send(c_socket,buffer,s_len,0);
 
-        printf("IP: %s Received: %d bytes, Message %s\n", 
-            inet_ntoa(clientaddr.sin_addr), 
-            s_len,
-            buffer);
-        
+        printf("IP: %s Received: %d bytes, Message %s\n", inet_ntoa(clientaddr.sin_addr), s_len, buffer);
         close(c_socket);
+    }
+
+    return NULL;
+}
+
+void* node_worker_thread_fun(void* vargp) {
+    DAEMON_LOG(INFO, "Started node worker thread");
+
+    while(1) {
+        
     }
 
     return NULL;
@@ -109,46 +118,18 @@ void* tcp_interface_thread_fun(void* vargp) {
 int main(int argc, char* argv[]) {
     DAEMON_LOG(INFO, "Started daemon");
 
-    if(argc < 2) {
-        fprintf(stderr, "Usage: hne [FILE]");
-        return 1;
-    }
-
-    const char* file_name = argv[1];
-    void *module = dlopen(file_name, RTLD_NOW);
-
-    if(module == NULL) {
-        fprintf(stderr, "ERROR: could not load %s: %s", file_name, dlerror());
-        return 1;
-    }
-
-    _meta_export_nodes _meta_export_nodes = dlsym(module, "_meta_export_nodes");
-
-    if(_meta_export_nodes == NULL) {
-        fprintf(stderr, "ERROR: could not find entrypoint symbol in %s: %s", file_name, dlerror());
-        return 1;
-    }
-
-    _meta_export_node* export_node = (*_meta_export_nodes)();
-
-    if(export_node == NULL) {
-        fprintf(stderr, "ERROR: module does not export any nodes");
-        return 1;
-    }
-
-    if(load_node(file_name, module, export_node[0]) == 1) {
-        fprintf(stderr, "ERROR: failed to load node from module %s", file_name);
-        return 1;
-    }
-
     pthread_t tcp_interface_thread_id;
     pthread_create(&tcp_interface_thread_id, NULL, tcp_interface_thread_fun, NULL);
+
+    pthread_t node_worker_thread_id;
+    pthread_create(&node_worker_thread_id, NULL, node_worker_thread_fun, NULL);
 
     while(1) {
         // Running
     }
 
     pthread_join(tcp_interface_thread_id, NULL);
+    pthread_join(node_worker_thread_id, NULL);
 
     return 0;
 }
