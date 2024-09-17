@@ -21,7 +21,7 @@ intNumber	=  [1-9][0-9]*
 
 %%
 
-{intNumber}	{System.out.println("NUMBER:"+yytext());return new Symbol(sym.NUMBER);}
+{intNumber}	{System.out.println("NUMBER:"+yytext());return symbol(sym.NUMBER, Integer.valueOf(yytext()));}
 
 
 "+"		{System.out.println("PLUS");return new Symbol(sym.PLUS);}
