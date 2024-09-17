@@ -7,7 +7,7 @@ start with expr_list;
 
 
 expr_list ::= expr_list expr
-		| expr;
+| expr;
 
 expr ::= e EQUAL {: System.out.println("PARSER: expression recognized"); :};
 
