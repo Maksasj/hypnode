@@ -10,8 +10,9 @@ RUN python3 build.py --no-run
 
 EXPOSE 8170
 
-# run
-FROM alpine:latest
+# run, todo ubunut is to heavy
+FROM ubuntu:latest
 WORKDIR /app
 COPY --from=0 ./source/target ./
-CMD ./hne
+
+ENTRYPOINT ["./hne"]
