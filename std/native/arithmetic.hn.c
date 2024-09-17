@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-#include "hypnode.h"
+#include "native.h"
 
 // Node type and callback declaration
 struct _node_sum_struct {

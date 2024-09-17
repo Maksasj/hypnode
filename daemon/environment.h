@@ -31,8 +31,8 @@ typedef struct {
     Node* nodes[MAX_NODES];
 } Environment;
 
-Environment* new_environment();
-void free_environment(Environment* env);
+void init_environment(Environment* env);
+void dispose_environment(Environment* env);
 
 void load_module(Environment* env, const char* file_name);
 void load_node(Environment* env, const char* file_name, void* module, _meta_export_node export_node);

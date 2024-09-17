@@ -19,7 +19,7 @@ type MyStruct = {
     b: i32
 };
 ```
-
+-с 
 Type operations
 ```lua
 type Type1 = { ... };
@@ -28,15 +28,153 @@ type Type3 = { ... };
 
 type Union = Type1 | Type2 | Type3;
  
-type Type11 = any as Type1; 
+type Type11 = any as Type1;
+ 
 ```
 
 Type C interface
 
 ```c
+ 
 struct _type_info_struct {
     const char* _type_name;
 }
+```
+
+
+```lua
+type Type1 = { 
+    a: i32
+};
+
+type Type2 = { 
+    a: string
+};
+
+type Type3 = { 
+    a: bool
+    b: i32 
+};
+
+type Union = Type1 | Type2 | Type3;
+```
+
+```c
+enum _type_category {
+    Primitive;
+    Compound;
+    Union;
+}
+
+// Maybe there could be not type_name, rather _type_info
+struct _compound_type_field {
+    const char* field_name;
+    const char* type_name;
+    // Todo offset
+}
+
+// Maybe there could be not type_name, rather _type_info
+struct _union_type_field {
+    const char* type_name;
+}
+
+struct _type_info {
+    const char* type_name;
+    _type_type category;
+
+    _compound_type_field* compound_fields;
+    _union_type_field* union_fields;
+}
+
+struct Type1 { 
+    signed int a;
+};
+
+_type_info _Type1_type_info = (_type_info) {
+    .type_name = "Type1",
+    .category = Compound
+
+    .compound_fields = {
+        (_compound_type_field) {
+            .field_name = "a",
+            .type_name = "i32"
+        }
+    }
+    ._union_type_field = NULL
+}
+
+struct Type2 { 
+    char* a;
+};
+
+_type_info _Type2_type_info = (_type_info) {
+    .type_name = "Type2",
+    .category = Compound,
+
+    .compound_fields = {
+        (_compound_type_field) {
+            .field_name = "a",
+            .type_name = "string"
+        }
+    },
+    .union_fields = NULL
+}
+
+struct Type3 = { 
+    unsigned char a;
+    signed int b;    
+};
+
+_type_info _Type3_type_info = (_type_info) {
+    .type_name = "Type3",
+    .category = Compound,
+
+    .compound_fields = {
+        (_compound_type_field) {
+            .field_name = "a",
+            .type_name = "bool"
+        },
+        (_compound_type_field) {
+            .field_name = "b",
+            .type_name = "i32"
+        }
+    },
+    .union_fields = NULL
+}
+
+union Union {
+    Type1 _Type1; 
+    Type2 _Type2;
+    Type3 _Type3;
+};
+
+_type_info _Type1_type_info = (_type_info) {
+    .type_name = "Union",
+    .category = Union
+
+    .compound_fields = NULL
+    .union_fields = {
+        (_union_type_field) {
+            .type_name = "Type1"
+        },
+        (_union_type_field) {
+            .type_name = "Type2"
+        },
+        (_union_type_field) {
+            .type_name = "Type3"
+        }
+    }
+}
+
+```
+
+```c
+
+struct Packet {
+    void* value;
+    _type_info type_info;
+};
+
 ```
 
 ### Node

@@ -1,19 +1,15 @@
 #include "environment.h"
 
-Environment* new_environment() {
-    DAEMON_LOG(INFO, "Creating environment");
-
-    Environment* env = (Environment*) malloc(sizeof(Environment));
+void init_environment(Environment* env) {
+    DAEMON_LOG(INFO, "Initializing environment");
 
     create_queue(&env->packet_queue, 1000);
 
     memset(env->nodes, 0, MAX_NODES*sizeof(Node*));
     env->node_count = 0;
-
-    return env;
 }
 
-void free_environment(Environment* env) {
+void dispose_environment(Environment* env) {
     free(env);
 }
 

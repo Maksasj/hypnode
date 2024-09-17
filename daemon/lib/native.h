@@ -1,7 +1,9 @@
 #ifndef HYPNODE_H
 #define HYPNODE_H
 
-#include "queue.h"
 #include "node.h"
+#include "port.h"
+#include "queue.h"
+#include "packet.h"
 
 #endif

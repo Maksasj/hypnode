@@ -1,11 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "hypnode.h"
+#include "native.h"
 
 // Node type and callback declaration
 struct _node_log_struct {
     // Ports
+    Port message;
     
     // Child nodes
 
