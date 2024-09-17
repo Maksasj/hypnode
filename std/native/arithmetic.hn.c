@@ -1,5 +1,7 @@
 #include <stdlib.h>
 
+#include "hypnode.h"
+
 // Node type and callback declaration
 struct _node_sum_struct {
     // Ports
@@ -10,9 +12,29 @@ struct _node_sum_struct {
     void (*_callback)(void* self);
 };
 
-void _node_sum_callback(void* _self) {
-    // struct _node_sum_struct* self = _self;
-}
+// Node life-cycle functions
+void* _node_sum_init();
+void _node_sum_callback(void* _self);
+void _node_sum_dispose(void* _node);
+void _node_sum_trigger(void* _node);
+
+// Module meta information
+// Exported nodes, etc...
+static _meta_export_node _export_symbols[] = {
+    (_meta_export_node) {
+        ._name = "std_sum",
+        
+        ._init = "_node_sum_init",
+        ._dispose = "_node_sum_dispose",
+        ._trigger = "_node_sum_trigger" 
+    }
+};
+
+_meta_export_node* _meta_export_nodes();
+//_meta_export_node* _meta_export_types();
+
+#define INCLUDE_IMPLEMENTATION
+#ifdef INCLUDE_IMPLEMENTATION
 
 // Node life-cycle functions
 void* _node_sum_init() {
@@ -27,6 +49,10 @@ void _node_sum_dispose(void* _node) {
     free(_node);
 }
 
+void _node_sum_callback(void* _self) {
+    // struct _node_sum_struct* self = _self;
+}
+
 void _node_sum_trigger(void* _node) {
     struct _node_sum_struct* node = _node;
 
@@ -34,29 +60,8 @@ void _node_sum_trigger(void* _node) {
     node->_callback(_node);
 }
 
-// Node specific meta information
-// ...
-
-// Module meta information
-// Exported nodes, etc...
-struct _meta_export_node {
-    const char* _name;
-
-    const char* _init;
-    const char* _dispose;
-    const char* _trigger;
-};
-
-static struct _meta_export_node _export_symbols[] = {
-    (struct _meta_export_node) {
-        ._name = "std_experimental_sum",
-        
-        ._init = "_node_sum_init",
-        ._dispose = "_node_sum_dispose",
-        ._trigger = "_node_sum_trigger" 
-    }
-};
-
-struct _meta_export_node* _meta_export_nodes() {
-    return _export_symbols;    
+_meta_export_node* _meta_export_nodes() {
+    return _export_symbols;
 }
+
+#endif

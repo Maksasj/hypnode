@@ -1,5 +1,5 @@
-#ifndef HYPNODE_H
-#define HYPNODE_H
+#ifndef NODE_H
+#define NODE_H
 
 typedef struct {
     const char* _name;
@@ -9,7 +9,9 @@ typedef struct {
     const char* _trigger;
 } _meta_export_node;
 
-typedef _meta_export_node* (*_meta_export_nodes)();
+#ifdef DAEMON_BUILD
+    typedef _meta_export_node* (*_meta_export_nodes)();
+#endif
 
 typedef void* (*_node_init)();
 typedef void (*_node_dispose)(void* _node);

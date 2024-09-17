@@ -22,12 +22,12 @@ def create_folders():
             os.mkdir(folder)
 
 def build_daemon():
-    print("Building daemon")
+    print("Building daemon 🤖")
 
-    os.system("gcc daemon/*.c -o target/hne")  
+    os.system("gcc daemon/lib/*.c daemon/*.c -o target/hne")  
 
 def build_tests():
-    print("Building tests")
+    print("Building tests 🧪")
 
     print("    Deleted old tests")
     for file in os.listdir("./target/tests"):
@@ -40,15 +40,10 @@ def build_tests():
             length = len(file)
             file = file[0:length - 7]
 
-            subprocess.call(["gcc", "./tests/daemon/" + file + ".test.c", "-Wall", "-o", file + ".test"]) 
-
-    # Copy all dtests to target folder
-    for file in os.listdir("./"):
-        if file.endswith(".test"):
-            shutil.move(file, 'target/tests')
+            os.system("gcc daemon/lib/*.c  tests/daemon/" + file + ".test.c -I daemon/lib -I tests -o target/tests/" + file + ".test")  
 
 def build_std_native():
-    print("Building native std modules")
+    print("Building native std modules 📜")
 
     modules = [ 
         "printf", 
@@ -59,7 +54,7 @@ def build_std_native():
     for module in modules: 
         print("    Building " + module + " module")
 
-        subprocess.call(["gcc", "-c", "-Wall", "-fpic", "./std/native/" + module + ".hn.c"]) 
+        os.system("gcc -c -Wall -fpic ./std/native/" + module + ".hn.c ./daemon/*.c  -Idaemon/lib")
         subprocess.call(["gcc", "-shared", "-o", module + ".so", module + ".hn.o"]) 
 
     # Copy all native modules to target folder
@@ -68,7 +63,7 @@ def build_std_native():
             shutil.move(file, 'target/std/native/' + file)
 
 def build_tools():
-    print("Building tools")
+    print("Building tools 🛠")
 
     subprocess.call(["go", "build", "./tools/hncli.go"]) 
 

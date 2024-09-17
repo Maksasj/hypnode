@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "hypnode.h"
+
 // Node type and callback declaration
 struct _node_printf_struct {
     // Ports
@@ -12,11 +14,29 @@ struct _node_printf_struct {
     void (*_callback)(void* self);
 };
 
-void _node_printf_callback(void* _self) {
-    struct _node_printf_struct* self = _self;
+// Node life-cycle functions
+void* _node_printf_init();
+void _node_printf_dispose(void* _node);
+void _node_printf_callback(void* _self);
+void _node_printf_trigger(void* _node);
 
-    printf("%s", self->format);
-}
+// Module meta information
+// Exported nodes, etc...
+static _meta_export_node _export_symbols[] = {
+    (_meta_export_node) {
+        ._name = "std_printf",
+
+        ._init = "_node_printf_init",
+        ._dispose = "_node_printf_dispose",
+        ._trigger = "_node_printf_trigger" 
+    }
+};
+
+_meta_export_node* _meta_export_nodes();
+//_meta_export_node* _meta_export_types();
+
+#define INCLUDE_IMPLEMENTATION
+#ifdef INCLUDE_IMPLEMENTATION
 
 // Node life-cycle functions
 void* _node_printf_init() {
@@ -32,6 +52,12 @@ void _node_printf_dispose(void* _node) {
     free(_node);
 }
 
+void _node_printf_callback(void* _self) {
+    struct _node_printf_struct* self = _self;
+
+    printf("%s", self->format);
+}
+
 void _node_printf_trigger(void* _node) {
     struct _node_printf_struct* node = _node;
 
@@ -39,29 +65,8 @@ void _node_printf_trigger(void* _node) {
     node->_callback(_node);
 }
 
-// Node specific meta information
-// ...
-
-// Module meta information
-// Exported nodes, etc...
-struct _meta_export_node {
-    const char* _name;
-
-    const char* _init;
-    const char* _dispose;
-    const char* _trigger;
-};
-
-static struct _meta_export_node _export_symbols[] = {
-    (struct _meta_export_node) {
-        ._name = "std_experimental_printf",
-
-        ._init = "_node_printf_init",
-        ._dispose = "_node_printf_dispose",
-        ._trigger = "_node_printf_trigger" 
-    }
-};
-
-struct _meta_export_node* _meta_export_nodes() {
+_meta_export_node* _meta_export_nodes() {
     return _export_symbols;    
 }
+
+#endif

@@ -3,7 +3,6 @@
 node based programming language
 
 ## BNF (Backus–Naur form)
-
 ```bnf
 <program> ::= ( <node_definition> | <type_definition> )*
 
