@@ -6,6 +6,8 @@
 // Node type and callback declaration
 struct _node_main_struct {
     // Ports
+    Port argc;
+    Port argv;
 
     // Child nodes
 
@@ -43,6 +45,7 @@ void* _node_main_init() {
 
     node->_callback = _node_main_callback;
     
+    // Create ports
     // Create child nodes
 
     return node;
@@ -54,10 +57,7 @@ void _node_main_dispose(void* _node) {
 
 void _node_main_callback(void* _self) {
     struct _node_main_struct* self = _self;
-
-    // Create node mylog
-    // send packet
-
+    
     /*
     let l: mylog;
     l.message <- "Hello world !\n";
@@ -66,6 +66,8 @@ void _node_main_callback(void* _self) {
 
 void _node_main_trigger(void* _node) {
     struct _node_main_struct* node = _node;
+
+    // Check argc and argv ports
 
     // for now we do not do any checks
     node->_callback(_node);

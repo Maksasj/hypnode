@@ -34,14 +34,6 @@ type Type11 = any as Type1;
 
 Type C interface
 
-```c
- 
-struct _type_info_struct {
-    const char* _type_name;
-}
-```
-
-
 ```lua
 type Type1 = { 
     a: i32
@@ -70,6 +62,7 @@ enum _type_category {
 struct _compound_type_field {
     const char* field_name;
     const char* type_name;
+    unsigned int offset;
     // Todo offset
 }
 
@@ -97,7 +90,8 @@ _type_info _Type1_type_info = (_type_info) {
     .compound_fields = {
         (_compound_type_field) {
             .field_name = "a",
-            .type_name = "i32"
+            .type_name = "i32",
+            .offset = offsetof(struct Type1, a)
         }
     }
     ._union_type_field = NULL
@@ -114,7 +108,8 @@ _type_info _Type2_type_info = (_type_info) {
     .compound_fields = {
         (_compound_type_field) {
             .field_name = "a",
-            .type_name = "string"
+            .type_name = "string",
+            .offset = offsetof(struct Type2, a)
         }
     },
     .union_fields = NULL
@@ -132,11 +127,13 @@ _type_info _Type3_type_info = (_type_info) {
     .compound_fields = {
         (_compound_type_field) {
             .field_name = "a",
-            .type_name = "bool"
+            .type_name = "bool",
+            .offset = offsetof(struct Type3, a)
         },
         (_compound_type_field) {
             .field_name = "b",
-            .type_name = "i32"
+            .type_name = "i32",
+            .offset = offsetof(struct Type3, b)
         }
     },
     .union_fields = NULL
@@ -165,16 +162,22 @@ _type_info _Type1_type_info = (_type_info) {
         }
     }
 }
-
 ```
 
 ```c
+struct Port {
+    const char* port_name;
 
-struct Packet {
-    void* value;
-    _type_info type_info;
+    Type1* value;
+    _type_info value_type_info;
 };
 
+struct Packet {
+    // Addresses
+
+    void* payload;
+    _type_info payload_type_info;
+};
 ```
 
 ### Node
