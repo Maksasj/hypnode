@@ -2,7 +2,6 @@
 
 Parser.java
 Yylex.java
-sym.java
 
 *.java~
 *.class
