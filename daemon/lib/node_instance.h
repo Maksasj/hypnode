@@ -1,5 +1,5 @@
-#ifndef NODE_H
-#define NODE_H
+#ifndef NODE_INSTANCE_H
+#define NODE_INSTANCE_H
 
 typedef struct {
     const char* _name;
@@ -16,5 +16,15 @@ typedef struct {
 typedef void* (*_node_init)();
 typedef void (*_node_dispose)(void* _node);
 typedef void (*_node_trigger)(void* _node);
+
+typedef struct {
+    void* node;
+
+    _node_init init;
+    _node_dispose dispose;
+    _node_trigger trigger;
+
+    _meta_export_node meta;
+} _node_instance_struct;
 
 #endif

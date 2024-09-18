@@ -4,6 +4,25 @@
 #include "native.h"
 #include "logger.h"
 
+// @include 'primitive.hn'
+/* =========== types declaration ======== */
+// Declared string type
+static _type_info _string_type_info = (_type_info) {
+    .type_name = "string",
+    .category = Primitive,
+    .compound_fields = NULL,
+    .union_fields = NULL
+};
+
+// Declared i32 type
+static _type_info _i32_type_info = (_type_info) {
+    .type_name = "i32",
+    .category = Primitive,
+    .compound_fields = NULL,
+    .union_fields = NULL
+};
+/* ====================================== */
+
 // Node type and callback declaration
 struct _node_log_struct {
     // Ports
@@ -44,6 +63,13 @@ void* _node_log_init() {
     struct _node_log_struct* node = malloc(sizeof(struct _node_log_struct));
 
     node->_callback = _node_log_callback;
+
+    // Initialize port
+    node->message = (_port_struct) {
+        .port_name = "message",
+        .value = NULL, // <- Initial value
+        .value_type_info = _string_type_info
+    };
 
     return node;
 }

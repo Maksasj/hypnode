@@ -5,7 +5,7 @@ void init_environment(Environment* env) {
 
     create_queue(&env->packet_queue, 1000);
 
-    memset(env->nodes, 0, MAX_NODES*sizeof(Node*));
+    memset(env->nodes, 0, MAX_NODES*sizeof(_node_instance_struct*));
     env->node_count = 0;
 }
 
@@ -51,13 +51,13 @@ void load_node(Environment* env, const char* file_name, void* module, _meta_expo
     if(trigger == NULL)
         DAEMON_LOG(ERROR, "could not find symbol in %s: %s", file_name, dlerror());
 
-    Node* node = (Node*) malloc(sizeof(Node));
-    node->node = init();
-    node->init = init; 
-    node->dispose = dispose; 
-    node->trigger = trigger; 
-    node->meta = export_node;
-    env->nodes[env->node_count] = node;
+    _node_instance_struct* instance = (_node_instance_struct*) malloc(sizeof(_node_instance_struct));
+    instance->node = init();
+    instance->init = init; 
+    instance->dispose = dispose; 
+    instance->trigger = trigger; 
+    instance->meta = export_node;
+    env->nodes[env->node_count] = instance;
 
     DAEMON_LOG(INFO, "Successfully loaded node %s", export_node._name);
 }

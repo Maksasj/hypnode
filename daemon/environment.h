@@ -6,20 +6,10 @@
 #include <dlfcn.h>
 
 #define DAEMON_BUILD
-#include "lib/node.h"
+#include "lib/node_instance.h"
 #include "lib/queue.h"
 
 #include "utils/logger.h"
-
-typedef struct {
-    void* node;
-
-    _node_init init;
-    _node_dispose dispose;
-    _node_trigger trigger;
-
-    _meta_export_node meta;
-} Node;
 
 #define MAX_NODES 100
 
@@ -28,8 +18,10 @@ typedef struct {
 
     // Top level nodes
     unsigned int node_count;
-    Node* nodes[MAX_NODES];
+    _node_instance_struct* nodes[MAX_NODES];
 } Environment;
+
+// typedef void (*_environment_provider)();
 
 void init_environment(Environment* env);
 void dispose_environment(Environment* env);
