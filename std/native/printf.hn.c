@@ -7,43 +7,24 @@
 struct _node_printf_struct {
     // Ports
     char* format;
-    
-    // Child nodes
 
     // Callback
-    void (*_callback)(void* self);
+    void (*_implementation)(void* self);
 };
 
 // Node life-cycle functions
 void* _node_printf_init();
 void _node_printf_dispose(void* _node);
-void _node_printf_callback(void* _self);
 void _node_printf_trigger(void* _node);
 
-// Module meta information
-// Exported nodes, etc...
-static _meta_export_node _export_symbols[] = {
-    (_meta_export_node) {
-        ._name = "std_printf",
-
-        ._init = "_node_printf_init",
-        ._dispose = "_node_printf_dispose",
-        ._trigger = "_node_printf_trigger" 
-    }
-};
-
-_meta_export_node* _meta_export_nodes();
-//_meta_export_node* _meta_export_types();
-
-#define INCLUDE_IMPLEMENTATION
-#ifdef INCLUDE_IMPLEMENTATION
+void _node_printf_implementation(void* _self);
 
 // Node life-cycle functions
 void* _node_printf_init() {
     struct _node_printf_struct* node = malloc(sizeof(struct _node_printf_struct));
 
     node->format = "Hello world !\n";
-    node->_callback = _node_printf_callback;
+    node->_implementation = _node_printf_implementation;
 
     return node;
 }
@@ -52,21 +33,40 @@ void _node_printf_dispose(void* _node) {
     free(_node);
 }
 
-void _node_printf_callback(void* _self) {
+void _node_printf_trigger(void* _node) {
+    struct _node_printf_struct* node = _node;
+
+    // for now we do not do any checks
+    node->_implementation(_node);
+}
+
+void _node_printf_implementation(void* _self) {
     struct _node_printf_struct* self = _self;
 
     printf("%s", self->format);
 }
 
-void _node_printf_trigger(void* _node) {
-    struct _node_printf_struct* node = _node;
+// Module meta information
+/* ================ meta ================ */
 
-    // for now we do not do any checks
-    node->_callback(_node);
-}
+unsigned long _node_import_symbols_count = 0;
+struct {
+    char* symbol_name;
+    char* implementation_symbol
+} _node_import_symbols[] = {
 
-_meta_export_node* _meta_export_nodes() {
-    return _export_symbols;    
-}
+};
+unsigned long _node_export_symbols_count = 1;
+_node_export_symbol _node_export_symbols[] = {
+    (_node_export_symbol) {
+        ._name = "std_printf",
 
-#endif
+        ._init = "_node_printf_init",
+        ._dispose = "_node_printf_dispose",
+        ._trigger = "_node_printf_trigger",
+
+        ._implementation = "_node_printf_implementation"
+    }
+};
+
+/* ====================================== */

@@ -27,42 +27,23 @@ static _type_info _i32_type_info = (_type_info) {
 struct _node_log_struct {
     // Ports
     _port_struct message;
-    
-    // Child nodes
 
     // Callback
-    void (*_callback)(void* self);
+    void (*_implementation)(void* self);
 };
 
 // Node life-cycle functions
 void* _node_log_init();
 void _node_log_dispose(void* _node);
-void _node_log_callback(void* _self);
 void _node_log_trigger(void* _node);
 
-// Module meta information
-// Exported nodes, etc...
-static _meta_export_node _export_symbols[] = {
-    (_meta_export_node) {
-        ._name = "std_experimental_log",
-
-        ._init = "_node_log_init",
-        ._dispose = "_node_log_dispose",
-        ._trigger = "_node_log_trigger" 
-    },
-};
-
-_meta_export_node* _meta_export_nodes();
-//_meta_export_node* _meta_export_types();
-
-#define INCLUDE_IMPLEMENTATION
-#ifdef INCLUDE_IMPLEMENTATION
+void _node_log_implementation(void* _self);
 
 // Node life-cycle functions
 void* _node_log_init() {
     struct _node_log_struct* node = malloc(sizeof(struct _node_log_struct));
 
-    node->_callback = _node_log_callback;
+    node->_implementation = _node_log_implementation;
 
     // Initialize port
     node->message = (_port_struct) {
@@ -78,7 +59,14 @@ void _node_log_dispose(void* _node) {
     free(_node);
 }
 
-void _node_log_callback(void* _self) {
+void _node_log_trigger(void* _node) {
+    struct _node_log_struct* node = _node;
+
+    // for now we do not do any checks
+    node->_implementation(_node);
+}
+
+void _node_log_implementation(void* _self) {
     struct _node_log_struct* self = _self;
 
     const char* message = self->message.value;
@@ -86,15 +74,28 @@ void _node_log_callback(void* _self) {
     DAEMON_LOG(EXPERIMENTAL, "%s", message);
 }
 
-void _node_log_trigger(void* _node) {
-    struct _node_log_struct* node = _node;
+// Module meta information
+/* ================ meta ================ */
 
-    // for now we do not do any checks
-    node->_callback(_node);
-}
+unsigned long _node_import_symbols_count = 0;
+struct {
+    char* symbol_name;
+    char* implementation_symbol
+} _node_import_symbols[] = {
 
-_meta_export_node* _meta_export_nodes() {
-    return _export_symbols;    
-}
+};
 
-#endif
+unsigned long _node_export_symbols_count = 1;
+_node_export_symbol _node_export_symbols[] = {
+    (_node_export_symbol) {
+        ._name = "std_experimental_log",
+
+        ._init = "_node_log_init",
+        ._dispose = "_node_log_dispose",
+        ._trigger = "_node_log_trigger",
+
+        ._implementation = "_node_log_implementation"
+    },
+};
+
+/* ====================================== */

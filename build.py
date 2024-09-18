@@ -48,14 +48,24 @@ def build_std_native():
     modules = [ 
         "printf", 
         "arithmetic", 
-        "experimental" 
+        "experimental",
+        "main"
     ]
+
 
     for module in modules: 
         print("    Building " + module + " module")
 
         os.system("gcc -c -Wall -fpic ./std/native/" + module + ".hn.c ./daemon/utils/*.c ./daemon/lib/*.c -I daemon/lib -I daemon/utils")
-        subprocess.call(["gcc", "-shared", "-o", module + ".so", module + ".hn.o"]) 
+        
+        # todo, fix this
+        obj = [
+            module + ".hn.o",
+            "logger.o",
+            "queue.o"
+        ]
+
+        os.system("gcc -shared -o" + module + ".so " + ' '.join(obj)) 
 
     # Copy all native modules to target folder
     for file in os.listdir("./"):

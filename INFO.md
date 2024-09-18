@@ -222,10 +222,10 @@ Node C interface
 ```c
 struct _node_name_struct {
     
-    void (*_callback)(void* self);
+    void (*_implementation)(void* self);
 };
 
-void _node_name_callback(void* _self) {
+void _node_name_implementation(void* _self) {
     struct _node_name_struct* self = _self;
 
     // Node logic
@@ -269,21 +269,21 @@ struct _data_packet {
 
 ### Meta
 ```c
-struct _meta_export_node {
+struct _node_export_symbol {
     char* _init;
     char* _dispose;
     char* _trigger;
 };
 
-static struct _meta_export_node _export_symbols[] = {
-    (struct _meta_export_node) {
+static struct _node_export_symbol _export_symbols[] = {
+    (struct _node_export_symbol) {
         ._init = "_node_name_init",
         ._dispose = "_node_name_dispose",
         ._trigger = "_node_name_trigger" 
     }
 };
 
-struct _meta_export_node* _meta_export_nodes() {
+struct _node_export_symbol* _node_export_symbols() {
     return _export_symbols;    
 }
 ```
@@ -322,3 +322,5 @@ node main = {
     l.message <- "Hello world !\n";
 }
 ```
+
+Child nodes are implementation specific so we do not include them in node structure

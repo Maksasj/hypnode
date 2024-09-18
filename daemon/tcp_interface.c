@@ -52,10 +52,10 @@ void* tcp_interface_thread_fun(void* vargp) {
 
         s_len = recv(c_socket, buffer, sizeof(buffer), 0);
 
-        DAEMON_LOG(INFO, "IP: %s Received: %d bytes, Message %s", inet_ntoa(clientaddr.sin_addr), s_len, buffer + 4);
+        DAEMON_LOG(INFO, "IP: %s Received: %d bytes, Message '%s'", inet_ntoa(clientaddr.sin_addr), s_len, buffer + 4);
 
         // Todo
-        load_module(env, "./target/std/native/printf.so");
+        load_module(env, buffer + 4); // Todo fix buffer + 4 cringe
 
         close(c_socket);
     }
