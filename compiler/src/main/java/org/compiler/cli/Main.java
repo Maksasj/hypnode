@@ -4,7 +4,7 @@ import picocli.CommandLine;
 
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "hypnode2c", mixinStandardHelpOptions = true,
+@CommandLine.Command(name = "hn2c", mixinStandardHelpOptions = true,
         description = "Converts Hypnode programs to C code", version = "0.1")
 public class Main implements Callable<Integer> {
 

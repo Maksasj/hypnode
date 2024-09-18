@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.compiler</groupId>
-    <artifactId>hypnode2c</artifactId>
+    <artifactId>hn2c</artifactId>
     <version>0.1</version>
     <packaging>jar</packaging>
 
@@ -69,7 +69,7 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <outputDirectory>bin</outputDirectory>
-                    <finalName>hypnode2c</finalName>
+                    <finalName>hn2c</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                 </configuration>
             </plugin>
@@ -96,7 +96,7 @@
                 <version>1.9.1</version>
                 <executions>
                     <execution>
-                        <id>generate-hypnode2c-scanner</id>
+                        <id>generate-hn2c-scanner</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
@@ -117,7 +117,7 @@
                 <version>1.3</version>
                 <executions>
                     <execution>
-                        <id>generate-hypnode2c-parser</id>
+                        <id>generate-hn2c-parser</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>

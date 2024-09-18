@@ -1,6 +1,10 @@
-*.class
-parser.java
-HnSymbol.java
-Yylex.java
 .idea
+
+Parser.java
+Yylex.java
+sym.java
+
 *.java~
+*.class
+
+bin
