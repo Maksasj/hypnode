@@ -1,5 +1,6 @@
 .vscode
 
+run.sh
 nhe
 *.obj
 *.o

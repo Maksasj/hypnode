@@ -45,16 +45,17 @@ void* tcp_interface_thread_fun(void* vargp) {
         memset(&buffer,0,sizeof(buffer));
 
         clientaddrlen = sizeof(struct sockaddr);
-        if ((c_socket = accept(l_socket,(struct sockaddr*)&clientaddr,&clientaddrlen)) < 0){
+        if ((c_socket = accept(l_socket, (struct sockaddr*) &clientaddr, &clientaddrlen)) < 0){
             DAEMON_LOG(ERROR, "TCP interface thread: error occured accepting connection");
             exit(1);
         }
 
-        s_len = recv(c_socket,buffer,sizeof(buffer),0);
+        s_len = recv(c_socket, buffer, sizeof(buffer), 0);
 
-        DAEMON_LOG(INFO, "IP: %s Received: %d bytes, Message %s", inet_ntoa(clientaddr.sin_addr), s_len, buffer + 4);
+        DAEMON_LOG(INFO, "IP: %s Received: %d bytes, Message '%s'", inet_ntoa(clientaddr.sin_addr), s_len, buffer + 4);
 
-        load_module(env, "./target/std/native/printf.so");
+        // Todo
+        load_module(env, buffer + 4); // Todo fix buffer + 4 cringe
 
         close(c_socket);
     }

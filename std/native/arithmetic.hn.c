@@ -1,46 +1,27 @@
 #include <stdlib.h>
 
-#include "hypnode.h"
+#include "native.h"
 
 // Node type and callback declaration
 struct _node_sum_struct {
     // Ports
     
-    // Child nodes
-    
     // Callback
-    void (*_callback)(void* self);
+    void (*_implementation)(void* self);
 };
 
 // Node life-cycle functions
 void* _node_sum_init();
-void _node_sum_callback(void* _self);
 void _node_sum_dispose(void* _node);
 void _node_sum_trigger(void* _node);
 
-// Module meta information
-// Exported nodes, etc...
-static _meta_export_node _export_symbols[] = {
-    (_meta_export_node) {
-        ._name = "std_sum",
-        
-        ._init = "_node_sum_init",
-        ._dispose = "_node_sum_dispose",
-        ._trigger = "_node_sum_trigger" 
-    }
-};
-
-_meta_export_node* _meta_export_nodes();
-//_meta_export_node* _meta_export_types();
-
-#define INCLUDE_IMPLEMENTATION
-#ifdef INCLUDE_IMPLEMENTATION
+void _node_sum_implementation(void* _self);
 
 // Node life-cycle functions
 void* _node_sum_init() {
     struct _node_sum_struct* node = malloc(sizeof(struct _node_sum_struct));
 
-    node->_callback = _node_sum_callback;
+    node->_implementation = _node_sum_implementation;
 
     return node;
 }
@@ -49,19 +30,38 @@ void _node_sum_dispose(void* _node) {
     free(_node);
 }
 
-void _node_sum_callback(void* _self) {
-    // struct _node_sum_struct* self = _self;
-}
-
 void _node_sum_trigger(void* _node) {
     struct _node_sum_struct* node = _node;
 
     // for now we do not do any checks
-    node->_callback(_node);
+    node->_implementation(_node);
 }
 
-_meta_export_node* _meta_export_nodes() {
-    return _export_symbols;
+void _node_sum_implementation(void* _self) {
+    // struct _node_sum_struct* self = _self;
 }
 
-#endif
+// Module meta information
+/* ================ meta ================ */
+
+unsigned long _node_import_symbols_count = 0;
+struct {
+    char* symbol_name;
+    char* implementation_symbol
+} _node_import_symbols[] = {
+
+};
+unsigned long _node_export_symbols_count = 1;
+_node_export_symbol _node_export_symbols[] = {
+    (_node_export_symbol) {
+        ._name = "std_sum",
+        
+        ._init = "_node_sum_init",
+        ._dispose = "_node_sum_dispose",
+        ._trigger = "_node_sum_trigger",
+
+        ._implementation = "_node_sum_implementation"
+    }
+};
+
+/* ====================================== */

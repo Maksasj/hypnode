@@ -19,7 +19,7 @@ type MyStruct = {
     b: i32
 };
 ```
-
+-с 
 Type operations
 ```lua
 type Type1 = { ... };
@@ -28,15 +28,156 @@ type Type3 = { ... };
 
 type Union = Type1 | Type2 | Type3;
  
-type Type11 = any as Type1; 
+type Type11 = any as Type1;
+ 
 ```
 
 Type C interface
 
+```lua
+type Type1 = { 
+    a: i32
+};
+
+type Type2 = { 
+    a: string
+};
+
+type Type3 = { 
+    a: bool
+    b: i32 
+};
+
+type Union = Type1 | Type2 | Type3;
+```
+
 ```c
-struct _type_info_struct {
-    const char* _type_name;
+enum _type_category {
+    Primitive;
+    Compound;
+    Union;
 }
+
+// Maybe there could be not type_name, rather _type_info
+struct _compound_type_field {
+    const char* field_name;
+    const char* type_name;
+    unsigned int offset;
+    // Todo offset
+}
+
+// Maybe there could be not type_name, rather _type_info
+struct _union_type_field {
+    const char* type_name;
+}
+
+struct _type_info {
+    const char* type_name;
+    _type_category category;
+
+    _compound_type_field* compound_fields;
+    _union_type_field* union_fields;
+}
+
+struct Type1 { 
+    signed int a;
+};
+
+_type_info _Type1_type_info = (_type_info) {
+    .type_name = "Type1",
+    .category = Compound
+
+    .compound_fields = {
+        (_compound_type_field) {
+            .field_name = "a",
+            .type_name = "i32",
+            .offset = offsetof(struct Type1, a)
+        }
+    }
+    ._union_type_field = NULL
+}
+
+struct Type2 { 
+    char* a;
+};
+
+_type_info _Type2_type_info = (_type_info) {
+    .type_name = "Type2",
+    .category = Compound,
+
+    .compound_fields = {
+        (_compound_type_field) {
+            .field_name = "a",
+            .type_name = "string",
+            .offset = offsetof(struct Type2, a)
+        }
+    },
+    .union_fields = NULL
+}
+
+struct Type3 = { 
+    unsigned char a;
+    signed int b;    
+};
+
+_type_info _Type3_type_info = (_type_info) {
+    .type_name = "Type3",
+    .category = Compound,
+
+    .compound_fields = {
+        (_compound_type_field) {
+            .field_name = "a",
+            .type_name = "bool",
+            .offset = offsetof(struct Type3, a)
+        },
+        (_compound_type_field) {
+            .field_name = "b",
+            .type_name = "i32",
+            .offset = offsetof(struct Type3, b)
+        }
+    },
+    .union_fields = NULL
+}
+
+union Union {
+    Type1 _Type1; 
+    Type2 _Type2;
+    Type3 _Type3;
+};
+
+_type_info _Type1_type_info = (_type_info) {
+    .type_name = "Union",
+    .category = Union
+
+    .compound_fields = NULL
+    .union_fields = {
+        (_union_type_field) {
+            .type_name = "Type1"
+        },
+        (_union_type_field) {
+            .type_name = "Type2"
+        },
+        (_union_type_field) {
+            .type_name = "Type3"
+        }
+    }
+}
+```
+
+```c
+struct _port_struct {
+    const char* port_name;
+
+    Type1* value;
+    _type_info value_type_info;
+};
+
+struct Packet {
+    // Addresses
+
+    void* payload;
+    _type_info payload_type_info;
+};
 ```
 
 ### Node
@@ -81,10 +222,10 @@ Node C interface
 ```c
 struct _node_name_struct {
     
-    void (*_callback)(void* self);
+    void (*_implementation)(void* self);
 };
 
-void _node_name_callback(void* _self) {
+void _node_name_implementation(void* _self) {
     struct _node_name_struct* self = _self;
 
     // Node logic
@@ -128,21 +269,21 @@ struct _data_packet {
 
 ### Meta
 ```c
-struct _meta_export_node {
+struct _node_export_symbol {
     char* _init;
     char* _dispose;
     char* _trigger;
 };
 
-static struct _meta_export_node _export_symbols[] = {
-    (struct _meta_export_node) {
+static struct _node_export_symbol _export_symbols[] = {
+    (struct _node_export_symbol) {
         ._init = "_node_name_init",
         ._dispose = "_node_name_dispose",
         ._trigger = "_node_name_trigger" 
     }
 };
 
-struct _meta_export_node* _meta_export_nodes() {
+struct _node_export_symbol* _node_export_symbols() {
     return _export_symbols;    
 }
 ```
@@ -181,3 +322,5 @@ node main = {
     l.message <- "Hello world !\n";
 }
 ```
+
+Child nodes are implementation specific so we do not include them in node structure
