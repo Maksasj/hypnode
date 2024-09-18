@@ -24,7 +24,7 @@ def create_folders():
 def build_daemon():
     print("Building daemon 🤖")
 
-    os.system("gcc daemon/lib/*.c daemon/*.c -o target/hne")  
+    os.system("gcc daemon/utils/*.c daemon/lib/*.c daemon/*.c -o target/hne")  
 
 def build_tests():
     print("Building tests 🧪")
@@ -40,7 +40,7 @@ def build_tests():
             length = len(file)
             file = file[0:length - 7]
 
-            os.system("gcc daemon/lib/*.c  tests/daemon/" + file + ".test.c -I daemon/lib -I tests -o target/tests/" + file + ".test")  
+            os.system("gcc daemon/utils/*.c daemon/lib/*.c tests/daemon/" + file + ".test.c -I daemon/lib -I tests -o target/tests/" + file + ".test")  
 
 def build_std_native():
     print("Building native std modules 📜")
@@ -54,7 +54,7 @@ def build_std_native():
     for module in modules: 
         print("    Building " + module + " module")
 
-        os.system("gcc -c -Wall -fpic ./std/native/" + module + ".hn.c ./daemon/*.c  -Idaemon/lib")
+        os.system("gcc -c -Wall -fpic ./std/native/" + module + ".hn.c ./daemon/utils/*.c ./daemon/lib/*.c -I daemon/lib -I daemon/utils")
         subprocess.call(["gcc", "-shared", "-o", module + ".so", module + ".hn.o"]) 
 
     # Copy all native modules to target folder

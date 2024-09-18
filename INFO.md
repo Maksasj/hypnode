@@ -73,7 +73,7 @@ struct _union_type_field {
 
 struct _type_info {
     const char* type_name;
-    _type_type category;
+    _type_category category;
 
     _compound_type_field* compound_fields;
     _union_type_field* union_fields;
@@ -165,7 +165,7 @@ _type_info _Type1_type_info = (_type_info) {
 ```
 
 ```c
-struct Port {
+struct _port_struct {
     const char* port_name;
 
     Type1* value;

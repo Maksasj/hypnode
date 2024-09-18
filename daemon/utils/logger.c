@@ -2,9 +2,10 @@
 
 const char* unix_log_level_color(LogLevel logLevel) {
     switch (logLevel) {
-        case INFO:       { return KGRN; }
-        case WARNING:    { return KYEL; }
-        case ERROR:      { return KRED; }
+        case INFO:          { return KGRN; }
+        case WARNING:       { return KYEL; }
+        case ERROR:         { return KRED; }
+        case EXPERIMENTAL:  { return KCYN; }
     }
 
     return NULL;
@@ -12,9 +13,10 @@ const char* unix_log_level_color(LogLevel logLevel) {
 
 const char* stringify_log_level(LogLevel logLevel) {
     switch (logLevel) {
-        case INFO:       { return "INF"; }
-        case WARNING:    { return "WAR"; }
-        case ERROR:      { return "ERR"; }
+        case INFO:          { return "INF"; }
+        case WARNING:       { return "WAR"; }
+        case ERROR:         { return "ERR"; }
+        case EXPERIMENTAL:  { return "EXP"; }
     }
 
     return NULL;

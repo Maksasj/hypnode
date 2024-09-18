@@ -2,11 +2,12 @@
 #include <stdio.h>
 
 #include "native.h"
+#include "logger.h"
 
 // Node type and callback declaration
 struct _node_log_struct {
     // Ports
-    Port message;
+    _port_struct message;
     
     // Child nodes
 
@@ -52,9 +53,11 @@ void _node_log_dispose(void* _node) {
 }
 
 void _node_log_callback(void* _self) {
-    // struct _node_log_struct* self = _self;
+    struct _node_log_struct* self = _self;
 
-    printf("Log callback !\n");
+    const char* message = self->message.value;
+
+    DAEMON_LOG(EXPERIMENTAL, "%s", message);
 }
 
 void _node_log_trigger(void* _node) {

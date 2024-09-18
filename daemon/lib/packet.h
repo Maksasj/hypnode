@@ -5,6 +5,6 @@ typedef struct {
     // Src Address
     // Dst Address
     // Payload Address
-} Packet;
+} _packet_struct;
 
 #endif

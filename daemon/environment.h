@@ -9,7 +9,7 @@
 #include "lib/node.h"
 #include "lib/queue.h"
 
-#include "logger.h"
+#include "utils/logger.h"
 
 typedef struct {
     void* node;

@@ -1,7 +1,7 @@
 #ifndef NODE_INTERFACE
 #define NODE_INTERFACE
 
-#include "logger.h"
+#include "utils/logger.h"
 #include "environment.h"
 #include "lib/packet.h"
 

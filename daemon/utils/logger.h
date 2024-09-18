@@ -19,7 +19,8 @@
 typedef enum LogLevel {
     INFO,
     WARNING,
-    ERROR
+    ERROR,
+    EXPERIMENTAL
 } LogLevel;
 
 const char* unix_log_level_color(LogLevel logLevel);
