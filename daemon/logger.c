@@ -43,6 +43,7 @@ void daemon_log(LogLevel logLevel, const char *format, ...) {
     vprintf(format, args);
 
     printf("\n");
+    fflush(stdout);
 
     va_end(args);
 }
