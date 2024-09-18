@@ -1,6 +1,6 @@
 *.class
 parser.java
-sym.java
+HnSymbol.java
 Yylex.java
 .idea
-.java~
+*.java~
