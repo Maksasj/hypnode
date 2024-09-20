@@ -5,11 +5,16 @@
 <type_implementation> ::= "{" ( <field_definition> )* "}" | <type>
 <field_definition> ::= <field_name> ":" <type_implementation> ";"
 
-<node_definition> ::= <node_declaration> "=" <node_implementation>
-<node_declaration> ::= "node" <node_name>
-<node_implementation> ::= "{" ( <statement_definition> )* "}"
-<statement_definition> ::= <port_definition> | <node_instance> | <node_connection>
-<port_definition> ::= ("input" | "output") <field_name> ":" <type_implementation> ";"
+<node_definition> ::= <node_attribute>* <node_declaration> "=" <node_implementation>
+<node_declaration> ::= "node" <node_name> "(" <port_definition>* ")" "=>" "(" <port_definition>* ")"
+<port_definition> ::=  <port_attribute>* <field_name> ":" <type_implementation> ","
+
+<port_attribute> ::= "@optional" | "@required" | "@trigger" <node_name>
+<node_attribute> ::= "@export" <string_literal>
+
+<node_implementation> ::= "{" ( <statement_definition> )* "}" | "@import" <string_literal>
+<statement_definition> ::= <node_instance> | <node_connection>
+
 <node_instance> ::= "let" <field_name> ":" <node_name> ";"
 
 <node_connection> ::= <field_access> "<-" <field_access> ";"
@@ -18,12 +23,11 @@
 <type> ::= <primitive_type> | <type_name>
 <primitive_type> ::= "i64" | "i32" | "i16" | "i8" | "u64" | "u32" | "u16" | "u8" | "string" | "f32" | "f64" | "bool"
 
-<type_name> ::= <uppercase_letter> <letter_or_digit>*
-<field_name> ::= <lowercase_letter> <letter_or_digit>*
-<node_name> ::= <letter> <letter>*
+<type_name> ::= ...
+<field_name> ::= ...
+<node_name> ::= ...
 
-<letter_or_digit> ::= <letter> | <digit>
-<letter> ::= <lowercase_letter> | <uppercase_letter>
-<lowercase_letter> ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" | "u" | "v" | "w" | "x" | "y" | "z"
-<uppercase_letter> ::= "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" | "U" | "V" | "W" | "X" | "Y" | "Z"
-<digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+<string_literal> = """ <letter>* """
+<number_literal> = ...
+<character_literal> = ...
+<bool_literal> = true | false
