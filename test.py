@@ -13,8 +13,8 @@ def clean_tests():
         if file.endswith(".test.res.txt"):
             os.remove("./target/tests/" + file)
 
-def run_tests():
-    print("Running tests")
+def run_c_tests():
+    print("Running C tests")
 
     total_success = 0
     total_failed = 0
@@ -58,13 +58,21 @@ def run_tests():
                 print(f"        ❌ Test failed {success_count}/{total_count}")
             else:
                 print(f"        ✅ Test passed {success_count}/{total_count}")
-
+    
     return (total_success, total_failed)
+
+def run_mvn_tests():
+    print("Running Maven tests")
+
+    os.system("mvn -f ./compiler/pom.xml test")
+
 
 build_everything()
 clean_tests()
 
-(total_success, total_failed) = run_tests()
+(total_success, total_failed) = run_c_tests()
+
+run_mvn_tests()
 
 if total_failed != 0:
     sys.exit('❌ Tests failed')

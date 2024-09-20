@@ -1,3 +1,5 @@
+package gen;
+
 import java_cup.runtime.*;
 
 terminal 			PLUS, MINUS, OBRACKET, CBRACKET, EQUAL;

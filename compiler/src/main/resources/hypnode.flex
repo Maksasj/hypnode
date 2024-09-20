@@ -1,7 +1,10 @@
+package gen;
+
 import java_cup.runtime.*;
 
 %%
 
+%class Scanner
 %unicode
 %cup
 %line
