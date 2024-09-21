@@ -1,33 +1,72 @@
 package gen;
 
 import java_cup.runtime.*;
+import main.java.org.hypnode.ast.*;
+import java.util.*;
 
-terminal 			PLUS, MINUS, OBRACKET, CBRACKET, EQUAL;
-terminal Integer 	NUMBER;
+// Identifier and primitive types
+terminal String             			IDENTIFIER, PRIMITIVE_TYPE;
 
-non terminal 				expr_list;
-non terminal Integer 		expr, e, t;
+// Literals
+terminal String             			STRING_LITERAL;
+terminal String             			NUMBER_LITERAL;
+terminal String             			CHARACTER_LITERAL;
+terminal Boolean            			BOOLEAN_LITERAL;
 
-start with expr_list;
+// 'Assignment' operators
+terminal								LEFT_ARROW, BOLD_RIGHT_ARROW;
 
+// Punctuation
+terminal								SEMI, COLON, COMMA, DOT, EQUAL, L_PARENTHESIS, R_PARENTHESIS, L_CURLY_PARENTHESIS, R_CURLY_PARENTHESIS;
 
-expr_list ::= expr_list expr | expr;
+// Keywords
+terminal								LET, TYPE, NODE;
 
-expr ::= e:e0 EQUAL {: System.out.println("PARSER: expression recognized" + e0.toString()); :};
+// Attribute keywords
+terminal String							OPTIONAL, REQUIRED, TRIGGER, EXPORT, IMPORT;
 
-e ::= 	e:e0 PLUS t:e1
-		{: RESULT = new Integer(e0.intValue() + e1.intValue());  :}
-		|
-	    e:e0 MINUS t:e1
-		{: RESULT = new Integer(e0.intValue() - e1.intValue());  :}
-		|
-	    t:e0
-		{: RESULT = e0;  :}
-;
+// Non terminals
+non terminal Program 					program;
+non terminal List<IDefinition>			definition_list;
 
-t ::= OBRACKET e:e0 CBRACKET 
-	{: RESULT = e0;  :}
+non terminal TypeDefinition				type_definition;
+non terminal String						type_declaration;
+non terminal ITypeImplementation 		type_implementation;
+non terminal List<FieldDefinition>		field_definition_list;
+non terminal FieldDefinition			field_definition;
+
+non terminal NodeDefinition				node_definition;
+non terminal NodeDeclaration			node_declaration;
+non terminal List<INodeAttribute>		node_attribute_list;
+non terminal List<PortDefinition> 		port_definition_list;
+non terminal PortDefinition 			port_definition;
+non terminal IPortAttribute 			port_attribute;
+non terminal List<IPortAttribute>		port_attribute_list;
+non terminal INodeAttribute				node_attribute;
+non terminal INodeImplementation		node_implementation;
+
+non terminal List<IStatement>			statement_definition_list;
+non terminal IStatement					statement_definition;
+non terminal NodeInstanceStatement		node_instance;
+non terminal NodeConnectionStatement	node_connection;
+
+non terminal FieldAccess				field_access;
+non terminal List<String>				identifier_accesss_list;
+
+non terminal String						type;
+
+start with program;
+
+program ::= definition_list;
+
+definition_list ::= definition_list:list node_definition:def
+	{: list.add(def); RESULT = list; :} 
+	| 
+	definition_list:list type_definition:def
+	{: list.add(def); RESULT = list; :} 
 	|
-	NUMBER:e0
-	{: RESULT = e0; :}
+	{: RESULT = new ArrayList<IDefinition>(); :}
 ;
+
+definition_list ::= STRING_LITERAL; // Todo
+type_definition ::= NUMBER_LITERAL; // Todo
