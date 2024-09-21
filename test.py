@@ -64,7 +64,7 @@ def run_c_tests():
 def run_mvn_tests():
     print("Running Maven tests")
 
-    os.system("mvn -f ./compiler/pom.xml test")
+    os.system("mvn -f ./hn2c/pom.xml test")
 
 
 build_everything()

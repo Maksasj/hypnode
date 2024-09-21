@@ -1,4 +1,4 @@
-package org.compiler.cli;
+package org.hn2c.cli;
 
 import picocli.CommandLine;
 
