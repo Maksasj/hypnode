@@ -1,4 +1,4 @@
-package main.java.org.hypnode.ast;
+package org.hypnode.ast;
 
 public interface INodeAttribute {
 

@@ -1,4 +1,4 @@
-package gen;
+package org.hypnode;
 
 import java.io.IOException;
 import java.io.StringReader;
