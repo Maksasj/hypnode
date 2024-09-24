@@ -14,18 +14,24 @@ import java_cup.runtime.*;
   private Symbol symbol(int type) {
     return new Symbol(type, yyline + 1, yycolumn + 1);
   }
+
   private Symbol symbol(int type, Object value) {
     return new Symbol(type, yyline + 1, yycolumn + 1, value);
   }
 %}
 
-nl		=  \n|\r|\r\n
+primitive_types = (i8|i16|i32|i64|u8|u16|u32|u64|f32|f64|string|bool)
+whitespace = [ \t\n\r\n]+
 
 %%
 
-// Todo
+<YYINITIAL> {
+    // ignore whitespace
+    {whitespace} {}
 
-{nl}|" " 	{;}
+    // type keywords
+    {primitive_types} { return symbol(sym.PRIMITIVE_TYPE, yytext()); }
+
+}
 
 .		{System.out.println("Error:" + yytext());}
-
