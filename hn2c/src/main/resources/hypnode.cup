@@ -5,7 +5,7 @@ import org.hypnode.ast.*;
 import java.util.*;
 
 // Identifier and primitive types
-terminal String             			IDENTIFIER, PRIMITIVE_TYPE;
+terminal String             			IDENTIFIER;
 
 // Literals
 terminal String             			STRING_LITERAL;
@@ -24,6 +24,9 @@ terminal								LET, TYPE, NODE;
 
 // Attribute keywords
 terminal String							OPTIONAL, REQUIRED, TRIGGER, EXPORT, IMPORT;
+
+// Comments
+terminal String                         SINGLE_LINE_COMMENT;
 
 // Non terminals
 non terminal Program 					program;

@@ -8,3 +8,5 @@ nhe
 *.out
 target
 *.test.txt
+
+.idea
