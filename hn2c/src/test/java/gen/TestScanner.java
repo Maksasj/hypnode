@@ -1,7 +1,15 @@
 package gen;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Objects;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
@@ -10,8 +18,37 @@ import java_cup.runtime.Symbol;
 
 public class TestScanner {
     @Test
-    public void main() {
-        // Run tests from scanner_tests directory
+    public void main() throws IOException {
+        URL url = this.getClass().getResource("/scanner_tests");
+        File testFolder = new File(url.getPath());
+        String[] tests = Arrays.stream(Objects.requireNonNull(testFolder.list())).sorted().toArray(String[]::new);
+
+        for (String test : tests) {
+            Path path = Paths.get(testFolder.getPath(), test);
+            File inputFile = path.resolve("input.txt").toFile();
+            File outputFile = path.resolve("output.txt").toFile();
+
+            FileReader reader = new FileReader(inputFile);
+            Scanner scanner = new gen.Scanner(reader);
+
+            FileWriter writer = new FileWriter(outputFile);
+
+            try {
+                while (true) {
+                    if (scanner.yyatEOF()) {
+                        break;
+                    }
+                    Symbol s = scanner.next_token();
+                    writer.append(sym.terminalNames[s.sym]);
+                }
+            } catch (IOException e) {
+                // e.printStackTrace();
+                // noop
+            } finally {
+                writer.close();
+            }
+        }
+
     }
 
     @Test
@@ -32,11 +69,11 @@ public class TestScanner {
 
     @Test
     public void single_line_comment() throws IOException {
-        StringReader input = new StringReader("  // Hello world!\n");
+        StringReader input = new StringReader("  # Hello world!\n");
         Scanner scanner = new gen.Scanner(input);
 
         Symbol s = scanner.next_token();
-        Assertions.assertEquals("// Hello world!", s.value);
+        Assertions.assertEquals("# Hello world!", s.value);
         Assertions.assertEquals(sym.SINGLE_LINE_COMMENT, s.sym);
 
         try {
@@ -131,7 +168,7 @@ public class TestScanner {
         StringReader input = new StringReader("1 2 3 4 5 6 7.0 8 9 10");
         Scanner scanner = new gen.Scanner(input);
 
-        for(int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 10; ++i) {
             Symbol s = scanner.next_token();
             assert s.sym == sym.NUMBER_LITERAL;
         }
@@ -197,7 +234,7 @@ public class TestScanner {
         StringReader input = new StringReader("true false true true false false");
         Scanner scanner = new gen.Scanner(input);
 
-        for(int i = 0; i < 6; ++i) {
+        for (int i = 0; i < 6; ++i) {
             Symbol s = scanner.next_token();
             Assertions.assertEquals(sym.BOOLEAN_LITERAL, s.sym);
         }
@@ -210,13 +247,12 @@ public class TestScanner {
         }
     }
 
-
     @Test
     public void tokenize_left_arrow() throws IOException {
         StringReader input = new StringReader("<- <- <-");
         Scanner scanner = new gen.Scanner(input);
 
-        for(int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i) {
             Symbol s = scanner.next_token();
             Assertions.assertEquals(sym.LEFT_ARROW, s.sym);
         }
@@ -234,7 +270,7 @@ public class TestScanner {
         StringReader input = new StringReader("=> => => =>");
         Scanner scanner = new gen.Scanner(input);
 
-        for(int i = 0; i < 4; ++i) {
+        for (int i = 0; i < 4; ++i) {
             Symbol s = scanner.next_token();
             Assertions.assertEquals(sym.BOLD_RIGHT_ARROW, s.sym);
         }
@@ -252,9 +288,10 @@ public class TestScanner {
         StringReader input = new StringReader("; : , . = ( ) { }");
         Scanner scanner = new gen.Scanner(input);
 
-        int expect[] = { sym.SEMI, sym.COLON, sym.COMMA, sym.DOT, sym.EQUAL, sym.L_PARENTHESIS, sym.R_PARENTHESIS, sym.L_CURLY_PARENTHESIS, sym.R_CURLY_PARENTHESIS };
+        int expect[] = { sym.SEMI, sym.COLON, sym.COMMA, sym.DOT, sym.EQUAL, sym.L_PARENTHESIS, sym.R_PARENTHESIS,
+                sym.L_CURLY_PARENTHESIS, sym.R_CURLY_PARENTHESIS };
 
-        for(int i = 0; i < 9; ++i) {
+        for (int i = 0; i < 9; ++i) {
             Symbol s = scanner.next_token();
             Assertions.assertEquals(expect[i], s.sym);
         }
@@ -267,7 +304,6 @@ public class TestScanner {
         }
     }
 
-
     @Test
     public void tokenize_keywords() throws IOException {
         StringReader input = new StringReader("let type node");
@@ -275,7 +311,7 @@ public class TestScanner {
 
         int expect[] = { sym.LET, sym.TYPE, sym.NODE };
 
-        for(int i = 0; i < 3; ++i) {
+        for (int i = 0; i < 3; ++i) {
             Symbol s = scanner.next_token();
             Assertions.assertEquals(expect[i], s.sym);
         }
@@ -295,7 +331,7 @@ public class TestScanner {
 
         int expect[] = { sym.OPTIONAL, sym.REQUIRED, sym.TRIGGER, sym.EXPORT, sym.IMPORT };
 
-        for(int i = 0; i < 5; ++i) {
+        for (int i = 0; i < 5; ++i) {
             Symbol s = scanner.next_token();
             Assertions.assertEquals(expect[i], s.sym);
         }

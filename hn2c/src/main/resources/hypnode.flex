@@ -36,7 +36,7 @@ whitespace = [ \t\n\r\n]+
 
       \".*\" { return symbol(sym.STRING_LITERAL, yytext()); }
 
-      \/\/.* { return symbol(sym.SINGLE_LINE_COMMENT, yytext()); }
+      #.* { return symbol(sym.SINGLE_LINE_COMMENT, yytext()); }
 
       \<\- { return symbol(sym.LEFT_ARROW, yytext()); }
 
