@@ -1,0 +1,1 @@
+[{"symbol":"SINGLE_LINE_COMMENT","value":"# Hello world"},{"symbol":"EOF"}]

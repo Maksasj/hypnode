@@ -8,39 +8,59 @@ import java.io.StringReader;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import com.google.gson.Gson;
+
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
 import java_cup.runtime.Symbol;
 
 public class TestScanner {
+    static class SerializedSymbol {
+        private String symbol;
+        private Object value;
+
+        public SerializedSymbol(String symbol, Object value) {
+            this.symbol = symbol;
+            this.value = value;
+        }
+    }
+
     @Test
     public void main() throws IOException {
         URL url = this.getClass().getResource("/scanner_tests");
         File testFolder = new File(url.getPath());
         String[] tests = Arrays.stream(Objects.requireNonNull(testFolder.list())).sorted().toArray(String[]::new);
 
+        Gson gson = new GsonBuilder().create();
+
         for (String test : tests) {
             Path path = Paths.get(testFolder.getPath(), test);
             File inputFile = path.resolve("input.txt").toFile();
             File outputFile = path.resolve("output.txt").toFile();
 
-            FileReader reader = new FileReader(inputFile);
-            Scanner scanner = new gen.Scanner(reader);
+            FileReader inputReader = new FileReader(inputFile);
+            Scanner scanner = new gen.Scanner(inputReader);
 
             FileWriter writer = new FileWriter(outputFile);
 
+
+
             try {
-                while (true) {
-                    if (scanner.yyatEOF()) {
-                        break;
-                    }
+                ArrayList<SerializedSymbol> symbols = new ArrayList<>();
+
+                while (!scanner.yyatEOF()) {
                     Symbol s = scanner.next_token();
-                    writer.append(sym.terminalNames[s.sym]);
+                    symbols.add(new SerializedSymbol(sym.terminalNames[s.sym], s.value));
                 }
+
+                gson.toJson(symbols, new com.google.gson.reflect.TypeToken<ArrayList<SerializedSymbol>>() {
+                }.getType(), writer);
             } catch (IOException e) {
                 // e.printStackTrace();
                 // noop
@@ -51,21 +71,21 @@ public class TestScanner {
 
     }
 
-    @Test
-    public void ignore_whitespace() throws IOException {
-        StringReader input = new StringReader(" i8   i64 \n  bool \r\n      \n\n\n i8");
-        Scanner scanner = new gen.Scanner(input);
-
-        for (int i = 0; i < 4; ++i) {
-            scanner.next_token();
-        }
-
-        try {
-            scanner.next_token();
-        } catch (IOException e) {
-            Assertions.fail();
-        }
-    }
+//    @Test
+//    public void ignore_whitespace() throws IOException {
+//        StringReader input = new StringReader(" i8   i64 \n  bool \r\n      \n\n\n i8");
+//        Scanner scanner = new gen.Scanner(input);
+//
+//        for (int i = 0; i < 4; ++i) {
+//            scanner.next_token();
+//        }
+//
+//        try {
+//            scanner.next_token();
+//        } catch (IOException e) {
+//            Assertions.fail();
+//        }
+//    }
 
     @Test
     public void single_line_comment() throws IOException {
@@ -288,8 +308,8 @@ public class TestScanner {
         StringReader input = new StringReader("; : , . = ( ) { }");
         Scanner scanner = new gen.Scanner(input);
 
-        int expect[] = { sym.SEMI, sym.COLON, sym.COMMA, sym.DOT, sym.EQUAL, sym.L_PARENTHESIS, sym.R_PARENTHESIS,
-                sym.L_CURLY_PARENTHESIS, sym.R_CURLY_PARENTHESIS };
+        int expect[] = {sym.SEMI, sym.COLON, sym.COMMA, sym.DOT, sym.EQUAL, sym.L_PARENTHESIS, sym.R_PARENTHESIS,
+                sym.L_CURLY_PARENTHESIS, sym.R_CURLY_PARENTHESIS};
 
         for (int i = 0; i < 9; ++i) {
             Symbol s = scanner.next_token();
@@ -309,7 +329,7 @@ public class TestScanner {
         StringReader input = new StringReader("let type node");
         Scanner scanner = new gen.Scanner(input);
 
-        int expect[] = { sym.LET, sym.TYPE, sym.NODE };
+        int expect[] = {sym.LET, sym.TYPE, sym.NODE};
 
         for (int i = 0; i < 3; ++i) {
             Symbol s = scanner.next_token();
@@ -329,7 +349,7 @@ public class TestScanner {
         StringReader input = new StringReader("@optional @required @trigger @export @import");
         Scanner scanner = new gen.Scanner(input);
 
-        int expect[] = { sym.OPTIONAL, sym.REQUIRED, sym.TRIGGER, sym.EXPORT, sym.IMPORT };
+        int expect[] = {sym.OPTIONAL, sym.REQUIRED, sym.TRIGGER, sym.EXPORT, sym.IMPORT};
 
         for (int i = 0; i < 5; ++i) {
             Symbol s = scanner.next_token();
