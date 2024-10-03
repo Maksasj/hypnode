@@ -11,6 +11,8 @@ import java_cup.runtime.*;
 %column
 
 %{
+    StringBuffer string = new StringBuffer();
+
     private Symbol symbol(int type) {
     return new Symbol(type, yyline + 1, yycolumn + 1);
     }
@@ -23,6 +25,8 @@ import java_cup.runtime.*;
 WHITESPACE = [ \t\n\r\n]+
 COMMENT = #[^\r\n]*(\r|\n|\r\n)?
 IDENTIFIER = [A-Za-z_$][\w]*
+
+%state DQ_STRING_LITERAL
 
 %%
 
@@ -57,8 +61,8 @@ IDENTIFIER = [A-Za-z_$][\w]*
     // literals
     (true|false) { return symbol(sym.BOOLEAN_LITERAL, yytext()); }
     '.' { return symbol(sym.CHARACTER_LITERAL, yytext()); }
-    \-?[0-9]+(\.[0-9]+)? { return symbol(sym.NUMBER_LITERAL, yytext()); }
-    \".*\" { return symbol(sym.STRING_LITERAL, yytext()); }
+    [+-]?(0|[1-9][0-9]*)(\.[0-9]+)? { return symbol(sym.NUMBER_LITERAL, yytext()); }
+    \" { string.setLength(0); yybegin(DQ_STRING_LITERAL); }
 
     {IDENTIFIER} { return symbol(sym.IDENTIFIER, yytext()); }
     {COMMENT} { return symbol(sym.SINGLE_LINE_COMMENT, yytext()); }
@@ -66,4 +70,17 @@ IDENTIFIER = [A-Za-z_$][\w]*
     {WHITESPACE} {}
 }
 
-.  { System.out.println("Error:" + yytext()); }
+// double quotes string literal
+<DQ_STRING_LITERAL> {
+    [^\"\\]+  { string.append(yytext()); }
+    \\\"      { string.append('"'); }
+    \\\\      { string.append('\\'); }
+    \\n       { string.append('\n'); }
+    \\r       { string.append('\r'); }
+    \\t       { string.append('\t'); }
+    \"        { yybegin(YYINITIAL); return symbol(sym.STRING_LITERAL, string.toString()); }
+    \n|\r     { System.err.println("Unterminated string literal"); }
+    \\.       { System.err.println("Invalid escape sequence \"" + yytext() + "\""); }
+}
+
+.  { System.out.println("Error: " + yytext()); }
