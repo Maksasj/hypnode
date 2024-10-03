@@ -58,9 +58,9 @@ public class TestScanner {
             }
 
             // Write to output.json
-//            FileWriter writer = new FileWriter(outputFile);
-//            gson.toJson(received, PROGRAM_TYPE, writer);
-//            writer.close();
+            // FileWriter writer = new FileWriter(outputFile);
+            // gson.toJson(received, PROGRAM_TYPE, writer);
+            // writer.close();
 
             // Read and check the output.json
             JsonReader reader = new JsonReader(new FileReader(outputFile));
