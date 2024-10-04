@@ -1,0 +1,45 @@
+# There is several primitive types in hypnode
+
+# Signed numerical types: 
+# - i8 
+# - i16 
+# - i32 
+# - i64
+# Unsigned numerical types: 
+# - u8 
+# - u16 
+# - u32 
+# - u64
+# Floating point: 
+# - f32 
+# - f64
+# Other: 
+# - string 
+# - bool
+
+# Special types:
+# - any
+
+# Compound types
+type MyStruct = {
+    a: i32
+    b: i32
+};
+
+type A = {
+    field: string
+};
+
+type B = {
+    value: i32
+};
+
+type AB = A | B;
+
+type C = {
+    value: bool
+    var: AB
+}
+
+# Type defines
+type real = f64;
