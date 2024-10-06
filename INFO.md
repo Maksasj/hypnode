@@ -311,9 +311,10 @@ basically ...
 With @import attribute we can defined node as usuall. But implementation callback should be provided by daemon.
 
 ```lua
-node anlog (message: string) => () = { ... }
+node nonempty (c: string) => (b: bool) = { ... }
 
 # -- Since this implementation is imported from native C code, we still need to specify node interface, to be able to compile this module
+    
 node mylog (message: string) => () = @import "std_experimental_log"
 
 @export "entrypoint"

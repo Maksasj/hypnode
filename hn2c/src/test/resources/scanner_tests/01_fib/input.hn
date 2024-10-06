@@ -1,6 +1,6 @@
 # Mazgo implitacija importuojama iš standartinės bibliotekos
 node sum (
-    @required a: i32, 
+    @required a: i32,
     @required b: i32
 ) => (c: i32) = @import("std_arithmetic_sum")
 

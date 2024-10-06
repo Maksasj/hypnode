@@ -1,0 +1,75 @@
+package gen;
+
+import java_cup.runtime.*;
+import org.hypnode.ast.*;
+import java.util.*;
+
+// Identifier and primitive types
+terminal String             			IDENTIFIER;
+
+// Literals
+terminal String             			STRING_LITERAL;
+terminal String             			NUMBER_LITERAL;
+terminal String             			CHARACTER_LITERAL;
+terminal Boolean            			BOOLEAN_LITERAL;
+
+// Operators
+terminal								EQUAL, LEFT_ARROW, BOLD_RIGHT_ARROW, PIPE;
+
+// Punctuation
+terminal								SEMI, COLON, COMMA, DOT, L_PAREN, R_PAREN, L_CURLY_PAREN, R_CURLY_PAREN, L_SQUARE_PAREN, R_SQUARE_PAREN;
+
+// Keywords
+terminal								LET, TYPE, NODE;
+
+// Attribute keywords
+terminal String							OPTIONAL, REQUIRED, TRIGGER, EXPORT, IMPORT;
+
+// Comments
+terminal String                         SINGLE_LINE_COMMENT;
+
+// Non terminals
+non terminal Program 					program;
+non terminal List<IDefinition>			definition_list;
+
+non terminal TypeDefinition				type_definition;
+non terminal String						type_declaration;
+non terminal ITypeImplementation 		type_implementation;
+non terminal List<FieldDefinition>		field_definition_list;
+non terminal FieldDefinition			field_definition;
+
+non terminal NodeDefinition				node_definition;
+non terminal NodeDeclaration			node_declaration;
+non terminal List<INodeAttribute>		node_attribute_list;
+non terminal List<PortDefinition> 		port_definition_list;
+non terminal PortDefinition 			port_definition;
+non terminal IPortAttribute 			port_attribute;
+non terminal List<IPortAttribute>		port_attribute_list;
+non terminal INodeAttribute				node_attribute;
+non terminal INodeImplementation		node_implementation;
+
+non terminal List<IStatement>			statement_definition_list;
+non terminal IStatement					statement_definition;
+non terminal NodeInstanceStatement		node_instance;
+non terminal NodeConnectionStatement	node_connection;
+
+non terminal FieldAccess				field_access;
+non terminal List<String>				identifier_accesss_list;
+
+non terminal String						type;
+
+start with program;
+
+program ::= definition_list;
+
+definition_list ::= definition_list:list node_definition:def
+	{: list.add(def); RESULT = list; :} 
+	| 
+	definition_list:list type_definition:def
+	{: list.add(def); RESULT = list; :} 
+	|
+	{: RESULT = new ArrayList<IDefinition>(); :}
+;
+
+definition_list ::= STRING_LITERAL; // Todo
+type_definition ::= NUMBER_LITERAL; // Todo
