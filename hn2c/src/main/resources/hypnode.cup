@@ -13,11 +13,11 @@ terminal String             			NUMBER_LITERAL;
 terminal String             			CHARACTER_LITERAL;
 terminal Boolean            			BOOLEAN_LITERAL;
 
-// 'Assignment' operators
-terminal								LEFT_ARROW, BOLD_RIGHT_ARROW;
+// Operators
+terminal								EQUAL, LEFT_ARROW, BOLD_RIGHT_ARROW, PIPE;
 
 // Punctuation
-terminal								SEMI, COLON, COMMA, DOT, EQUAL, L_PAREN, R_PAREN, L_CURLY_PAREN, R_CURLY_PAREN, L_SQUARE_PAREN, R_SQUARE_PAREN;
+terminal								SEMI, COLON, COMMA, DOT, L_PAREN, R_PAREN, L_CURLY_PAREN, R_CURLY_PAREN, L_SQUARE_PAREN, R_SQUARE_PAREN;
 
 // Keywords
 terminal								LET, TYPE, NODE;

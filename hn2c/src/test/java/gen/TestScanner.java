@@ -49,7 +49,6 @@ public class TestScanner {
             FileReader inputReader = new FileReader(inputFile);
             Scanner scanner = new gen.Scanner(inputReader);
 
-
             ArrayList<SerializedSymbol> received = new ArrayList<>();
 
             while (!scanner.yyatEOF()) {

@@ -57,6 +57,7 @@ IDENTIFIER = [A-Za-z_$][\w]*
     \= { return symbol(sym.EQUAL, yytext()); }
     \<\- { return symbol(sym.LEFT_ARROW, yytext()); }
     \=\> { return symbol(sym.BOLD_RIGHT_ARROW, yytext()); }
+    "\|" { return symbol(sym.PIPE, yytext()); }
 
     // literals
     (true|false) { return symbol(sym.BOOLEAN_LITERAL, yytext()); }
