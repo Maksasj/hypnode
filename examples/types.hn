@@ -22,24 +22,41 @@
 
 # Compound types
 type MyStruct = {
-    a: i32
-    b: i32
+    a: i32;
+    b: i32;
 };
 
 type A = {
-    field: string
+    field: string;
 };
 
 type B = {
-    value: i32
+    value: i32;
 };
 
 type AB = A | B;
 
 type C = {
-    value: bool
-    var: AB
+    value: bool;
+    var: AB;
 }
 
 # Type defines
-type real = f64;
+type Real = f64;
+
+type Array = any[];
+
+type Byte = u8;
+
+type ByteArray = Byte[]; 
+
+type Matrix = Real[][];
+
+type Model = {
+    a: Matrix[];
+    name: string;
+};
+
+type CoolUnion = ByteArray[] | string | any;
+
+type Pointer = u64;
