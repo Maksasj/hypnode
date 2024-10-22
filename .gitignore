@@ -6,6 +6,7 @@ nhe
 *.o
 *.so
 *.out
-cli
 target
 *.test.txt
+
+.idea

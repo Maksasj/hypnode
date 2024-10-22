@@ -1,0 +1,15 @@
+[
+  { "symbol": "NUMBER_LITERAL", "value": "0" },
+  { "symbol": "NUMBER_LITERAL", "value": "-0" },
+  { "symbol": "NUMBER_LITERAL", "value": "+0" },
+  { "symbol": "NUMBER_LITERAL", "value": "-0.1" },
+  { "symbol": "NUMBER_LITERAL", "value": "+0.1" },
+  { "symbol": "NUMBER_LITERAL", "value": "1" },
+  { "symbol": "NUMBER_LITERAL", "value": "-1" },
+  { "symbol": "NUMBER_LITERAL", "value": "1111111111111111111111111.123123" },
+  {
+    "symbol": "NUMBER_LITERAL",
+    "value": "99999999999999999999999999999999999999999999999999999999999999999999.99999999999999999999999999999999999999999999999999"
+  },
+  { "symbol": "EOF" }
+]
