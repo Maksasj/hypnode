@@ -2,6 +2,10 @@ package org.hypnode;
 
 import java.io.Reader;
 
+import org.hypnode.ast.Program;
+
+import gen.Parser;
+import gen.Scanner;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.Symbol;
 import java_cup.runtime.SymbolFactory;
@@ -12,19 +16,16 @@ public class Generator {
     }
 
     public String generate(Reader in) {
-        // Todo
-        /*
         Scanner scanner = new gen.Scanner(in);
-        Parser parser = new gen.Parser(scanner);
+        Parser parser = new Parser(scanner);
 
         try {
             Symbol s = parser.parse();
             Program program = (Program) s.value;
             
-            String result = program.visit();
-            return result;
+            // String result = program.visit();
+            // return result;
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         

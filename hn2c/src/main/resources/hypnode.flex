@@ -4,6 +4,7 @@ import java_cup.runtime.*;
 
 %%
 
+%public
 %class Scanner
 %unicode
 %cup

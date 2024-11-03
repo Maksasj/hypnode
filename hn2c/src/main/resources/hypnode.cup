@@ -35,6 +35,7 @@ non terminal List<IDefinition>			definition_list;
 non terminal TypeDefinition				type_definition;
 non terminal String						type_declaration;
 non terminal ITypeImplementation 		type_implementation;
+non terminal List<ITypeImplementation>  union_type_implementation;
 non terminal List<FieldDefinition>		field_definition_list;
 non terminal FieldDefinition			field_definition;
 
@@ -60,16 +61,102 @@ non terminal String						type;
 
 start with program;
 
-program ::= definition_list;
+program ::= 
+	definition_list
+	;
 
-definition_list ::= definition_list:list node_definition:def
-	{: list.add(def); RESULT = list; :} 
-	| 
+definition_list ::= 
 	definition_list:list type_definition:def
+	{: list.add(def); RESULT = list; :} 
+	|
+	definition_list:list node_definition:def
 	{: list.add(def); RESULT = list; :} 
 	|
 	{: RESULT = new ArrayList<IDefinition>(); :}
 ;
 
-definition_list ::= STRING_LITERAL; // Todo
-type_definition ::= NUMBER_LITERAL; // Todo
+type_definition ::= type_declaration:decl EQUAL type_implementation:impl SEMI;
+type_declaration ::= TYPE IDENTIFIER;
+
+type_implementation ::= 
+	L_CURLY_PAREN field_definition_list R_CURLY_PAREN 
+	| 
+	type_implementation L_SQUARE_PAREN R_SQUARE_PAREN
+	|
+	L_PAREN type_implementation PIPE type_implementation R_PAREN
+	| 
+	IDENTIFIER
+;
+
+field_definition_list ::= 
+	field_definition_list field_definition
+	|
+;
+
+field_definition ::= IDENTIFIER COLON type_implementation SEMI;
+
+node_definition ::= 
+	node_attribute_list node_declaration EQUAL node_implementation
+;
+
+node_attribute_list ::=
+	node_attribute_list node_attribute
+	|
+;
+
+node_attribute ::= 
+	EXPORT L_PAREN STRING_LITERAL R_PAREN
+;
+
+node_declaration ::= 
+	NODE IDENTIFIER L_PAREN port_definition_list R_PAREN BOLD_RIGHT_ARROW L_PAREN port_definition_list R_PAREN
+;
+
+port_definition_list ::= 
+	port_definition_list port_definition
+	|
+;
+
+port_definition ::= port_attribute_list IDENTIFIER COLON type_implementation COMMA
+;
+
+port_attribute_list ::=
+	port_attribute_list port_attribute
+	|
+;
+
+port_attribute ::= 
+	OPTIONAL 
+	|
+ 	REQUIRED 
+	| 
+	TRIGGER L_PAREN IDENTIFIER R_PAREN
+;
+
+node_implementation ::= 
+	L_CURLY_PAREN statement_definition_list R_CURLY_PAREN 
+	| 
+	IMPORT L_PAREN STRING_LITERAL R_PAREN
+;
+
+statement_definition_list ::= 
+	statement_definition_list statement_definition
+	|
+;
+statement_definition ::= 
+	node_instance
+	|
+	node_connection
+;
+
+node_instance ::= 
+	LET IDENTIFIER COLON IDENTIFIER SEMI
+;
+
+node_connection ::= 
+	field_access LEFT_ARROW field_access SEMI
+;
+
+field_access ::= 
+	IDENTIFIER
+;

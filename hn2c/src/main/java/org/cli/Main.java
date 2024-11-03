@@ -1,21 +1,45 @@
 package org.hn2c.cli;
 
 import picocli.CommandLine;
+import picocli.CommandLine.Command;
+import picocli.CommandLine.Option;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.concurrent.Callable;
 
-@CommandLine.Command(name = "hn2c", mixinStandardHelpOptions = true,
-        description = "Converts Hypnode programs to C code", version = "0.1")
-public class Main implements Callable<Integer> {
+import org.hypnode.Generator;
 
-    @Override
-    public Integer call() throws Exception {
-        System.out.println("Hello world!");
-        return 0;
+public class Main {
+    @Command(name = "main", subcommands = { HelloCommand.class }, description = "Main command with subcommands")
+    static class MainCommand implements Runnable {
+        @Override
+        public void run() {
+            // Main command logic, if any
+        }
     }
 
-    public static void main(String... args) {
-        int exitCode = new CommandLine(new Main()).execute(args);
-        System.exit(exitCode);
+    @Command(name = "comp", description = "Compiles cho source file into a C")
+    static class HelloCommand implements Runnable {
+        @Option(names = {"-f", "--file"}, description = "Source file path")
+        private String filePath;
+
+        @Override
+        public void run() {
+            System.out.printf("Hello, %s!%n", filePath);
+
+            Generator generator = new Generator();
+            try {
+                String code = generator.generate(new BufferedReader(new FileReader(filePath)));
+                System.out.println(code);
+            } catch (Exception e) {
+                System.err.println("Failed to generate C file");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        CommandLine.run(new MainCommand(), args);
     }
 }
