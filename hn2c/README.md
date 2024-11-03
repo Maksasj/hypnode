@@ -1,4 +1,4 @@
-# JFlex scanner - Aleksandras Šukelovič
+# JFlex scanner
 
 This project is built using maven. So, in order to run the tests you should have `mvn` and `java` installed on your computer.
 
