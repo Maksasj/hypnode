@@ -1,9 +1,11 @@
-# Create mylog node and import implementation from standart library
-node mylog (@required message: string) => () = @import("std_experimental_log")
+type MyStruct = {
+    a: i32;
+    b: i32;
+};
 
-# HypnodeModule entrypoint
+node mylog (@required message: string,) => () = @import("std_experimental_log")
+
 @export("entrypoint")
-node main (argc: i32, argv: string[]) => () = {
+node main (argc: i32, argv: string[],) => () = {
     let l: mylog;
-    l.message <- "Hello world !\n";
 }
