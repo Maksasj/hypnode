@@ -43,8 +43,25 @@ public class GeneratorVisitor implements Visitor<String> {
 
     @Override
     public String visit(HypnodeModule node) {
+        StringBuilder builder = new StringBuilder();
 
-        return null;
+        // include necessary libraries
+        builder.append("#include <stdlib.h>\n");
+        builder.append("#include \"native.h\"\n");
+
+        // type declarations
+        for(TypeDefinition definition : node.getTypeDefinitions()) {
+            builder.append(definition.accept(this));
+        }
+
+        // node delcarations
+        for(NodeDefinition definition : node.getNodeDefinitions()) {
+            builder.append(definition.accept(this));
+        }
+
+        // meta information
+
+        return builder.toString();
     }
 
 
@@ -113,8 +130,7 @@ public class GeneratorVisitor implements Visitor<String> {
 
     @Override
     public String visit(NodeDefinition node) {
-
-        return null;
+        return "node definition \n";
     }
 
 
@@ -141,7 +157,6 @@ public class GeneratorVisitor implements Visitor<String> {
 
     @Override
     public String visit(TypeDefinition node) {
-
-        return null;
+        return "type definition \n";
     }
 }

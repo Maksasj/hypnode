@@ -13,7 +13,11 @@ public class TypeDefinition extends IDefinition {
 
     @Override
     public <T> T accept(Visitor<T> visitor) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'accept'");
+        return visitor.visit(this);
+    }
+
+    @Override
+    public DefinitionType getType() {
+        return DefinitionType.TypeDefinition;
     }
 }

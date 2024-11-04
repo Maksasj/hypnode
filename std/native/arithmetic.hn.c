@@ -1,5 +1,4 @@
 #include <stdlib.h>
-
 #include "native.h"
 
 // Node type and callback declaration

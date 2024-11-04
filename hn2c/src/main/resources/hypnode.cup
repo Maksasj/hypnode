@@ -36,7 +36,9 @@ non terminal List<IDefinition>			definition_list;
 non terminal TypeDefinition				type_definition;
 non terminal String						type_declaration;
 non terminal ITypeImplementation 		type_implementation;
-non terminal List<ITypeImplementation>  union_type_implementation;
+
+non terminal ITypeImplementation 		composite_type_implementation;
+
 non terminal List<FieldDefinition>		field_definition_list;
 non terminal FieldDefinition			field_definition;
 
@@ -87,13 +89,23 @@ type_declaration ::=
 ;
 
 type_implementation ::= 
-	L_CURLY_PAREN field_definition_list R_CURLY_PAREN 
-	| 
+	type_implementation PIPE composite_type_implementation
+	|
+	type_implementation PIPE IDENTIFIER
+	|
+	type_implementation PIPE L_PAREN type_implementation R_PAREN
+	|
+	L_PAREN type_implementation R_PAREN
+	|
+	composite_type_implementation
+	|
 	type_implementation L_SQUARE_PAREN R_SQUARE_PAREN
 	|
-	L_PAREN type_implementation PIPE type_implementation R_PAREN
-	| 
 	IDENTIFIER
+;
+
+composite_type_implementation ::=
+	L_CURLY_PAREN field_definition_list R_CURLY_PAREN 
 ;
 
 field_definition_list ::= 
