@@ -30,24 +30,24 @@ void load_module(Environment* env, const char* file_name) {
     unsigned long* _node_export_symbols_count = dlsym(module, "_node_export_symbols_count");
 
     if(_node_export_symbols_count == NULL)
-        DAEMON_LOG(ERROR, "Module is invalid, could not find _node_export_symbols_count symbol in %s: %s", file_name, dlerror());
+        DAEMON_LOG(ERROR, "HypnodeModule is invalid, could not find _node_export_symbols_count symbol in %s: %s", file_name, dlerror());
 
     if(_node_export_symbols_count == 0)
-        DAEMON_LOG(WARNING, "Module %s does not export any symbols");
+        DAEMON_LOG(WARNING, "HypnodeModule %s does not export any symbols");
 
     _node_export_symbol* _node_export_symbols = dlsym(module, "_node_export_symbols");
 
     if(_node_export_symbols == NULL)
-        DAEMON_LOG(ERROR, "Module is invalid, could not find _node_export_symbols symbol in %s: %s", file_name, dlerror());
+        DAEMON_LOG(ERROR, "HypnodeModule is invalid, could not find _node_export_symbols symbol in %s: %s", file_name, dlerror());
 
     // Import node symbols
     unsigned long* _node_import_symbols_count = dlsym(module, "_node_import_symbols_count");
 
     if(_node_import_symbols_count == NULL)
-        DAEMON_LOG(ERROR, "Module is invalid, could not find _node_import_symbols_count symbol in %s: %s", file_name, dlerror());
+        DAEMON_LOG(ERROR, "HypnodeModule is invalid, could not find _node_import_symbols_count symbol in %s: %s", file_name, dlerror());
 
     if(*_node_import_symbols_count != 0)
-        DAEMON_LOG(INFO, "Module %s imports %d node symbols", file_name, *_node_import_symbols_count);
+        DAEMON_LOG(INFO, "HypnodeModule %s imports %d node symbols", file_name, *_node_import_symbols_count);
 
     struct {
         char* symbol_name;
@@ -55,7 +55,7 @@ void load_module(Environment* env, const char* file_name) {
     }* _node_import_symbols = dlsym(module, "_node_import_symbols");
 
     if(_node_import_symbols == NULL)
-        DAEMON_LOG(ERROR, "Module is invalid, could not find _node_import_symbols symbol in %s: %s", file_name, dlerror());
+        DAEMON_LOG(ERROR, "HypnodeModule is invalid, could not find _node_import_symbols symbol in %s: %s", file_name, dlerror());
 
     for(int i = 0; i < *_node_import_symbols_count; ++i) {
         const char* symbol_name = _node_import_symbols[i].symbol_name;
@@ -65,7 +65,7 @@ void load_module(Environment* env, const char* file_name) {
 
         _node_implementation* _node_import_symbols = dlsym(module, implementation_symbol);
         if(_node_import_symbols == NULL)
-            DAEMON_LOG(ERROR, "Module is invalid, could not find %s symbol in %s: %s", implementation_symbol, file_name, dlerror());
+            DAEMON_LOG(ERROR, "HypnodeModule is invalid, could not find %s symbol in %s: %s", implementation_symbol, file_name, dlerror());
 
         *_node_import_symbols = get_definition_by_name(env, symbol_name).implementation;
 

@@ -74,7 +74,7 @@ void _node_log_implementation(void* _self) {
     DAEMON_LOG(EXPERIMENTAL, "%s", message);
 }
 
-// Module meta information
+// HypnodeModule meta information
 /* ================ meta ================ */
 
 unsigned long _node_import_symbols_count = 0;

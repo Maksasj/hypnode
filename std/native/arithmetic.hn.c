@@ -41,7 +41,7 @@ void _node_sum_implementation(void* _self) {
     // struct _node_sum_struct* self = _self;
 }
 
-// Module meta information
+// HypnodeModule meta information
 /* ================ meta ================ */
 
 unsigned long _node_import_symbols_count = 0;

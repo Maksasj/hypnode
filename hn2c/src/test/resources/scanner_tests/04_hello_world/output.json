@@ -19,7 +19,7 @@
   { "symbol": "L_PAREN", "value": "(" },
   { "symbol": "STRING_LITERAL", "value": "std_experimental_log" },
   { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "SINGLE_LINE_COMMENT", "value": "# Module entrypoint\n" },
+  { "symbol": "SINGLE_LINE_COMMENT", "value": "# HypnodeModule entrypoint\n" },
   { "symbol": "EXPORT", "value": "@export" },
   { "symbol": "L_PAREN", "value": "(" },
   { "symbol": "STRING_LITERAL", "value": "entrypoint" },

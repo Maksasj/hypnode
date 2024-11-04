@@ -138,7 +138,7 @@ void _node_main_implementation(void* _self) {
     _node_log_dispose(mylog);
 }
 
-// Module meta information
+// HypnodeModule meta information
 /* ================ meta ================ */
 
 unsigned long _node_import_symbols_count = 1;

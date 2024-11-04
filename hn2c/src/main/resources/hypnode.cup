@@ -2,6 +2,7 @@ package gen;
 
 import java_cup.runtime.*;
 import org.hypnode.ast.*;
+import org.hypnode.ast.attributes.*;
 import java.util.*;
 
 // Identifier and primitive types
@@ -29,7 +30,7 @@ terminal String							OPTIONAL, REQUIRED, TRIGGER, EXPORT, IMPORT;
 terminal String                         SINGLE_LINE_COMMENT;
 
 // Non terminals
-non terminal Program 					program;
+non terminal HypnodeModule 					module;
 non terminal List<IDefinition>			definition_list;
 
 non terminal TypeDefinition				type_definition;
@@ -59,11 +60,12 @@ non terminal List<String>				identifier_accesss_list;
 
 non terminal String						type;
 
-start with program;
+start with module;
 
-program ::= 
-	definition_list
-	;
+module ::= 
+	definition_list:list
+	{: RESULT = new HypnodeModule(list); :}
+;
 
 definition_list ::= 
 	definition_list:list type_definition:def
@@ -75,8 +77,14 @@ definition_list ::=
 	{: RESULT = new ArrayList<IDefinition>(); :}
 ;
 
-type_definition ::= type_declaration:decl EQUAL type_implementation:impl SEMI;
-type_declaration ::= TYPE IDENTIFIER;
+type_definition ::= type_declaration:name EQUAL type_implementation:impl SEMI
+	{: RESULT = new TypeDefinition(name, impl); :}
+;
+
+type_declaration ::= 
+	TYPE IDENTIFIER:name 
+	{: RESULT = name; :}
+;
 
 type_implementation ::= 
 	L_CURLY_PAREN field_definition_list R_CURLY_PAREN 
@@ -96,16 +104,20 @@ field_definition_list ::=
 field_definition ::= IDENTIFIER COLON type_implementation SEMI;
 
 node_definition ::= 
-	node_attribute_list node_declaration EQUAL node_implementation
+	node_attribute_list:attributes node_declaration:decl EQUAL node_implementation:impl
+	{: RESULT = new NodeDefinition(attributes, decl, impl); :}
 ;
 
 node_attribute_list ::=
-	node_attribute_list node_attribute
+	node_attribute_list:list node_attribute:attribute
+	{: list.add(attribute); RESULT = list; :} 
 	|
+	{: RESULT = new ArrayList<INodeAttribute>(); :}
 ;
 
 node_attribute ::= 
-	EXPORT L_PAREN STRING_LITERAL R_PAREN
+	EXPORT L_PAREN STRING_LITERAL:symbolName R_PAREN
+	{: RESULT = new ExportAttribute(symbolName); :}
 ;
 
 node_declaration ::= 
@@ -134,27 +146,35 @@ port_attribute ::=
 ;
 
 node_implementation ::= 
-	L_CURLY_PAREN statement_definition_list R_CURLY_PAREN 
+	L_CURLY_PAREN statement_definition_list:list R_CURLY_PAREN 
+	{: RESULT = new StatementListNodeImplementation(list); :}
 	| 
-	IMPORT L_PAREN STRING_LITERAL R_PAREN
+	IMPORT L_PAREN STRING_LITERAL:symbolName R_PAREN
+	{: RESULT = new ImportNodeImplementation(symbolName); :}
 ;
 
 statement_definition_list ::= 
-	statement_definition_list statement_definition
+	statement_definition_list:list statement_definition:statement
+	{: list.add(statement); RESULT = list; :} 
 	|
+	{: RESULT = new ArrayList<IStatement>(); :}
 ;
 statement_definition ::= 
-	node_instance
+	node_instance:statement
+	{: RESULT = statement; :}
 	|
-	node_connection
+	node_connection:statement
+	{: RESULT = statement; :}
 ;
 
 node_instance ::= 
-	LET IDENTIFIER COLON IDENTIFIER SEMI
+	LET IDENTIFIER:name COLON IDENTIFIER:nodeName SEMI
+	{: RESULT = new NodeInstanceStatement(name, nodeName); :}
 ;
 
 node_connection ::= 
 	field_access LEFT_ARROW field_access SEMI
+	{: RESULT = new NodeConnectionStatement(); :}
 ;
 
 field_access ::= 

@@ -2,7 +2,7 @@ package org.hypnode;
 
 import java.io.Reader;
 
-import org.hypnode.ast.Program;
+import org.hypnode.ast.HypnodeModule;
 
 import gen.Parser;
 import gen.Scanner;
@@ -21,7 +21,7 @@ public class Generator {
 
         try {
             Symbol s = parser.parse();
-            Program program = (Program) s.value;
+            HypnodeModule module = (HypnodeModule) s.value;
             
             // String result = program.visit();
             // return result;

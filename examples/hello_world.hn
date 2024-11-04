@@ -1,7 +1,7 @@
 # Create mylog node and import implementation from standart library
 node mylog (@required message: string) => () = @import("std_experimental_log")
 
-# Module entrypoint
+# HypnodeModule entrypoint
 @export("entrypoint")
 node main (argc: i32, argv: string[]) => () = {
     let l: mylog;

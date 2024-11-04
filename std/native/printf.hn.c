@@ -46,7 +46,7 @@ void _node_printf_implementation(void* _self) {
     printf("%s", self->format);
 }
 
-// Module meta information
+// HypnodeModule meta information
 /* ================ meta ================ */
 
 unsigned long _node_import_symbols_count = 0;
