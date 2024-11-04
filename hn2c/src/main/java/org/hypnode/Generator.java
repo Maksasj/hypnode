@@ -23,20 +23,13 @@ public class Generator {
             Symbol s = parser.parse();
             HypnodeModule module = (HypnodeModule) s.value;
             
-            // String result = program.visit();
-            // return result;
+            GeneratorVisitor generator = new GeneratorVisitor();
+
+            return generator.visit(module);
         } catch (Exception e) {
             e.printStackTrace();
         }
         
-        /*
-        TypeChecker typeChecker = new TypeChecker();
-        typeChecker.doTypeCheck(program);
-
-        GeneratorVisitor visitor = new GeneratorVisitor();
-
-        // return visitor.visit(program);
-        */
         return "Poggers";
     }
 }

@@ -1,5 +1,5 @@
 package org.hypnode.ast;
 
-public class FieldDefinition {
+public class FieldDefinition extends AstNode {
     
 }

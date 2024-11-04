@@ -2,7 +2,7 @@ package org.hypnode.ast;
 
 import java.util.List;
 
-public class NodeDefinition implements IDefinition {
+public class NodeDefinition extends IDefinition {
     private List<INodeAttribute> attributes;
     private NodeDeclaration declaration;
     private INodeImplementation implementation;

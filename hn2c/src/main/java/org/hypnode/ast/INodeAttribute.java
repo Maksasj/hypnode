@@ -1,5 +1,5 @@
 package org.hypnode.ast;
 
-public interface INodeAttribute {
+public abstract class INodeAttribute extends AstNode {
     
 }

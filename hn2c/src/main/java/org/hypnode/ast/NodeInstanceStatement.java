@@ -2,7 +2,7 @@ package org.hypnode.ast;
 
 import javax.print.attribute.SetOfIntegerSyntax;
 
-public class NodeInstanceStatement implements IStatement {
+public class NodeInstanceStatement extends IStatement {
     private String name;
     private String nodeName;
 

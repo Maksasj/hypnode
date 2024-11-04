@@ -1,5 +1,5 @@
 package org.hypnode.ast;
 
-public interface IDefinition {
+public abstract class IDefinition extends AstNode {
     
 }

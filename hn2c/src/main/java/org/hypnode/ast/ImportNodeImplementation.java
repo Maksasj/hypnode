@@ -1,6 +1,6 @@
 package org.hypnode.ast;
 
-public class ImportNodeImplementation implements INodeImplementation {
+public class ImportNodeImplementation extends INodeImplementation {
     private String symbolName;
 
     public ImportNodeImplementation(String symbolName) {

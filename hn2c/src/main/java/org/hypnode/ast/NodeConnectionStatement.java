@@ -1,5 +1,5 @@
 package org.hypnode.ast;
 
-public class NodeConnectionStatement implements IStatement {
+public class NodeConnectionStatement extends IStatement {
     
 }

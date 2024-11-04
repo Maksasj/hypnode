@@ -1,6 +1,5 @@
 package org.hypnode.ast;
 
-public interface IStatement {
-
+public abstract class IStatement extends AstNode {
     
 };

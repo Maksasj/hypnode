@@ -1,6 +1,6 @@
 package org.hypnode.ast;
 
-public class TypeDefinition implements IDefinition {
+public class TypeDefinition extends IDefinition {
     private String typeName;
     private ITypeImplementation implementation;
 

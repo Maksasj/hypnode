@@ -1,5 +1,5 @@
 package org.hypnode.ast;
 
-public interface INodeImplementation {
+public abstract class INodeImplementation extends AstNode {
     
 };
