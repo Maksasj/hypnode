@@ -3,11 +3,24 @@ package org.hypnode.ast;
 import org.hypnode.Visitor;
 
 public class FieldDefinition extends AstNode {
+    private String fieldName;
+    private ITypeImplementation type;
+
+    public FieldDefinition(String fieldName, ITypeImplementation type) {
+        this.fieldName = fieldName; 
+        this.type = type; 
+    }
+
+    public String getFieldName() {
+        return fieldName;
+    }
+
+    public ITypeImplementation getType() {
+        return type;
+    }
 
     @Override
     public <T> T accept(Visitor<T> visitor) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'accept'");
+        return visitor.visit(this);
     }
-    
 }

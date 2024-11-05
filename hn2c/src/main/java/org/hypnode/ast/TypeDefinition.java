@@ -11,6 +11,10 @@ public class TypeDefinition extends IDefinition {
         this.implementation = implementation;
     }
 
+    public ITypeImplementation getImplementation() {
+        return implementation; 
+    }
+
     @Override
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);

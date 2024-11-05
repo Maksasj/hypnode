@@ -90,30 +90,42 @@ type_declaration ::=
 
 type_implementation ::= 
 	type_implementation PIPE composite_type_implementation
+	{: :}
 	|
 	type_implementation PIPE IDENTIFIER
+	{: :}
 	|
 	type_implementation PIPE L_PAREN type_implementation R_PAREN
+	{: :}
 	|
-	L_PAREN type_implementation R_PAREN
+	L_PAREN type_implementation:impl R_PAREN
+	{: RESULT = impl; :}
 	|
-	composite_type_implementation
+	composite_type_implementation:impl
+	{: RESULT = impl; :}
 	|
-	type_implementation L_SQUARE_PAREN R_SQUARE_PAREN
+	type_implementation:impl L_SQUARE_PAREN R_SQUARE_PAREN
+	{: RESULT = new ArrayTypeImplementation(impl); :}
 	|
-	IDENTIFIER
+	IDENTIFIER:typeName
+	{: RESULT = new TypeReferenceImplementation(typeName); :}
 ;
 
 composite_type_implementation ::=
-	L_CURLY_PAREN field_definition_list R_CURLY_PAREN 
+	L_CURLY_PAREN field_definition_list:fields R_CURLY_PAREN 
+	{: RESULT = new CompositeTypeImplementation(fields); :}
 ;
 
 field_definition_list ::= 
-	field_definition_list field_definition
+	field_definition_list:list field_definition:def
+	{: list.add(def); RESULT = list; :} 
 	|
+	{: RESULT = new ArrayList<FieldDefinition>(); :}
 ;
 
-field_definition ::= IDENTIFIER COLON type_implementation SEMI;
+field_definition ::= IDENTIFIER:name COLON type_implementation:type SEMI
+	{: RESULT = new FieldDefinition(name, type); :}
+;
 
 node_definition ::= 
 	node_attribute_list:attributes node_declaration:decl EQUAL node_implementation:impl

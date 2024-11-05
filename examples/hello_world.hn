@@ -3,8 +3,6 @@ type MyStruct = {
     b: i32;
 };
 
-type AB = i32 | f32;
-
 node mylog (@required message: string,) => () = @import("std_experimental_log")
 
 @export("entrypoint")

@@ -1,14 +1,14 @@
 package org.hn2c.cli;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.PrintWriter;
+
+import org.hypnode.Generator;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.concurrent.Callable;
-
-import org.hypnode.Generator;
 
 public class Main {
     @Command(name = "main", subcommands = { HelloCommand.class }, description = "Main command with subcommands")
@@ -30,8 +30,12 @@ public class Main {
 
             Generator generator = new Generator();
             try {
+                PrintWriter out = new PrintWriter("result.hn.c");
                 String code = generator.generate(new BufferedReader(new FileReader(filePath)));
-                System.out.println(code);
+
+                out.print(code);
+
+                out.close();
             } catch (Exception e) {
                 System.err.println("Failed to generate C file");
                 e.printStackTrace();

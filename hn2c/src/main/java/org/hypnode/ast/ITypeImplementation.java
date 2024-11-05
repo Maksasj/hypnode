@@ -1,5 +1,5 @@
 package org.hypnode.ast;
 
-public interface ITypeImplementation {
+public abstract class ITypeImplementation extends AstNode {
     
 }
