@@ -23,6 +23,14 @@ public class Generator {
             Symbol s = parser.parse();
             HypnodeModule module = (HypnodeModule) s.value;
             
+            // Flatten all inlined and anonymous types 
+            // FlattenTypesVisitor flattenTypes = new FlattenTypesVisitor();
+            // Integer typeCheckResult = flattenTypes.visit(module);
+
+            // Do type checking
+            // TypeCheckerVisitor typeChecker = new TypeCheckerVisitor();
+            // Integer typeCheckResult = typeChecker.visit(module);
+
             GeneratorVisitor generator = new GeneratorVisitor();
 
             return generator.visit(module);
