@@ -3,6 +3,11 @@ package org.hypnode.ast;
 import org.hypnode.Visitor;
 
 public class FieldAccess extends AstNode {
+    private String fieldName;
+
+    public FieldAccess(String fieldName) {
+        this.fieldName = fieldName;
+    }
 
     @Override
     public <T> T accept(Visitor<T> visitor) {

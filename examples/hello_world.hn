@@ -3,9 +3,11 @@ type MyStruct = {
     b: i32;
 };
 
-node mylog (@required message: string,) => () = @import("std_experimental_log")
+node mylog (@required message: string) => () = @import("std_experimental_log")
 
 @export("entrypoint")
-node main (argc: i32, argv: string[],) => () = {
+node main (argc: i32, argv: string[]) => () = {
     let l: mylog;
+
+    test.some.more.and.again <- some;
 }

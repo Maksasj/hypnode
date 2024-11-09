@@ -45,7 +45,10 @@ non terminal FieldDefinition			field_definition;
 non terminal NodeDefinition				node_definition;
 non terminal NodeDeclaration			node_declaration;
 non terminal List<INodeAttribute>		node_attribute_list;
+
 non terminal List<PortDefinition> 		port_definition_list;
+non terminal List<PortDefinition> 		port_definition_list_filled;
+
 non terminal PortDefinition 			port_definition;
 non terminal IPortAttribute 			port_attribute;
 non terminal List<IPortAttribute>		port_attribute_list;
@@ -58,9 +61,7 @@ non terminal NodeInstanceStatement		node_instance;
 non terminal NodeConnectionStatement	node_connection;
 
 non terminal FieldAccess				field_access;
-non terminal List<String>				identifier_accesss_list;
-
-non terminal String						type;
+non terminal List<FieldAccess>			field_accesss_list;
 
 start with module;
 
@@ -148,25 +149,41 @@ node_declaration ::=
 	NODE IDENTIFIER L_PAREN port_definition_list R_PAREN BOLD_RIGHT_ARROW L_PAREN port_definition_list R_PAREN
 ;
 
-port_definition_list ::= 
-	port_definition_list port_definition
+port_definition_list ::=
+	port_definition_list_filled:list
+	{: RESULT = list; :}
 	|
+	{: RESULT = new ArrayList<PortDefinition>(); :}
 ;
 
-port_definition ::= port_attribute_list IDENTIFIER COLON type_implementation COMMA
+port_definition_list_filled ::=
+	port_definition_list_filled:list COMMA port_definition:port
+	{: list.add(port); RESULT = list; :} 
+	|
+	port_definition:port
+	{: List<PortDefinition> ports = new ArrayList<PortDefinition>(); ports.add(port); RESULT = ports;:}
+;
+
+port_definition ::= 
+	port_attribute_list IDENTIFIER COLON type_implementation
 ;
 
 port_attribute_list ::=
-	port_attribute_list port_attribute
+	port_attribute_list:list port_attribute:attribute
+	{: list.add(attribute); RESULT = list; :} 
 	|
+	{: RESULT = new ArrayList<IPortAttribute>(); :}
 ;
 
 port_attribute ::= 
 	OPTIONAL 
+	{: RESULT = new OptionalAttribute(); :}
 	|
  	REQUIRED 
+	{: RESULT = new RequiredAttribute(); :}
 	| 
-	TRIGGER L_PAREN IDENTIFIER R_PAREN
+	TRIGGER L_PAREN IDENTIFIER:nodeName R_PAREN
+	{: RESULT = new TriggerAttribute(nodeName); :}
 ;
 
 node_implementation ::= 
@@ -183,6 +200,7 @@ statement_definition_list ::=
 	|
 	{: RESULT = new ArrayList<IStatement>(); :}
 ;
+
 statement_definition ::= 
 	node_instance:statement
 	{: RESULT = statement; :}
@@ -197,10 +215,19 @@ node_instance ::=
 ;
 
 node_connection ::= 
-	field_access LEFT_ARROW field_access SEMI
-	{: RESULT = new NodeConnectionStatement(); :}
+	field_accesss_list:sink LEFT_ARROW field_accesss_list:source SEMI
+	{: RESULT = new NodeConnectionStatement(sink, source); :}
 ;
 
-field_access ::= 
-	IDENTIFIER
+field_accesss_list ::= 
+	field_accesss_list:list DOT field_access:field
+	{: list.add(field); RESULT = list; :} 
+	|
+	field_access:field
+	{: List<FieldAccess> fields = new ArrayList<FieldAccess>(); fields.add(field); RESULT = fields; :}
+;
+
+field_access ::=
+	IDENTIFIER:field
+	{: RESULT = new FieldAccess(field); :}
 ;

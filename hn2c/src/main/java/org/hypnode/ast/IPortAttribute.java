@@ -1,5 +1,5 @@
 package org.hypnode.ast;
 
-public interface IPortAttribute {
+public abstract class IPortAttribute extends AstNode {
     
 }
