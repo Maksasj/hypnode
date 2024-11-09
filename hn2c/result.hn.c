@@ -8,29 +8,29 @@ struct {
 
 meta type information
 
-struct _node_printf_struct {
+struct _node_sym_T0RyCABvfNXPfCRf_struct {
     // Ports
     // Callback
     // void (*_implementation)(void* self);
 };
 
 // Node life-cycle functions
-void* _node_printf_init();
-void _node_printf_dispose(void* _node);
-void _node_printf_trigger(void* _node);
-void _node_printf_implementation(void* _self) 
+void* _node_sym_T0RyCABvfNXPfCRf_init();
+void _node_sym_T0RyCABvfNXPfCRf_dispose(void* _node);
+void _node_sym_T0RyCABvfNXPfCRf_trigger(void* _node);
+void _nodesym_T0RyCABvfNXPfCRf_implementation(void* _self) 
 
-struct _node_printf_struct {
+struct _node_sym_IYCT8ctJgAYmahQ8_struct {
     // Ports
     // Callback
     // void (*_implementation)(void* self);
 };
 
 // Node life-cycle functions
-void* _node_printf_init();
-void _node_printf_dispose(void* _node);
-void _node_printf_trigger(void* _node);
-void _node_printf_implementation(void* _self) 
+void* _node_sym_IYCT8ctJgAYmahQ8_init();
+void _node_sym_IYCT8ctJgAYmahQ8_dispose(void* _node);
+void _node_sym_IYCT8ctJgAYmahQ8_trigger(void* _node);
+void _nodesym_IYCT8ctJgAYmahQ8_implementation(void* _self) 
 
 /* ================ meta ================ */
 
