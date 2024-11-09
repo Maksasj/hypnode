@@ -6,15 +6,9 @@ import org.hypnode.ast.HypnodeModule;
 
 import gen.Parser;
 import gen.Scanner;
-import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.Symbol;
-import java_cup.runtime.SymbolFactory;
 
 public class Generator {
-    public Generator() {
-
-    }
-
     public String generate(Reader in) {
         Scanner scanner = new gen.Scanner(in);
         Parser parser = new Parser(scanner);
