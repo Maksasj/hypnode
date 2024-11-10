@@ -5,6 +5,16 @@ import org.hypnode.ast.*;
 import org.hypnode.ast.attributes.*;
 import java.util.*;
 
+scan with {:     
+	Symbol symbol = null;  
+	
+	do {
+		symbol = this.getScanner().next_token();
+	} while (symbol != null && (symbol.sym == gen.sym.SINGLE_LINE_COMMENT));
+	
+	return symbol != null ? symbol : this.getSymbolFactory().newSymbol("END_OF_FILE", this.EOF_sym()); 
+:};
+
 // Identifier and primitive types
 terminal String             			IDENTIFIER;
 
@@ -30,7 +40,7 @@ terminal String							OPTIONAL, REQUIRED, TRIGGER, EXPORT, IMPORT;
 terminal String                         SINGLE_LINE_COMMENT;
 
 // Non terminals
-non terminal HypnodeModule 					module;
+non terminal HypnodeModule 				module;
 non terminal List<IDefinition>			definition_list;
 
 non terminal TypeDefinition				type_definition;
