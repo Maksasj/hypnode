@@ -31,7 +31,7 @@ terminal								EQUAL, LEFT_ARROW, BOLD_RIGHT_ARROW, PIPE;
 terminal								SEMI, COLON, COMMA, DOT, L_PAREN, R_PAREN, L_CURLY_PAREN, R_CURLY_PAREN, L_SQUARE_PAREN, R_SQUARE_PAREN;
 
 // Keywords
-terminal								LET, TYPE, NODE;
+terminal								LET, TYPE, NODE, AS;
 
 // Attribute keywords
 terminal String							OPTIONAL, REQUIRED, TRIGGER, EXPORT, IMPORT;
@@ -72,6 +72,12 @@ non terminal NodeConnectionStatement	node_connection;
 
 non terminal FieldAccess				field_access;
 non terminal List<FieldAccess>			field_accesss_list;
+
+non terminal 							value_expression;
+non terminal 							constant_value_expression;
+non terminal 							field_value_expression_list;
+non terminal 							field_value_expression_list_filled;
+non terminal							field_value_expression;
 
 start with module;
 
@@ -176,6 +182,8 @@ port_definition_list_filled ::=
 
 port_definition ::= 
 	port_attribute_list IDENTIFIER COLON type_implementation
+	|
+	port_attribute_list IDENTIFIER COLON type_implementation EQUAL value_expression
 ;
 
 port_attribute_list ::=
@@ -225,8 +233,8 @@ node_instance ::=
 ;
 
 node_connection ::= 
-	field_accesss_list:sink LEFT_ARROW field_accesss_list:source SEMI
-	{: RESULT = new NodeConnectionStatement(sink, source); :}
+	field_accesss_list:sink LEFT_ARROW value_expression SEMI
+	{: :}
 ;
 
 field_accesss_list ::= 
@@ -240,4 +248,41 @@ field_accesss_list ::=
 field_access ::=
 	IDENTIFIER:field
 	{: RESULT = new FieldAccess(field); :}
+;
+
+value_expression ::=
+	constant_value_expression
+	|
+	field_accesss_list
+	|
+	L_PAREN value_expression R_PAREN
+	|
+	L_CURLY_PAREN field_value_expression_list R_CURLY_PAREN
+	|
+	value_expression AS IDENTIFIER
+;
+
+field_value_expression_list ::=
+	field_value_expression_list_filled
+	|
+;
+
+field_value_expression_list_filled ::=
+	field_value_expression_list COMMA field_value_expression
+	|
+	field_value_expression
+;
+
+field_value_expression ::=
+	IDENTIFIER COLON value_expression
+;
+
+constant_value_expression ::=
+	STRING_LITERAL
+	|
+	NUMBER_LITERAL
+	|
+	CHARACTER_LITERAL
+	|
+	BOOLEAN_LITERAL
 ;

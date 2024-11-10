@@ -1,4 +1,4 @@
-# Mazgo implitacija importuojama iš standartinės bibliotekos
+# Node implementation is imported from standard library
 node sum (
     @required a: i32, 
     @required b: i32
@@ -6,12 +6,12 @@ node sum (
 
 node mylog (@required message: i32) => () = @import("std_experimental_log")
 
-node loop (@required l: i32) => (lo: i32) = {
+node loop (@required l: i32 = 0) => (lo: i32) = {
     let log: mylog;
     let s: sum;
 
     s.a <- l;
-    s.b <- ONE; 
+    s.b <- 1; 
     
     l <- s.c;
     log.message <- s.c;

@@ -36,6 +36,7 @@ IDENTIFIER = [A-Za-z_$][\w]*
     "let" { return symbol(sym.LET, yytext()); }
     "type" { return symbol(sym.TYPE, yytext()); }
     "node" { return symbol(sym.NODE, yytext()); }
+    "as" { return symbol(sym.AS, yytext()); }
     "@optional" { return symbol(sym.OPTIONAL, yytext()); }
     "@required" { return symbol(sym.REQUIRED, yytext()); }
     "@trigger" { return symbol(sym.TRIGGER, yytext()); }
