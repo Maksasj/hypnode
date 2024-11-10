@@ -14,6 +14,7 @@ import org.hypnode.ast.PortDefinition;
 import org.hypnode.ast.StatementListNodeImplementation;
 import org.hypnode.ast.TypeDefinition;
 import org.hypnode.ast.TypeReferenceImplementation;
+import org.hypnode.ast.UnionTypeImplementation;
 import org.hypnode.ast.attributes.ExportAttribute;
 import org.hypnode.ast.attributes.OptionalAttribute;
 import org.hypnode.ast.attributes.RequiredAttribute;
@@ -31,6 +32,7 @@ public interface Visitor<T> {
     T visit(ArrayTypeImplementation node);
     T visit(CompositeTypeImplementation node);
     T visit(TypeReferenceImplementation node);
+    T visit(UnionTypeImplementation node);
 
     T visit(NodeDeclaration node);
     T visit(StatementListNodeImplementation node);

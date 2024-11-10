@@ -6,12 +6,12 @@ import org.hypnode.ast.attributes.*;
 import java.util.*;
 
 scan with {:     
-	Symbol symbol = null;  
-	
+	Symbol symbol = null;
+	 
 	do {
 		symbol = this.getScanner().next_token();
-	} while (symbol != null && (symbol.sym == gen.sym.SINGLE_LINE_COMMENT));
-	
+	} while (symbol != null && symbol.sym == gen.sym.SINGLE_LINE_COMMENT);
+
 	return symbol != null ? symbol : this.getSymbolFactory().newSymbol("END_OF_FILE", this.EOF_sym()); 
 :};
 
@@ -100,14 +100,14 @@ type_declaration ::=
 ;
 
 type_implementation ::= 
-	type_implementation PIPE composite_type_implementation
-	{: :}
+	type_implementation:left PIPE composite_type_implementation:right
+	{: RESULT = new UnionTypeImplementation(left, right); :}
 	|
-	type_implementation PIPE IDENTIFIER
-	{: :}
+	type_implementation:left PIPE IDENTIFIER:typeName
+	{: RESULT = new UnionTypeImplementation(left, new TypeReferenceImplementation(typeName)); :}
 	|
-	type_implementation PIPE L_PAREN type_implementation R_PAREN
-	{: :}
+	type_implementation:left PIPE L_PAREN type_implementation:right R_PAREN
+	{: RESULT = new UnionTypeImplementation(left, right); :}
 	|
 	L_PAREN type_implementation:impl R_PAREN
 	{: RESULT = impl; :}

@@ -14,6 +14,7 @@ import org.hypnode.ast.PortDefinition;
 import org.hypnode.ast.StatementListNodeImplementation;
 import org.hypnode.ast.TypeDefinition;
 import org.hypnode.ast.TypeReferenceImplementation;
+import org.hypnode.ast.UnionTypeImplementation;
 import org.hypnode.ast.attributes.ExportAttribute;
 import org.hypnode.ast.attributes.OptionalAttribute;
 import org.hypnode.ast.attributes.RequiredAttribute;
@@ -64,6 +65,12 @@ public class TypeCheckerVisitor implements Visitor<Integer> {
 
 	@Override
 	public Integer visit(TypeReferenceImplementation node) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'visit'");
+	}
+
+	@Override
+	public Integer visit(UnionTypeImplementation node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}

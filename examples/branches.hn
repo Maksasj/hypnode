@@ -3,15 +3,15 @@ type Message = string;
 
 type Result = Message | Error;
 
-node type_equal (a: any, b: any) => (c: bool) = @import("std_experimental_type_equal");
-node not (a: bool) => (c: bool) = @import("std_experimental_not");
+node type_equal (a: any, b: any) => (c: bool) = @import("std_experimental_type_equal")
+node not (a: bool) => (c: bool) = @import("std_experimental_not")
 
 # trigger
 node is_error (a: any) => (c: bool) = {
     let e: type_equal;
     
     e.a <- a;
-    e.b <- (0 as Error);
+    e.b <- Error;
 
     c <- e.c;
 }
@@ -34,7 +34,7 @@ node handle_ok(
 ) => () = {
     let l: mylog;
 
-    l.message <- "Result is ok";
+    l.message <- OK_LITERAL;
 }
 
 node handle_error(
@@ -42,18 +42,18 @@ node handle_error(
     error: Error
 ) => () = {
 
-    l.message <- "Result is an error";
+    l.message <- ERROR_LITERAL;
 }
 
 @export("entrypoint")
 node main (argc: i32, argv: string[]) => () = {
     let side: side_effect;
 
-    side.message <- "Do stuff";
+    side.message <- DO_STUFF_LITERAL;
 
     let ok: handle_ok;
-    ok.result <- (side.result as Message);
+    ok.result <- MESSAGE;
     
     let error: handle_error;
-    error.error <- (side.result as Error);
+    error.error <- ERROR;
 }

@@ -6,12 +6,12 @@ node sum (
 
 node mylog (@required message: i32) => () = @import("std_experimental_log")
 
-node loop (@required l: i32 = 0) => (lo: i32) = {
+node loop (@required l: i32) => (lo: i32) = {
     let log: mylog;
     let s: sum;
 
     s.a <- l;
-    s.b <- 1; 
+    s.b <- ONE; 
     
     l <- s.c;
     log.message <- s.c;

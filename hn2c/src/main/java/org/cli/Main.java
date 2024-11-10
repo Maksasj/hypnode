@@ -22,16 +22,17 @@ public class Main {
     @Command(name = "comp", description = "Compiles cho source file into a C")
     static class HelloCommand implements Runnable {
         @Option(names = {"-f", "--file"}, description = "Source file path")
-        private String filePath;
+        private String inputFilePath;
 
+        @Option(names = {"-t", "--target"}, description = "Target file path")
+        private String outputFilePath;
+        
         @Override
         public void run() {
-            System.out.printf("Hello, %s!%n", filePath);
-
             Generator generator = new Generator();
             try {
-                PrintWriter out = new PrintWriter("result.hn.c");
-                String code = generator.generate(new BufferedReader(new FileReader(filePath)));
+                PrintWriter out = new PrintWriter(outputFilePath);
+                String code = generator.generate(new BufferedReader(new FileReader(inputFilePath)));
 
                 out.print(code);
 

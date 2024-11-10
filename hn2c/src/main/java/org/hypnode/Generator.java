@@ -26,12 +26,11 @@ public class Generator {
             // Integer typeCheckResult = typeChecker.visit(module);
 
             GeneratorVisitor generator = new GeneratorVisitor();
-
+            
             return generator.visit(module);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        
-        return "Poggers";
     }
 }

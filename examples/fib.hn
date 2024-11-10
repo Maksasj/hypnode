@@ -6,14 +6,14 @@ node sum (
 
 # Tipas, kuriame saugoma mazgo būsena.
 type FibState = {
-    a: i32
-    b: i32
-}
+    a: i32;
+    b: i32;
+};
 
 # Testinis komentaras
 
 # Fibonačio mazgas
-node fib(ins: FibState = { a: 0, b: 1 }) => (ous: FibState) = {
+node fib(ins: FibState) => (ous: FibState) = {
     let s: sum;
     s.a <- ous.a;
     s.b <- ous.b;
