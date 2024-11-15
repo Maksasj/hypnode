@@ -3,56 +3,211 @@
     "symbol": "SINGLE_LINE_COMMENT",
     "value": "# Create mylog node and import implementation from standart library\n"
   },
-  { "symbol": "NODE", "value": "node" },
-  { "symbol": "IDENTIFIER", "value": "mylog" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "REQUIRED", "value": "@required" },
-  { "symbol": "IDENTIFIER", "value": "message" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "string" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "BOLD_RIGHT_ARROW", "value": "\u003d\u003e" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "IMPORT", "value": "@import" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "STRING_LITERAL", "value": "std_experimental_log" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "SINGLE_LINE_COMMENT", "value": "# HypnodeModule entrypoint\n" },
-  { "symbol": "EXPORT", "value": "@export" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "STRING_LITERAL", "value": "entrypoint" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "NODE", "value": "node" },
-  { "symbol": "IDENTIFIER", "value": "main" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "argc" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "i32" },
-  { "symbol": "COMMA", "value": "," },
-  { "symbol": "IDENTIFIER", "value": "argv" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "string" },
-  { "symbol": "L_SQUARE_PAREN", "value": "[" },
-  { "symbol": "R_SQUARE_PAREN", "value": "]" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "BOLD_RIGHT_ARROW", "value": "\u003d\u003e" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "L_CURLY_PAREN", "value": "{" },
-  { "symbol": "LET", "value": "let" },
-  { "symbol": "IDENTIFIER", "value": "l" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "mylog" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "IDENTIFIER", "value": "l" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "message" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "STRING_LITERAL", "value": "Hello world !\n" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "R_CURLY_PAREN", "value": "}" },
-  { "symbol": "EOF" }
+  {
+    "symbol": "NODE",
+    "value": "node"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "mylog"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "REQUIRED",
+    "value": "@required"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "message"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "string"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "BOLD_RIGHT_ARROW",
+    "value": "\u003d\u003e"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "IMPORT",
+    "value": "@import"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "std_experimental_log"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "SINGLE_LINE_COMMENT",
+    "value": "# HypnodeModule entrypoint\n"
+  },
+  {
+    "symbol": "EXPORT",
+    "value": "@export"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "entrypoint"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "NODE",
+    "value": "node"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "main"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "argc"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "i32"
+  },
+  {
+    "symbol": "COMMA",
+    "value": ","
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "argv"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "string"
+  },
+  {
+    "symbol": "L_SQUARE_PAREN",
+    "value": "["
+  },
+  {
+    "symbol": "R_SQUARE_PAREN",
+    "value": "]"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "BOLD_RIGHT_ARROW",
+    "value": "\u003d\u003e"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "L_CURLY_PAREN",
+    "value": "{"
+  },
+  {
+    "symbol": "LET",
+    "value": "let"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "l"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "mylog"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "l"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "message"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "Hello world !\n"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "R_CURLY_PAREN",
+    "value": "}"
+  },
+  {
+    "symbol": "EOF"
+  }
 ]

@@ -1,299 +1,1165 @@
 [
-  { "symbol": "TYPE", "value": "type" },
-  { "symbol": "IDENTIFIER", "value": "u64" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "IDENTIFIER", "value": "Error" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "TYPE", "value": "type" },
-  { "symbol": "IDENTIFIER", "value": "Message" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "IDENTIFIER", "value": "string" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "TYPE", "value": "type" },
-  { "symbol": "IDENTIFIER", "value": "Result" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "IDENTIFIER", "value": "Message" },
-  { "symbol": "PIPE", "value": "|" },
-  { "symbol": "IDENTIFIER", "value": "Error" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "NODE", "value": "node" },
-  { "symbol": "IDENTIFIER", "value": "type_equal" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "a" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "any" },
-  { "symbol": "COMMA", "value": "," },
-  { "symbol": "IDENTIFIER", "value": "b" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "any" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "BOLD_RIGHT_ARROW", "value": "\u003d\u003e" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "c" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "bool" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "IMPORT", "value": "@import" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "STRING_LITERAL", "value": "std_experimental_type_equal" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "NODE", "value": "node" },
-  { "symbol": "IDENTIFIER", "value": "not" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "a" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "bool" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "BOLD_RIGHT_ARROW", "value": "\u003d\u003e" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "c" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "bool" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "IMPORT", "value": "@import" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "STRING_LITERAL", "value": "std_experimental_not" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "SINGLE_LINE_COMMENT", "value": "# trigger\n" },
-  { "symbol": "NODE", "value": "node" },
-  { "symbol": "IDENTIFIER", "value": "is_error" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "a" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "any" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "BOLD_RIGHT_ARROW", "value": "\u003d\u003e" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "c" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "bool" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "L_CURLY_PAREN", "value": "{" },
-  { "symbol": "LET", "value": "let" },
-  { "symbol": "IDENTIFIER", "value": "e" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "type_equal" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "IDENTIFIER", "value": "e" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "a" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "IDENTIFIER", "value": "a" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "IDENTIFIER", "value": "e" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "b" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "NUMBER_LITERAL", "value": "0" },
-  { "symbol": "IDENTIFIER", "value": "as" },
-  { "symbol": "IDENTIFIER", "value": "Error" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "IDENTIFIER", "value": "c" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "IDENTIFIER", "value": "e" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "c" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "R_CURLY_PAREN", "value": "}" },
-  { "symbol": "SINGLE_LINE_COMMENT", "value": "# trigger\n" },
-  { "symbol": "NODE", "value": "node" },
-  { "symbol": "IDENTIFIER", "value": "is_ok" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "a" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "any" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "BOLD_RIGHT_ARROW", "value": "\u003d\u003e" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "c" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "bool" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "L_CURLY_PAREN", "value": "{" },
-  { "symbol": "LET", "value": "let" },
-  { "symbol": "IDENTIFIER", "value": "e" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "is_error" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "LET", "value": "let" },
-  { "symbol": "IDENTIFIER", "value": "n" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "not" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "IDENTIFIER", "value": "e" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "a" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "IDENTIFIER", "value": "a" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "IDENTIFIER", "value": "n" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "a" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "IDENTIFIER", "value": "e" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "c" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "IDENTIFIER", "value": "c" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "IDENTIFIER", "value": "n" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "c" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "R_CURLY_PAREN", "value": "}" },
-  { "symbol": "NODE", "value": "node" },
-  { "symbol": "IDENTIFIER", "value": "side_effect" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "REQUIRED", "value": "@required" },
-  { "symbol": "IDENTIFIER", "value": "message" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "any" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "BOLD_RIGHT_ARROW", "value": "\u003d\u003e" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "result" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "Result" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "IMPORT", "value": "@import" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "STRING_LITERAL", "value": "std_experimental_log" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "NODE", "value": "node" },
-  { "symbol": "IDENTIFIER", "value": "handle_ok" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "TRIGGER", "value": "@trigger" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "is_ok" },
-  { "symbol": "R_PAREN", "value": ")" },
+  {
+    "symbol": "TYPE",
+    "value": "type"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "u64"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "Error"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "TYPE",
+    "value": "type"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "Message"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "string"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "TYPE",
+    "value": "type"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "Result"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "Message"
+  },
+  {
+    "symbol": "PIPE",
+    "value": "|"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "Error"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "NODE",
+    "value": "node"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "type_equal"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "a"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "any"
+  },
+  {
+    "symbol": "COMMA",
+    "value": ","
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "b"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "any"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "BOLD_RIGHT_ARROW",
+    "value": "\u003d\u003e"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "c"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "bool"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "IMPORT",
+    "value": "@import"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "std_experimental_type_equal"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "NODE",
+    "value": "node"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "not"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "a"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "bool"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "BOLD_RIGHT_ARROW",
+    "value": "\u003d\u003e"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "c"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "bool"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "IMPORT",
+    "value": "@import"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "std_experimental_not"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "SINGLE_LINE_COMMENT",
+    "value": "# trigger\n"
+  },
+  {
+    "symbol": "NODE",
+    "value": "node"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "is_error"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "a"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "any"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "BOLD_RIGHT_ARROW",
+    "value": "\u003d\u003e"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "c"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "bool"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "L_CURLY_PAREN",
+    "value": "{"
+  },
+  {
+    "symbol": "LET",
+    "value": "let"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "e"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "type_equal"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "e"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "a"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "a"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "e"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "b"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "NUMBER_LITERAL",
+    "value": "0"
+  },
+  {
+    "symbol": "AS",
+    "value": "as"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "Error"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "c"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "e"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "c"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "R_CURLY_PAREN",
+    "value": "}"
+  },
+  {
+    "symbol": "SINGLE_LINE_COMMENT",
+    "value": "# trigger\n"
+  },
+  {
+    "symbol": "NODE",
+    "value": "node"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "is_ok"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "a"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "any"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "BOLD_RIGHT_ARROW",
+    "value": "\u003d\u003e"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "c"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "bool"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "L_CURLY_PAREN",
+    "value": "{"
+  },
+  {
+    "symbol": "LET",
+    "value": "let"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "e"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "is_error"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "LET",
+    "value": "let"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "n"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "not"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "e"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "a"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "a"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "n"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "a"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "e"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "c"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "c"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "n"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "c"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "R_CURLY_PAREN",
+    "value": "}"
+  },
+  {
+    "symbol": "NODE",
+    "value": "node"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "side_effect"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "REQUIRED",
+    "value": "@required"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "message"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "any"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "BOLD_RIGHT_ARROW",
+    "value": "\u003d\u003e"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "result"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "Result"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "IMPORT",
+    "value": "@import"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "std_experimental_log"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "NODE",
+    "value": "node"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "handle_ok"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "TRIGGER",
+    "value": "@trigger"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "is_ok"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
   {
     "symbol": "SINGLE_LINE_COMMENT",
     "value": "# Propagate only if trigger was satisfied\n"
   },
-  { "symbol": "IDENTIFIER", "value": "result" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "Message" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "BOLD_RIGHT_ARROW", "value": "\u003d\u003e" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "L_CURLY_PAREN", "value": "{" },
-  { "symbol": "LET", "value": "let" },
-  { "symbol": "IDENTIFIER", "value": "l" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "mylog" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "IDENTIFIER", "value": "l" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "message" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "STRING_LITERAL", "value": "Result is ok" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "R_CURLY_PAREN", "value": "}" },
-  { "symbol": "NODE", "value": "node" },
-  { "symbol": "IDENTIFIER", "value": "handle_error" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "TRIGGER", "value": "@trigger" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "is_ok" },
-  { "symbol": "R_PAREN", "value": ")" },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "result"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "Message"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "BOLD_RIGHT_ARROW",
+    "value": "\u003d\u003e"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "L_CURLY_PAREN",
+    "value": "{"
+  },
+  {
+    "symbol": "LET",
+    "value": "let"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "l"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "mylog"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "l"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "message"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "Result is ok"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "R_CURLY_PAREN",
+    "value": "}"
+  },
+  {
+    "symbol": "NODE",
+    "value": "node"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "handle_error"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "TRIGGER",
+    "value": "@trigger"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "is_ok"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
   {
     "symbol": "SINGLE_LINE_COMMENT",
     "value": "# Propagate only if trigger was satisfied\n"
   },
-  { "symbol": "IDENTIFIER", "value": "error" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "Error" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "BOLD_RIGHT_ARROW", "value": "\u003d\u003e" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "L_CURLY_PAREN", "value": "{" },
-  { "symbol": "IDENTIFIER", "value": "l" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "message" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "STRING_LITERAL", "value": "Result is an error" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "R_CURLY_PAREN", "value": "}" },
-  { "symbol": "EXPORT", "value": "@export" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "STRING_LITERAL", "value": "entrypoint" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "NODE", "value": "node" },
-  { "symbol": "IDENTIFIER", "value": "main" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "argc" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "i32" },
-  { "symbol": "COMMA", "value": "," },
-  { "symbol": "IDENTIFIER", "value": "argv" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "string" },
-  { "symbol": "L_SQUARE_PAREN", "value": "[" },
-  { "symbol": "R_SQUARE_PAREN", "value": "]" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "BOLD_RIGHT_ARROW", "value": "\u003d\u003e" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "EQUAL", "value": "\u003d" },
-  { "symbol": "L_CURLY_PAREN", "value": "{" },
-  { "symbol": "LET", "value": "let" },
-  { "symbol": "IDENTIFIER", "value": "side" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "side_effect" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "IDENTIFIER", "value": "side" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "message" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "STRING_LITERAL", "value": "Do stuff" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "LET", "value": "let" },
-  { "symbol": "IDENTIFIER", "value": "ok" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "handle_ok" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "IDENTIFIER", "value": "ok" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "result" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "side" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "result" },
-  { "symbol": "IDENTIFIER", "value": "as" },
-  { "symbol": "IDENTIFIER", "value": "Message" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "LET", "value": "let" },
-  { "symbol": "IDENTIFIER", "value": "error" },
-  { "symbol": "COLON", "value": ":" },
-  { "symbol": "IDENTIFIER", "value": "handle_error" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "IDENTIFIER", "value": "error" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "error" },
-  { "symbol": "LEFT_ARROW", "value": "\u003c-" },
-  { "symbol": "L_PAREN", "value": "(" },
-  { "symbol": "IDENTIFIER", "value": "side" },
-  { "symbol": "DOT", "value": "." },
-  { "symbol": "IDENTIFIER", "value": "result" },
-  { "symbol": "IDENTIFIER", "value": "as" },
-  { "symbol": "IDENTIFIER", "value": "Error" },
-  { "symbol": "R_PAREN", "value": ")" },
-  { "symbol": "SEMI", "value": ";" },
-  { "symbol": "R_CURLY_PAREN", "value": "}" },
-  { "symbol": "EOF" }
+  {
+    "symbol": "IDENTIFIER",
+    "value": "error"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "Error"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "BOLD_RIGHT_ARROW",
+    "value": "\u003d\u003e"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "L_CURLY_PAREN",
+    "value": "{"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "l"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "message"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "Result is an error"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "R_CURLY_PAREN",
+    "value": "}"
+  },
+  {
+    "symbol": "EXPORT",
+    "value": "@export"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "entrypoint"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "NODE",
+    "value": "node"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "main"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "argc"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "i32"
+  },
+  {
+    "symbol": "COMMA",
+    "value": ","
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "argv"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "string"
+  },
+  {
+    "symbol": "L_SQUARE_PAREN",
+    "value": "["
+  },
+  {
+    "symbol": "R_SQUARE_PAREN",
+    "value": "]"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "BOLD_RIGHT_ARROW",
+    "value": "\u003d\u003e"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "EQUAL",
+    "value": "\u003d"
+  },
+  {
+    "symbol": "L_CURLY_PAREN",
+    "value": "{"
+  },
+  {
+    "symbol": "LET",
+    "value": "let"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "side"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "side_effect"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "side"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "message"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "Do stuff"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "LET",
+    "value": "let"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "ok"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "handle_ok"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "ok"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "result"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "side"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "result"
+  },
+  {
+    "symbol": "AS",
+    "value": "as"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "Message"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "LET",
+    "value": "let"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "error"
+  },
+  {
+    "symbol": "COLON",
+    "value": ":"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "handle_error"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "error"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "error"
+  },
+  {
+    "symbol": "LEFT_ARROW",
+    "value": "\u003c-"
+  },
+  {
+    "symbol": "L_PAREN",
+    "value": "("
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "side"
+  },
+  {
+    "symbol": "DOT",
+    "value": "."
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "result"
+  },
+  {
+    "symbol": "AS",
+    "value": "as"
+  },
+  {
+    "symbol": "IDENTIFIER",
+    "value": "Error"
+  },
+  {
+    "symbol": "R_PAREN",
+    "value": ")"
+  },
+  {
+    "symbol": "SEMI",
+    "value": ";"
+  },
+  {
+    "symbol": "R_CURLY_PAREN",
+    "value": "}"
+  },
+  {
+    "symbol": "EOF"
+  }
 ]
