@@ -1,0 +1,10 @@
+# Missing left paren
+
+node mylog (@required message: string) => () = @import"std_experimental_log")
+
+# HypnodeModule entrypoint
+@export("entrypoint")
+node main (argc: i32, argv: string[]) => () = {
+    let l: mylog;
+    l.message <- "Hello world !\n";
+}
