@@ -1,4 +1,4 @@
-# JFlex scanner
+# javacup scanner
 
 This project is built using maven. So, in order to run the tests you should have `mvn` and `java` installed on your computer.
 
@@ -18,8 +18,6 @@ mvn test
 
 ## Main files
 
-- `src/main/resources/hypnode.flex`: JFlex scanner generator reads this file and generates the `hypnode` language scanner based on it.
+- `src/main/resources/hypnode.cup`: JFlex parser generator definition.
 
-- `src/test/resources/**`: This directory contains `hypnode` language example programs that are being scanned by generated scanner. In `input.hn` you can see the source code and in `output.json` the expected array of lexemes.
-
-- `src/test/java/gen/TestScanner.java`: org.junit.jupiter tests entrypoint.
+- `src/test/resources/parser_tests/**`: This directory contains 2 directories: accepted and rejected. These directories contain input files that are accepted by parser (has no syntax errors) or rejected (has some syntax errors)
