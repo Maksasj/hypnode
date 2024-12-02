@@ -8,6 +8,7 @@ import org.hypnode.ast.CompositeTypeImplementation;
 import org.hypnode.ast.FieldAccess;
 import org.hypnode.ast.FieldDefinition;
 import org.hypnode.ast.HypnodeModule;
+import org.hypnode.ast.ITypeImplementation;
 import org.hypnode.ast.ImportNodeImplementation;
 import org.hypnode.ast.NodeConnectionStatement;
 import org.hypnode.ast.NodeDeclaration;
@@ -22,8 +23,6 @@ import org.hypnode.ast.attributes.ExportAttribute;
 import org.hypnode.ast.attributes.OptionalAttribute;
 import org.hypnode.ast.attributes.RequiredAttribute;
 import org.hypnode.ast.attributes.TriggerAttribute;
-
-import gen.sym;
 
 public class GeneratorVisitor implements Visitor<String> {
     private int scope = 0;
@@ -56,45 +55,6 @@ public class GeneratorVisitor implements Visitor<String> {
         return builder.toString();
     }
     
-    private void appendTransitiveMetaNodes(HypnodeModule node, StringBuilder builder) {
-        builder.append("/* ================ meta ================ */\n");
-
-        List<NodeDefinition> imported = collectImports(node);
-        builder.append("\n");
-        builder.append("unsigned long _node_import_symbols_count = " + imported.size() + ";\n");
-        builder.append("struct {\n");
-        builder.append("    char* symbol_name;\n");
-        builder.append("    char* implementation_symbol\n");
-        builder.append("} _node_import_symbols[] = {\n");
-
-        for(NodeDefinition imp : imported) {
-            builder.append("    { \"" + imp.getImportedName() + "\", \"_node_" + imp.getSymbolName() + "_implementation\" }\n");
-        }
-
-        builder.append("};\n");
-        builder.append("\n");
-
-        List<NodeDefinition> exported = collectExports(node);
-        builder.append("unsigned long _node_export_symbols_count = " + exported.size() + ";\n");
-        builder.append("_node_export_symbol _node_export_symbols[] = {\n");
-
-        for(NodeDefinition exp : exported) {
-            builder.append("    (_node_export_symbol) {\n");
-            builder.append("        ._name = \"" + exp.getExportedName() + "\",\n");
-            builder.append("\n");
-            builder.append("        ._init = \"_node_"+ exp.getSymbolName() +"_init\",\n");
-            builder.append("        ._dispose = \"_node_"+ exp.getSymbolName() +"_dispose\",\n");
-            builder.append("        ._trigger = \"_node_"+ exp.getSymbolName() +"_trigger\",\n");
-            builder.append("        ._implementation = \"_node_" + exp.getSymbolName() + "_implementation\"\n");
-            builder.append("    },\n");
-        }
-
-        builder.append("};\n");
-        builder.append("\n");
-
-        builder.append("/* ====================================== */\n");
-    } 
-
     @Override
     public String visit(NodeDefinition node) {
         StringBuilder builder = new StringBuilder();
@@ -120,7 +80,7 @@ public class GeneratorVisitor implements Visitor<String> {
                 builder.append("\n");
 
             builder.append("    // Output ports\n");
-            for(PortDefinition port : node.getOutputPorts()) {
+            for(PortDefinition port : outputPorts) {
                 builder.append("    _port_struct " + port.getSymbolName() + ";\n");
             }
         }
@@ -161,16 +121,70 @@ public class GeneratorVisitor implements Visitor<String> {
         StringBuilder builder = new StringBuilder();
         appendScopeTabs(builder);
 
-        // type definition
-        builder.append(node.getImplementation().accept(this));
-        builder.append("\n");
+        ITypeImplementation impl = node.getImplementation();
 
-        // meta type information
-        builder.append("// Meta type information\n");
+        if(impl instanceof ArrayTypeImplementation) {
+            appendArrayTypeImplementation(node, (ArrayTypeImplementation) impl, builder);
+        } else if(impl instanceof CompositeTypeImplementation) {
+            appendCompositeTypeImplementation(node, (CompositeTypeImplementation) impl, builder);
+        } else if(impl instanceof TypeReferenceImplementation) {
+            builder.append("// Type Reference\n");
+        } else if(impl instanceof UnionTypeImplementation) {
+            appendUnionTypeImplementation(node, (UnionTypeImplementation) impl, builder);
+        } else {
+            builder.append("// Unreachable\n");
+        }
 
         builder.append("\n");
 
         return builder.toString();
+    }
+
+    private void appendArrayTypeImplementation(TypeDefinition node, ArrayTypeImplementation implementation, StringBuilder builder) {
+        builder.append("// Type '" + node.getTypeName() + "' declaration\n");
+        builder.append("typedef struct { \n");
+
+        builder.append("    SOME_TYPE* value;\n");
+
+        builder.append("} " + node.getSymbolName() + ";\n");
+
+        builder.append("\n");
+        
+        builder.append("// Type '" + node.getTypeName() + "' meta information\n");
+        builder.append("static _type_info _" + node.getSymbolName() + "_type_info = (_type_info) {\n");
+        builder.append("    .type_name = \"" + node.getTypeName() + "\",\n");
+        builder.append("    .category = Array,\n");
+        builder.append("    .compound_fields = NULL,\n");
+        builder.append("    .union_fields = NULL\n");
+        builder.append("};");
+
+        builder.append("\n");
+    }
+
+    private void appendCompositeTypeImplementation(TypeDefinition node, CompositeTypeImplementation implementation, StringBuilder builder) {
+        builder.append("// Type '" + node.getTypeName() + "' declaration\n");
+        builder.append("typedef struct { \n");
+
+        for(FieldDefinition field : implementation.getFields())
+            builder.append("    SOME_TYPE* " + field.getFieldName() + ";\n");
+
+        builder.append("} " + node.getSymbolName() + ";\n");
+
+        builder.append("\n");
+        
+        builder.append("// Type '" + node.getTypeName() + "' meta information\n");
+        builder.append("static _type_info _" + node.getSymbolName() + "_type_info = (_type_info) {\n");
+        builder.append("    .type_name = \"" + node.getTypeName() + "\",\n");
+        builder.append("    .category = Compound,\n");
+        builder.append("    .compound_fields = NULL,\n");
+        builder.append("    .union_fields = NULL\n");
+        builder.append("};");
+
+        builder.append("\n");
+    }
+
+    private void appendUnionTypeImplementation(TypeDefinition node, UnionTypeImplementation implementation, StringBuilder builder) {
+        builder.append("// Union\n");
     }
 
     @Override
@@ -183,7 +197,7 @@ public class GeneratorVisitor implements Visitor<String> {
         StringBuilder builder = new StringBuilder();
         appendScopeTabs(builder);
 
-        builder.append(node.getType().accept(this));
+        builder.append(node.getTypeImplementation().accept(this));
         builder.append(" ");
         builder.append(node.getFieldName());
         builder.append(";");
@@ -193,32 +207,12 @@ public class GeneratorVisitor implements Visitor<String> {
 
     @Override
     public String visit(ArrayTypeImplementation node) {
-        return "array type implementation";
+        return null;
     }
 
     @Override
     public String visit(CompositeTypeImplementation node) {
-        StringBuilder builder = new StringBuilder();
-        appendScopeTabs(builder);
-
-        // type definition
-        builder.append("struct { \n");
-
-        scope += 1;
-        
-        for(FieldDefinition field : node.getFields()) {
-            builder.append(field.accept(this));
-            builder.append("\n");
-        }
-
-        scope -= 1;
-
-        builder.append("};");
-
-        // extra new line
-        builder.append("\n");
-
-        return builder.toString();
+        return null;
     }
 
     @Override
@@ -311,37 +305,6 @@ public class GeneratorVisitor implements Visitor<String> {
         return exports;
     }
 
-
-
-    /*
-// Node life-cycle functions
-void* _node_log_init() {
-    struct _node_log_struct* node = malloc(sizeof(struct _node_log_struct));
-
-    node->_implementation = _node_log_implementation;
-
-    // Initialize port
-    node->message = (_port_struct) {
-        .port_name = "message",
-        .value = NULL, // <- Initial value
-        .value_type_info = _string_type_info
-    };
-
-    return node;
-}
-
-void _node_log_dispose(void* _node) {
-    free(_node);
-}
-
-void _node_log_trigger(void* _node) {
-    struct _node_log_struct* node = _node;
-
-    // for now we do not do any checks
-    node->_implementation(_node);
-}
-     */
-    
     private void appendNodeInitCallbackImplementation(NodeDefinition node, StringBuilder builder) {
         String symbolName = node.getSymbolName();
         String structName = "_node_" + symbolName + "_struct";
@@ -359,7 +322,7 @@ void _node_log_trigger(void* _node) {
             builder.append("    node->" + port.getSymbolName() + " = (_port_struct) {\n");
             builder.append("        .port_name = \"" + port.getPortName() + "\",\n");
             builder.append("        .value = NULL, // Initial value\n");
-            builder.append("        .value_type_info = _type_info\n");
+            builder.append("        .value_type_info = _" + ((TypeReferenceImplementation) port.getTypeImplementation()).getReferenceTypeName() + "_type_info\n");
             builder.append("    };\n");
         }
         builder.append("\n");
@@ -423,4 +386,43 @@ void _node_log_trigger(void* _node) {
 
         builder.append("\n");
     }
+
+    private void appendTransitiveMetaNodes(HypnodeModule node, StringBuilder builder) {
+        builder.append("/* ================ meta ================ */\n");
+
+        List<NodeDefinition> imported = collectImports(node);
+        builder.append("\n");
+        builder.append("unsigned long _node_import_symbols_count = " + imported.size() + ";\n");
+        builder.append("struct {\n");
+        builder.append("    char* symbol_name;\n");
+        builder.append("    char* implementation_symbol\n");
+        builder.append("} _node_import_symbols[] = {\n");
+
+        for(NodeDefinition imp : imported) {
+            builder.append("    { \"" + imp.getImportedName() + "\", \"_node_" + imp.getSymbolName() + "_implementation\" }\n");
+        }
+
+        builder.append("};\n");
+        builder.append("\n");
+
+        List<NodeDefinition> exported = collectExports(node);
+        builder.append("unsigned long _node_export_symbols_count = " + exported.size() + ";\n");
+        builder.append("_node_export_symbol _node_export_symbols[] = {\n");
+
+        for(NodeDefinition exp : exported) {
+            builder.append("    (_node_export_symbol) {\n");
+            builder.append("        ._name = \"" + exp.getExportedName() + "\",\n");
+            builder.append("\n");
+            builder.append("        ._init = \"_node_"+ exp.getSymbolName() +"_init\",\n");
+            builder.append("        ._dispose = \"_node_"+ exp.getSymbolName() +"_dispose\",\n");
+            builder.append("        ._trigger = \"_node_"+ exp.getSymbolName() +"_trigger\",\n");
+            builder.append("        ._implementation = \"_node_" + exp.getSymbolName() + "_implementation\"\n");
+            builder.append("    },\n");
+        }
+
+        builder.append("};\n");
+        builder.append("\n");
+
+        builder.append("/* ====================================== */\n");
+    } 
 }

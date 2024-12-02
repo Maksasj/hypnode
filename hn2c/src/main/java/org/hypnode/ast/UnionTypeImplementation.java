@@ -1,14 +1,22 @@
 package org.hypnode.ast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hypnode.Visitor;
 
 public class UnionTypeImplementation extends ITypeImplementation {
-    private ITypeImplementation left;
-    private ITypeImplementation right;
+    private List<ITypeImplementation> types;
     
     public UnionTypeImplementation(ITypeImplementation left, ITypeImplementation right) {
-        this.left = left;
-        this.right = right;
+        this.types = new ArrayList<>();
+        
+        this.types.add(left);
+        this.types.add(right);
+    }
+
+    public List<ITypeImplementation> getTypes() {
+        return types;
     }
 
     @Override

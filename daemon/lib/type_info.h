@@ -5,6 +5,7 @@ typedef enum {
     Primitive,
     Compound,
     Union,
+    Array
 } _type_category;
 
 // Maybe there could be not type_name, rather _type_info

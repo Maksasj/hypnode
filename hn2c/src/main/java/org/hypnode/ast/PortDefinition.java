@@ -36,6 +36,10 @@ public class PortDefinition {
         return typeImplementation;
     }
     
+    public void setTypeImplementation(ITypeImplementation typeImplementation) {
+        this.typeImplementation = typeImplementation;
+    }
+
     private void generateSymbolName() {
         symbolName = "psym_" + StringUtils.generateRandomString(16);
     };

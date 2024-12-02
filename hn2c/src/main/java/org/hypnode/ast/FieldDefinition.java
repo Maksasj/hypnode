@@ -15,8 +15,12 @@ public class FieldDefinition extends AstNode {
         return fieldName;
     }
 
-    public ITypeImplementation getType() {
+    public ITypeImplementation getTypeImplementation() {
         return type;
+    }
+
+    public boolean isTypeReferenceType() {
+        return type instanceof TypeReferenceImplementation;
     }
 
     @Override

@@ -18,8 +18,8 @@ public class Generator {
             HypnodeModule module = (HypnodeModule) s.value;
             
             // Flatten all inlined and anonymous types 
-            // FlattenTypesVisitor flattenTypes = new FlattenTypesVisitor();
-            // Integer typeCheckResult = flattenTypes.visit(module);
+            FlattenTypesVisitor flattenTypes = new FlattenTypesVisitor(module);
+            flattenTypes.flatten();
 
             // Do type checking
             // TypeCheckerVisitor typeChecker = new TypeCheckerVisitor();

@@ -34,4 +34,8 @@ public class HypnodeModule extends AstNode {
     public List<NodeDefinition> getNodeDefinitions() {
         return nodeDefinitions;
     }
+
+    public void addTypeDefinition(TypeDefinition definition) {
+        typeDefinitions.add(definition);
+    }
 }
