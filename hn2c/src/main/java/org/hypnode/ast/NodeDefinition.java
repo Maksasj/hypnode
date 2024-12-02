@@ -37,6 +37,14 @@ public class NodeDefinition extends IDefinition {
         return symbolName;
     }
 
+    public List<PortDefinition> getInputPorts() {
+        return declaration.getInputPorts();
+    }
+
+    public List<PortDefinition> getOutputPorts() {
+        return declaration.getOutputPorts();
+    }
+
     public String getNodeName() {
         return declaration.getNodeName();
     }
@@ -69,6 +77,6 @@ public class NodeDefinition extends IDefinition {
     }
 
     private void generateSymbolName() {
-        symbolName = "sym_" + StringUtils.generateRandomString(16);
+        symbolName = "nsym_" + StringUtils.generateRandomString(16);
     };
 }

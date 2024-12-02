@@ -8,7 +8,6 @@ import org.hypnode.ast.CompositeTypeImplementation;
 import org.hypnode.ast.FieldAccess;
 import org.hypnode.ast.FieldDefinition;
 import org.hypnode.ast.HypnodeModule;
-import org.hypnode.ast.IDefinition;
 import org.hypnode.ast.ImportNodeImplementation;
 import org.hypnode.ast.NodeConnectionStatement;
 import org.hypnode.ast.NodeDeclaration;
@@ -24,14 +23,10 @@ import org.hypnode.ast.attributes.OptionalAttribute;
 import org.hypnode.ast.attributes.RequiredAttribute;
 import org.hypnode.ast.attributes.TriggerAttribute;
 
-public class GeneratorVisitor implements Visitor<String> {
-    private int scope;
-    private HypnodeModule module;
+import gen.sym;
 
-    public GeneratorVisitor(HypnodeModule module) {
-        this.scope = 0;
-        this.module = module;
-    }
+public class GeneratorVisitor implements Visitor<String> {
+    private int scope = 0;
     
     @Override
     public String visit(HypnodeModule node) {
@@ -109,7 +104,27 @@ public class GeneratorVisitor implements Visitor<String> {
         
         builder.append("// Node '" + node.getNodeName() +"' declaration\n");
         builder.append("struct _node_" + symbolName + "_struct {\n");
-        builder.append("    // Ports\n");
+        
+
+        List<PortDefinition> inputPorts = node.getInputPorts();
+        if(!inputPorts.isEmpty()) {
+            builder.append("    // Input ports\n");
+            for(PortDefinition port : inputPorts) {
+                builder.append("    _port_struct " + port.getSymbolName() + ";\n");
+            }
+        }
+
+        List<PortDefinition> outputPorts = node.getOutputPorts();
+        if(!outputPorts.isEmpty()) {
+            if(!inputPorts.isEmpty())
+                builder.append("\n");
+
+            builder.append("    // Output ports\n");
+            for(PortDefinition port : node.getOutputPorts()) {
+                builder.append("    _port_struct " + port.getSymbolName() + ";\n");
+            }
+        }
+
         builder.append("};\n");
         
         // Extra new line
@@ -122,7 +137,7 @@ public class GeneratorVisitor implements Visitor<String> {
 
         // Node implementation
         if(node.imported()) {
-            builder.append("_node_implementation _node_" + symbolName + "_implementation; // implementation is provided by environment\n");
+            builder.append("_node_implementation _node_" + symbolName + "_implementation; // Implementation is provided by environment\n");
         } else {
             builder.append("void _node_" + symbolName + "_implementation(void* _self);\n");
         }
@@ -151,7 +166,7 @@ public class GeneratorVisitor implements Visitor<String> {
         builder.append("\n");
 
         // meta type information
-        builder.append("meta type information\n");
+        builder.append("// Meta type information\n");
 
         builder.append("\n");
 
@@ -295,14 +310,79 @@ public class GeneratorVisitor implements Visitor<String> {
 
         return exports;
     }
+
+
+
+    /*
+// Node life-cycle functions
+void* _node_log_init() {
+    struct _node_log_struct* node = malloc(sizeof(struct _node_log_struct));
+
+    node->_implementation = _node_log_implementation;
+
+    // Initialize port
+    node->message = (_port_struct) {
+        .port_name = "message",
+        .value = NULL, // <- Initial value
+        .value_type_info = _string_type_info
+    };
+
+    return node;
+}
+
+void _node_log_dispose(void* _node) {
+    free(_node);
+}
+
+void _node_log_trigger(void* _node) {
+    struct _node_log_struct* node = _node;
+
+    // for now we do not do any checks
+    node->_implementation(_node);
+}
+     */
     
     private void appendNodeInitCallbackImplementation(NodeDefinition node, StringBuilder builder) {
         String symbolName = node.getSymbolName();
-
+        String structName = "_node_" + symbolName + "_struct";
+        
         builder.append("void* _node_" + symbolName + "_init() {\n");
-        builder.append("\n");
-        builder.append("}\n");
+        builder.append("    struct " + structName + "* node = malloc(sizeof(struct " + structName + "));\n");
 
+        builder.append("\n");
+
+        List<PortDefinition> inputPorts = node.getInputPorts();
+        if(!inputPorts.isEmpty())
+            builder.append("    // Initialize input ports\n");
+
+        for(PortDefinition port : inputPorts) {
+            builder.append("    node->" + port.getSymbolName() + " = (_port_struct) {\n");
+            builder.append("        .port_name = \"" + port.getPortName() + "\",\n");
+            builder.append("        .value = NULL, // Initial value\n");
+            builder.append("        .value_type_info = _type_info\n");
+            builder.append("    };\n");
+        }
+        builder.append("\n");
+
+        List<PortDefinition> outputPorts = node.getOutputPorts();
+        if(!outputPorts.isEmpty())
+            builder.append("    // Initialize output ports\n");
+        
+        for(PortDefinition port : outputPorts) {
+            builder.append("    node->" + port.getSymbolName() + " = (_port_struct) {\n");
+            builder.append("        .port_name = \"" + port.getPortName() + "\",\n");
+            builder.append("        .value = NULL, // Initial value\n");
+            builder.append("        .value_type_info = _type_info\n");
+            builder.append("    };\n");
+        }
+        builder.append("\n");
+
+        builder.append("    // Initial trigger callback call;\n");
+        builder.append("    _node_" + symbolName + "_trigger(node);\n");
+        builder.append("\n");
+
+        builder.append("    return node;\n");
+        builder.append("}\n");
         builder.append("\n");
     }
     
@@ -310,7 +390,11 @@ public class GeneratorVisitor implements Visitor<String> {
         String symbolName = node.getSymbolName();
 
         builder.append("void _node_" + symbolName + "_dispose(void* _node) {\n");
+        builder.append("    // Dispose port values\n");
+        builder.append("    // Todo\n");
         builder.append("\n");
+        builder.append("    // Dispose node structure\n");
+        builder.append("    free(_node);\n");
         builder.append("}\n");
 
         builder.append("\n");
@@ -320,7 +404,11 @@ public class GeneratorVisitor implements Visitor<String> {
         String symbolName = node.getSymbolName();
 
         builder.append("void _node_" + symbolName + "_trigger(void* _node) {\n");
+        builder.append("    // Check all requirements\n");
+        builder.append("    // Todo\n");
         builder.append("\n");
+        builder.append("    // Call node implementation callback\n");
+        builder.append("    _node_" + symbolName + "_implementation(_node);\n");
         builder.append("}\n");
 
         builder.append("\n");

@@ -16,4 +16,12 @@ public class NodeDeclaration {
     public String getNodeName() {
         return nodeName;
     }
+
+    public List<PortDefinition> getInputPorts() {
+        return in;
+    }
+
+    public List<PortDefinition> getOutputPorts() {
+        return out;
+    }
 }

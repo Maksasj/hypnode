@@ -182,9 +182,11 @@ port_definition_list_filled ::=
 ;
 
 port_definition ::= 
-	port_attribute_list IDENTIFIER COLON type_implementation
+	port_attribute_list:attributes IDENTIFIER:portName COLON type_implementation:typeImpl
+	{: RESULT = new PortDefinition(attributes, portName, typeImpl, null); :}
 	|
-	port_attribute_list IDENTIFIER COLON type_implementation EQUAL value_expression
+	port_attribute_list:attributes IDENTIFIER:portName COLON type_implementation:typeImpl EQUAL value_expression
+	{: RESULT = new PortDefinition(attributes, portName, typeImpl, null); :}
 ;
 
 port_attribute_list ::=
