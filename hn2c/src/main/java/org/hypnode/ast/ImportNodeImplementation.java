@@ -9,6 +9,10 @@ public class ImportNodeImplementation extends INodeImplementation {
         this.symbolName = symbolName;
     }
 
+    public String getSymbolName() {
+        return symbolName;
+    }
+
     @Override
     public <T> T accept(Visitor<T> visitor) {
         // TODO Auto-generated method stub

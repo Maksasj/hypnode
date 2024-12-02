@@ -162,7 +162,8 @@ node_attribute ::=
 ;
 
 node_declaration ::= 
-	NODE IDENTIFIER L_PAREN port_definition_list R_PAREN BOLD_RIGHT_ARROW L_PAREN port_definition_list R_PAREN
+	NODE IDENTIFIER:nodeName L_PAREN port_definition_list:in R_PAREN BOLD_RIGHT_ARROW L_PAREN port_definition_list:out R_PAREN
+	{: RESULT = new NodeDeclaration(nodeName, in, out); :}
 ;
 
 port_definition_list ::=

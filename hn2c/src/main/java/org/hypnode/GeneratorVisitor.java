@@ -1,10 +1,14 @@
 package org.hypnode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hypnode.ast.ArrayTypeImplementation;
 import org.hypnode.ast.CompositeTypeImplementation;
 import org.hypnode.ast.FieldAccess;
 import org.hypnode.ast.FieldDefinition;
 import org.hypnode.ast.HypnodeModule;
+import org.hypnode.ast.IDefinition;
 import org.hypnode.ast.ImportNodeImplementation;
 import org.hypnode.ast.NodeConnectionStatement;
 import org.hypnode.ast.NodeDeclaration;
@@ -22,11 +26,13 @@ import org.hypnode.ast.attributes.TriggerAttribute;
 
 public class GeneratorVisitor implements Visitor<String> {
     private int scope;
+    private HypnodeModule module;
 
-    public GeneratorVisitor() {
-        scope = 0;
+    public GeneratorVisitor(HypnodeModule module) {
+        this.scope = 0;
+        this.module = module;
     }
-
+    
     @Override
     public String visit(HypnodeModule node) {
         StringBuilder builder = new StringBuilder();
@@ -50,34 +56,50 @@ public class GeneratorVisitor implements Visitor<String> {
         }
 
         // meta information
-        builder.append("/* ================ meta ================ */\n");
-        builder.append("\n");
-        builder.append("unsigned long _node_import_symbols_count = 0;\n");
-        builder.append("struct {\n");
-        builder.append("    char* symbol_name;\n");
-        builder.append("    char* implementation_symbol\n");
-        builder.append("} _node_import_symbols[] = {\n");
-        builder.append("\n");
-        builder.append("};\n");
-        builder.append("\n");
-        builder.append("unsigned long _node_export_symbols_count = 1;\n");
-        builder.append("_node_export_symbol _node_export_symbols[] = {\n");
-        builder.append("    (_node_export_symbol) {\n");
-        builder.append("        ._name = \"std_experimental_log\",\n");
-        builder.append("\n");
-        builder.append("        ._init = \"_node_log_init\",\n");
-        builder.append("        ._dispose = \"_node_log_dispose\",\n");
-        builder.append("        ._trigger = \"_node_log_trigger\",\n");
-        builder.append("\n");
-        builder.append("        ._implementation = \"_node_log_implementation\"\n");
-        builder.append("    },\n");
-        builder.append("};\n");
-        builder.append("\n");
-        builder.append("/* ====================================== */\n");
+        appendTransitiveMetaNodes(node, builder);
 
         return builder.toString();
     }
     
+    private void appendTransitiveMetaNodes(HypnodeModule node, StringBuilder builder) {
+        builder.append("/* ================ meta ================ */\n");
+
+        List<NodeDefinition> imported = collectImports(node);
+        builder.append("\n");
+        builder.append("unsigned long _node_import_symbols_count = " + imported.size() + ";\n");
+        builder.append("struct {\n");
+        builder.append("    char* symbol_name;\n");
+        builder.append("    char* implementation_symbol\n");
+        builder.append("} _node_import_symbols[] = {\n");
+
+        for(NodeDefinition imp : imported) {
+            builder.append("    { \"" + imp.getImportedName() + "\", \"_node_" + imp.getSymbolName() + "_implementation\" }\n");
+        }
+
+        builder.append("};\n");
+        builder.append("\n");
+
+        List<NodeDefinition> exported = collectExports(node);
+        builder.append("unsigned long _node_export_symbols_count = " + exported.size() + ";\n");
+        builder.append("_node_export_symbol _node_export_symbols[] = {\n");
+
+        for(NodeDefinition exp : exported) {
+            builder.append("    (_node_export_symbol) {\n");
+            builder.append("        ._name = \"" + exp.getExportedName() + "\",\n");
+            builder.append("\n");
+            builder.append("        ._init = \"_node_"+ exp.getSymbolName() +"_init\",\n");
+            builder.append("        ._dispose = \"_node_"+ exp.getSymbolName() +"_dispose\",\n");
+            builder.append("        ._trigger = \"_node_"+ exp.getSymbolName() +"_trigger\",\n");
+            builder.append("        ._implementation = \"_node_" + exp.getSymbolName() + "_implementation\"\n");
+            builder.append("    },\n");
+        }
+
+        builder.append("};\n");
+        builder.append("\n");
+
+        builder.append("/* ====================================== */\n");
+    } 
+
     @Override
     public String visit(NodeDefinition node) {
         StringBuilder builder = new StringBuilder();
@@ -85,25 +107,36 @@ public class GeneratorVisitor implements Visitor<String> {
 
         String symbolName = node.getSymbolName();
         
+        builder.append("// Node '" + node.getNodeName() +"' declaration\n");
         builder.append("struct _node_" + symbolName + "_struct {\n");
         builder.append("    // Ports\n");
-        builder.append("    // Callback\n");
-        builder.append("    // void (*_implementation)(void* self);\n");
         builder.append("};\n");
-
-        // extra new line
+        
+        // Extra new line
         builder.append("\n");
 
-        builder.append("// Node life-cycle functions\n");
+        // Declare all C functions
         builder.append("void* _node_" + symbolName + "_init();\n");
         builder.append("void _node_" + symbolName + "_dispose(void* _node);\n");
         builder.append("void _node_" + symbolName + "_trigger(void* _node);\n");
 
-        // node implementation
-        builder.append("void _node_" + symbolName + "_implementation(void* _self) \n");
+        // Node implementation
+        if(node.imported()) {
+            builder.append("_node_implementation _node_" + symbolName + "_implementation; // implementation is provided by environment\n");
+        } else {
+            builder.append("void _node_" + symbolName + "_implementation(void* _self);\n");
+        }
 
-        // extra new line
+        // Extra new line
         builder.append("\n");
+
+        appendNodeInitCallbackImplementation(node, builder);
+        appendNodeDisposeCallbackImplementation(node, builder);
+        appendNodeTriggerCallbackImplementation(node, builder);
+ 
+        // If node is not imported we need to have implementation
+        if(!node.imported())
+            appendNodeImplementationCallbackImplementation(node, builder);
 
         return builder.toString();
     }
@@ -241,5 +274,65 @@ public class GeneratorVisitor implements Visitor<String> {
         for(int i = 0; i < scope; ++i) {
             builder.append("    ");
         }
+    }
+
+    static private List<NodeDefinition> collectImports(HypnodeModule module) {
+        List<NodeDefinition> exports = new ArrayList<>();
+
+        for(NodeDefinition def : module.getNodeDefinitions())
+            if(def.imported())
+                exports.add(def);
+
+        return exports;
+    }
+
+    static private List<NodeDefinition> collectExports(HypnodeModule module) {
+        List<NodeDefinition> exports = new ArrayList<>();
+
+        for(NodeDefinition def : module.getNodeDefinitions())
+            if(def.exported())
+                exports.add(def);
+
+        return exports;
+    }
+    
+    private void appendNodeInitCallbackImplementation(NodeDefinition node, StringBuilder builder) {
+        String symbolName = node.getSymbolName();
+
+        builder.append("void* _node_" + symbolName + "_init() {\n");
+        builder.append("\n");
+        builder.append("}\n");
+
+        builder.append("\n");
+    }
+    
+    private void appendNodeDisposeCallbackImplementation(NodeDefinition node, StringBuilder builder) {
+        String symbolName = node.getSymbolName();
+
+        builder.append("void _node_" + symbolName + "_dispose(void* _node) {\n");
+        builder.append("\n");
+        builder.append("}\n");
+
+        builder.append("\n");
+    }
+
+    private void appendNodeTriggerCallbackImplementation(NodeDefinition node, StringBuilder builder) {
+        String symbolName = node.getSymbolName();
+
+        builder.append("void _node_" + symbolName + "_trigger(void* _node) {\n");
+        builder.append("\n");
+        builder.append("}\n");
+
+        builder.append("\n");
+    }
+
+    private void appendNodeImplementationCallbackImplementation(NodeDefinition node, StringBuilder builder) {
+        String symbolName = node.getSymbolName();
+        
+        builder.append("void _node_" + symbolName + "_implementation(void* _self) {\n");
+        builder.append("\n");
+        builder.append("}\n");
+
+        builder.append("\n");
     }
 }

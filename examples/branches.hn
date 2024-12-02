@@ -34,26 +34,27 @@ node handle_ok(
 ) => () = {
     let l: mylog;
 
-    l.message <- OK_LITERAL;
+    l.message <- "Ok";
 }
 
 node handle_error(
     @trigger(is_ok) # Propagate only if trigger was satisfied
     error: Error
 ) => () = {
+    let l: mylog;
 
-    l.message <- ERROR_LITERAL;
+    l.message <- "Error";
 }
 
 @export("entrypoint")
 node main (argc: i32, argv: string[]) => () = {
     let side: side_effect;
 
-    side.message <- DO_STUFF_LITERAL;
+    side.message <- "Do stuff";
 
     let ok: handle_ok;
-    ok.result <- MESSAGE;
+    ok.result <- "Message";
     
     let error: handle_error;
-    error.error <- ERROR;
+    error.error <- "Error";
 }

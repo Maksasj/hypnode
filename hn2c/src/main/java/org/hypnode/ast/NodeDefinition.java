@@ -3,6 +3,7 @@ package org.hypnode.ast;
 import java.util.List;
 
 import org.hypnode.Visitor;
+import org.hypnode.ast.attributes.ExportAttribute;
 import org.utils.StringUtils;
 
 public class NodeDefinition extends IDefinition {
@@ -34,6 +35,37 @@ public class NodeDefinition extends IDefinition {
 
     public String getSymbolName() {
         return symbolName;
+    }
+
+    public String getNodeName() {
+        return declaration.getNodeName();
+    }
+
+    public boolean exported() {
+        for(INodeAttribute atr : attributes)
+            if(atr instanceof ExportAttribute)
+                return true;
+
+        return false;
+    }
+
+    public String getExportedName() {
+        for(INodeAttribute atr : attributes)
+            if(atr instanceof ExportAttribute)
+                return ((ExportAttribute) atr).getSymbolName();
+        
+        return null;
+    }
+
+    public String getImportedName() {
+        if(imported())
+            return ((ImportNodeImplementation) implementation).getSymbolName();
+
+        return null;
+    }
+    
+    public boolean imported() {
+        return implementation instanceof ImportNodeImplementation;
     }
 
     private void generateSymbolName() {

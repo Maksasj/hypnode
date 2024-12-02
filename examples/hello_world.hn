@@ -9,5 +9,5 @@ node mylog (@required message: string) => () = @import("std_experimental_log")
 node main (argc: i32, argv: string[]) => () = {
     let l: mylog;
 
-    test.some.more.and.again <- some;
+    l.message <- some;
 }
