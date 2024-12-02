@@ -144,7 +144,13 @@ public class GeneratorVisitor implements Visitor<String> {
         builder.append("// Type '" + node.getTypeName() + "' declaration\n");
         builder.append("typedef struct { \n");
 
-        builder.append("    SOME_TYPE* value;\n");
+        ITypeImplementation impl = implementation.getChildTypeImplementation();
+
+        if(impl instanceof TypeReferenceImplementation) {
+            builder.append("    " + ((TypeReferenceImplementation) impl).getReferenceTypeName() + "* value;\n");
+        } else {
+            throw new UnsupportedOperationException("Not type reference implementation found in array type implementation");
+        }
 
         builder.append("} " + node.getSymbolName() + ";\n");
 
@@ -165,8 +171,13 @@ public class GeneratorVisitor implements Visitor<String> {
         builder.append("// Type '" + node.getTypeName() + "' declaration\n");
         builder.append("typedef struct { \n");
 
-        for(FieldDefinition field : implementation.getFields())
-            builder.append("    SOME_TYPE* " + field.getFieldName() + ";\n");
+        for(FieldDefinition field : implementation.getFields()) {
+            if(field.getTypeImplementation() instanceof TypeReferenceImplementation) {
+                builder.append("    " + ((TypeReferenceImplementation) field.getTypeImplementation()).getReferenceTypeName() + "* " + field.getFieldName() + ";\n");
+            } else {
+                throw new UnsupportedOperationException("Not type reference implementation found in union type implementation");
+            }
+        }
 
         builder.append("} " + node.getSymbolName() + ";\n");
 
@@ -335,7 +346,7 @@ public class GeneratorVisitor implements Visitor<String> {
             builder.append("    node->" + port.getSymbolName() + " = (_port_struct) {\n");
             builder.append("        .port_name = \"" + port.getPortName() + "\",\n");
             builder.append("        .value = NULL, // Initial value\n");
-            builder.append("        .value_type_info = _type_info\n");
+            builder.append("        .value_type_info = _" + ((TypeReferenceImplementation) port.getTypeImplementation()).getReferenceTypeName() + "_type_info\n");
             builder.append("    };\n");
         }
         builder.append("\n");

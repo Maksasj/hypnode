@@ -6,5 +6,6 @@
 #include "queue.h"
 #include "packet.h"
 #include "type_info.h"
+#include "primitive_types.h"
 
 #endif
