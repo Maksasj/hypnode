@@ -1,8 +1,25 @@
 [
-  { "symbol": "STRING_LITERAL", "value": "\"Hello\"" },
-  { "symbol": "STRING_LITERAL", "value": "a\ns\nd\nf" },
-  { "symbol": "STRING_LITERAL", "value": "" },
-  { "symbol": "STRING_LITERAL", "value": "a" },
-  { "symbol": "STRING_LITERAL", "value": "Hello, \"Seaman\"!" },
-  { "symbol": "EOF" }
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "\"Hello\""
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "a\ns\nd\nf"
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": ""
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "a"
+  },
+  {
+    "symbol": "STRING_LITERAL",
+    "value": "Hello, \"Seaman\"!"
+  },
+  {
+    "symbol": "EOF"
+  }
 ]
