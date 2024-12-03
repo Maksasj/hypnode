@@ -93,7 +93,7 @@ public class GeneratorVisitor implements Visitor<String> {
         // Declare all C functions
         builder.append("void* _node_" + symbolName + "_init();\n");
         builder.append("void _node_" + symbolName + "_dispose(void* _node);\n");
-        builder.append("void _node_" + symbolName + "_trigger(void* _node);\n");
+        builder.append("int _node_" + symbolName + "_trigger(void* _node);\n");
 
         // Node implementation
         if(node.imported()) {
@@ -377,12 +377,14 @@ public class GeneratorVisitor implements Visitor<String> {
     private void appendNodeTriggerCallbackImplementation(NodeDefinition node, StringBuilder builder) {
         String symbolName = node.getSymbolName();
 
-        builder.append("void _node_" + symbolName + "_trigger(void* _node) {\n");
+        builder.append("int _node_" + symbolName + "_trigger(void* _node) {\n");
         builder.append("    // Check all requirements\n");
         builder.append("    // Todo\n");
         builder.append("\n");
         builder.append("    // Call node implementation callback\n");
         builder.append("    _node_" + symbolName + "_implementation(_node);\n");
+        builder.append("\n");
+        builder.append("    return 1;\n");
         builder.append("}\n");
 
         builder.append("\n");

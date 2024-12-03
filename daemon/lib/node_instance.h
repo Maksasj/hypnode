@@ -3,7 +3,7 @@
 
 typedef void* (*_node_init)();
 typedef void (*_node_dispose)(void* _node);
-typedef void (*_node_trigger)(void* _node);
+typedef int (*_node_trigger)(void* _node);
 
 typedef void (*_node_implementation)(void* _node);
 
