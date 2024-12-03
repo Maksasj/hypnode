@@ -19,6 +19,7 @@ import org.hypnode.ast.attributes.ExportAttribute;
 import org.hypnode.ast.attributes.OptionalAttribute;
 import org.hypnode.ast.attributes.RequiredAttribute;
 import org.hypnode.ast.attributes.TriggerAttribute;
+import org.hypnode.ast.value.FieldAccessValueExpression;
 import org.hypnode.ast.value.StringValueExpression;
 
 public class TypeReferenceLinkerVisitor implements Visitor<Object> {
@@ -153,6 +154,12 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
 
     @Override
     public Object visit(StringValueExpression stringValueExpression) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public Object visit(FieldAccessValueExpression fieldAccessValueExpression) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'visit'");
     }

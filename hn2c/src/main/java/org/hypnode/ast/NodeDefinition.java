@@ -63,6 +63,13 @@ public class NodeDefinition extends IDefinition {
         return null;
     }
 
+    public List<NodeConnectionStatement> getConstantValueConnections() {
+        if(implementation instanceof StatementListNodeImplementation) 
+            return ((StatementListNodeImplementation) implementation).getConstantValueConnections();
+
+        return null;
+    }
+
     public boolean exported() {
         for(INodeAttribute atr : attributes)
             if(atr instanceof ExportAttribute)

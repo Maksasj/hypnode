@@ -78,7 +78,7 @@ non terminal IValueExpression 			value_expression;
 non terminal ConstantValueExpression 	constant_value_expression;
 non terminal 							field_value_expression_list;
 non terminal 							field_value_expression_list_filled;
-non terminal							field_value_expression;
+non terminal 							field_value_expression;
 
 start with module;
 
@@ -258,7 +258,8 @@ value_expression ::=
 	constant_value_expression:expr
 	{: RESULT = expr; :}
 	|
-	field_accesss_list
+	field_accesss_list:list
+	{: RESULT = new FieldAccessValueExpression(); :}
 	|
 	L_PAREN value_expression:expr R_PAREN
 	{: RESULT = expr; :}

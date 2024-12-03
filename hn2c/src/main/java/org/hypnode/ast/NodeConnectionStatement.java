@@ -14,6 +14,10 @@ public class NodeConnectionStatement extends IStatement {
         this.source = source;
     }
 
+    public IValueExpression getSource() {
+        return source;
+    }
+
     @Override
     public <T> T accept(Visitor<T> visitor) {
         // TODO Auto-generated method stub

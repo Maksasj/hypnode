@@ -23,15 +23,13 @@ import org.hypnode.ast.attributes.ExportAttribute;
 import org.hypnode.ast.attributes.OptionalAttribute;
 import org.hypnode.ast.attributes.RequiredAttribute;
 import org.hypnode.ast.attributes.TriggerAttribute;
+import org.hypnode.ast.value.FieldAccessValueExpression;
 import org.hypnode.ast.value.StringValueExpression;
 
 public class GeneratorVisitor implements Visitor<String> {
-    private int scope = 0;
-    
     @Override
     public String visit(HypnodeModule node) {
         StringBuilder builder = new StringBuilder();
-        appendScopeTabs(builder);
 
         // include necessary libraries
         builder.append("#include <stdlib.h>\n");
@@ -59,7 +57,6 @@ public class GeneratorVisitor implements Visitor<String> {
     @Override
     public String visit(NodeDefinition node) {
         StringBuilder builder = new StringBuilder();
-        appendScopeTabs(builder);
 
         String symbolName = node.getSymbolName();
         
@@ -119,7 +116,6 @@ public class GeneratorVisitor implements Visitor<String> {
     @Override
     public String visit(TypeDefinition node) {
         StringBuilder builder = new StringBuilder();
-        appendScopeTabs(builder);
 
         ITypeImplementation impl = node.getImplementation();
 
@@ -232,15 +228,7 @@ public class GeneratorVisitor implements Visitor<String> {
 
     @Override
     public String visit(FieldDefinition node) {
-        StringBuilder builder = new StringBuilder();
-        appendScopeTabs(builder);
-
-        builder.append(node.getTypeImplementation().accept(this));
-        builder.append(" ");
-        builder.append(node.getFieldName());
-        builder.append(";");
-        
-        return builder.toString();
+        return null;
     }
 
     @Override
@@ -315,12 +303,6 @@ public class GeneratorVisitor implements Visitor<String> {
     @Override
     public String visit(NodeInstanceStatement node) {
         return null;
-    }
-
-    private void appendScopeTabs(StringBuilder builder) {
-        for(int i = 0; i < scope; ++i) {
-            builder.append("    ");
-        }
     }
 
     static private List<NodeDefinition> collectImports(HypnodeModule module) {
@@ -410,7 +392,9 @@ public class GeneratorVisitor implements Visitor<String> {
 
             builder.append("\n");
         }
-    
+
+        List<NodeConnectionStatement> initialValueStatements = node.getConstantValueConnections();
+
         // Get all raw node connections
         List<NodeConnectionStatement> connectionStatements = node.getConnections();
         
@@ -511,6 +495,12 @@ public class GeneratorVisitor implements Visitor<String> {
 
     @Override
     public String visit(StringValueExpression stringValueExpression) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'visit'");
+    }
+
+    @Override
+    public String visit(FieldAccessValueExpression fieldAccessValueExpression) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'visit'");
     } 
