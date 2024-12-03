@@ -3,12 +3,13 @@ package org.hypnode.ast;
 import java.util.List;
 
 import org.hypnode.Visitor;
+import org.hypnode.ast.value.IValueExpression;
 
 public class NodeConnectionStatement extends IStatement {
     private List<FieldAccess> sink;
-    private List<FieldAccess> source;
+    private IValueExpression source;
 
-    public NodeConnectionStatement(List<FieldAccess> sink, List<FieldAccess> source) {
+    public NodeConnectionStatement(List<FieldAccess> sink, IValueExpression source) {
         this.sink = sink;
         this.source = source;
     }

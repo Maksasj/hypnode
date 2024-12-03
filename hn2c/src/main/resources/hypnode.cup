@@ -3,6 +3,7 @@ package gen;
 import java_cup.runtime.*;
 import org.hypnode.ast.*;
 import org.hypnode.ast.attributes.*;
+import org.hypnode.ast.value.*;
 import java.util.*;
 
 scan with {:     
@@ -73,8 +74,8 @@ non terminal NodeConnectionStatement	node_connection;
 non terminal FieldAccess				field_access;
 non terminal List<FieldAccess>			field_accesss_list;
 
-non terminal 							value_expression;
-non terminal 							constant_value_expression;
+non terminal IValueExpression 			value_expression;
+non terminal ConstantValueExpression 	constant_value_expression;
 non terminal 							field_value_expression_list;
 non terminal 							field_value_expression_list_filled;
 non terminal							field_value_expression;
@@ -236,8 +237,8 @@ node_instance ::=
 ;
 
 node_connection ::= 
-	field_accesss_list:sink LEFT_ARROW value_expression SEMI
-	{: :}
+	field_accesss_list:sink LEFT_ARROW value_expression:value SEMI
+	{: RESULT = new NodeConnectionStatement(sink, value); :}
 ;
 
 field_accesss_list ::= 
@@ -254,11 +255,13 @@ field_access ::=
 ;
 
 value_expression ::=
-	constant_value_expression
+	constant_value_expression:expr
+	{: RESULT = expr; :}
 	|
 	field_accesss_list
 	|
-	L_PAREN value_expression R_PAREN
+	L_PAREN value_expression:expr R_PAREN
+	{: RESULT = expr; :}
 	|
 	L_CURLY_PAREN field_value_expression_list R_CURLY_PAREN
 	|
@@ -281,7 +284,8 @@ field_value_expression ::=
 ;
 
 constant_value_expression ::=
-	STRING_LITERAL
+	STRING_LITERAL:value
+	{: RESULT = new StringValueExpression(value); :}
 	|
 	NUMBER_LITERAL
 	|
