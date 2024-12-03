@@ -64,13 +64,12 @@ public class GeneratorVisitor implements Visitor<String> {
         
         builder.append("// Node '" + node.getNodeName() +"' declaration\n");
         builder.append("struct _node_" + symbolName + "_struct {\n");
-        
 
         List<PortDefinition> inputPorts = node.getInputPorts();
         if(!inputPorts.isEmpty()) {
             builder.append("    // Input ports\n");
             for(PortDefinition port : inputPorts) {
-                builder.append("    _port_struct " + port.getSymbolName() + ";\n");
+                builder.append("    _port_struct* " + port.getSymbolName() + "; // " + port.getPortName() + "\n");
             }
         }
 
@@ -81,7 +80,7 @@ public class GeneratorVisitor implements Visitor<String> {
 
             builder.append("    // Output ports\n");
             for(PortDefinition port : outputPorts) {
-                builder.append("    _port_struct " + port.getSymbolName() + ";\n");
+                builder.append("    _port_struct* " + port.getSymbolName() + "; // " + port.getPortName() + "\n");
             }
         }
 
@@ -325,32 +324,6 @@ public class GeneratorVisitor implements Visitor<String> {
 
         builder.append("\n");
 
-        List<PortDefinition> inputPorts = node.getInputPorts();
-        if(!inputPorts.isEmpty())
-            builder.append("    // Initialize input ports\n");
-
-        for(PortDefinition port : inputPorts) {
-            builder.append("    node->" + port.getSymbolName() + " = (_port_struct) {\n");
-            builder.append("        .port_name = \"" + port.getPortName() + "\",\n");
-            builder.append("        .value = NULL, // Initial value\n");
-            builder.append("        .value_type_info = _" + ((TypeReferenceImplementation) port.getTypeImplementation()).getReferenceTypeName() + "_type_info\n");
-            builder.append("    };\n");
-        }
-        builder.append("\n");
-
-        List<PortDefinition> outputPorts = node.getOutputPorts();
-        if(!outputPorts.isEmpty())
-            builder.append("    // Initialize output ports\n");
-        
-        for(PortDefinition port : outputPorts) {
-            builder.append("    node->" + port.getSymbolName() + " = (_port_struct) {\n");
-            builder.append("        .port_name = \"" + port.getPortName() + "\",\n");
-            builder.append("        .value = NULL, // Initial value\n");
-            builder.append("        .value_type_info = _" + ((TypeReferenceImplementation) port.getTypeImplementation()).getReferenceTypeName() + "_type_info\n");
-            builder.append("    };\n");
-        }
-        builder.append("\n");
-
         builder.append("    // Initial trigger callback call;\n");
         builder.append("    _node_" + symbolName + "_trigger(node);\n");
         builder.append("\n");
@@ -392,9 +365,78 @@ public class GeneratorVisitor implements Visitor<String> {
 
     private void appendNodeImplementationCallbackImplementation(NodeDefinition node, StringBuilder builder) {
         String symbolName = node.getSymbolName();
-        
+
         builder.append("void _node_" + symbolName + "_implementation(void* _self) {\n");
+
+        List<NodeInstanceStatement> childNodes = node.getChildNodes();
+
+        if(!childNodes.isEmpty()) {
+            builder.append("    // Initialize all child nodes\n");
+
+            for(NodeInstanceStatement child : childNodes) {
+                String childSymbolName = child.getSymbolName();
+                String nodeSymbolName = child.getNodeSymbolName();
+
+                builder.append("    " + nodeSymbolName + " " + childSymbolName + " = _node_" + nodeSymbolName + "_init();\n"); 
+            }
+
+            builder.append("\n");
+        }
+    
+        // Get all raw node connections
+        List<NodeConnectionStatement> connectionStatements = node.getConnections();
+        
+        List<Object> pipes = new ArrayList<>();
+
+        if(!pipes.isEmpty()) {
+            builder.append("    // Initialize all connections\n");
+            
+            builder.append("\n");
+        }
+
+        builder.append("    // Running flag\n");
+        builder.append("    int running;\n");
+
+        builder.append("    do {\n");
+        builder.append("        running = 0;\n");
+
+
+        for(Object pipe : pipes) {
+            builder.append("    // pipe");
+        }
+
+        builder.append("    } while(running > 0);\n");
+
+        /*
+        List<PortDefinition> inputPorts = node.getInputPorts();
+        if(!inputPorts.isEmpty())
+            builder.append("    // Initialize input ports\n");
+
+        for(PortDefinition port : inputPorts) {
+            builder.append("    node->" + port.getSymbolName() + " = (_port_struct) {\n");
+            builder.append("        .port_name = \"" + port.getPortName() + "\",\n");
+            builder.append("        .value = NULL, // Initial value\n");
+            builder.append("        .value_type_info = _" + ((TypeReferenceImplementation) port.getTypeImplementation()).getReferenceTypeName() + "_type_info\n");
+            builder.append("    };\n");
+        }
         builder.append("\n");
+        */
+
+        /*
+        List<PortDefinition> outputPorts = node.getOutputPorts();
+        if(!outputPorts.isEmpty())
+            builder.append("    // Initialize output ports\n");
+        
+        for(PortDefinition port : outputPorts) {
+            builder.append("    node->" + port.getSymbolName() + " = (_port_struct) {\n");
+            builder.append("        .port_name = \"" + port.getPortName() + "\",\n");
+            builder.append("        .value = NULL, // Initial value\n");
+            builder.append("        .value_type_info = _" + ((TypeReferenceImplementation) port.getTypeImplementation()).getReferenceTypeName() + "_type_info\n");
+            builder.append("    };\n");
+        }
+        builder.append("\n");
+        */
+
         builder.append("}\n");
 
         builder.append("\n");

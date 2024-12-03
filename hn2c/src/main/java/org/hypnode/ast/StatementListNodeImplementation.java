@@ -1,5 +1,6 @@
 package org.hypnode.ast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hypnode.Visitor;
@@ -9,6 +10,26 @@ public class StatementListNodeImplementation extends INodeImplementation {
 
     public StatementListNodeImplementation(List<IStatement> statements) {
         this.statements = statements;
+    }
+
+    public List<NodeInstanceStatement> getChildNodes() {
+        List<NodeInstanceStatement> childs = new ArrayList<>();
+
+        for(IStatement child : statements)
+            if(child instanceof NodeInstanceStatement)
+                childs.add((NodeInstanceStatement) child);
+
+        return childs;
+    }
+
+    public List<NodeConnectionStatement> getConnections() {
+        List<NodeConnectionStatement> childs = new ArrayList<>();
+
+        for(IStatement child : statements)
+            if(child instanceof NodeConnectionStatement)
+                childs.add((NodeConnectionStatement) child);
+
+        return childs;
     }
 
     @Override

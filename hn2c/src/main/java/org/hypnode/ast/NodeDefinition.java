@@ -49,6 +49,20 @@ public class NodeDefinition extends IDefinition {
         return declaration.getNodeName();
     }
 
+    public List<NodeInstanceStatement> getChildNodes() {
+        if(implementation instanceof StatementListNodeImplementation)
+            return ((StatementListNodeImplementation) implementation).getChildNodes();
+            
+        return null;
+    }
+
+    public List<NodeConnectionStatement> getConnections() {
+        if(implementation instanceof StatementListNodeImplementation) 
+            return ((StatementListNodeImplementation) implementation).getConnections();
+
+        return null;
+    }
+
     public boolean exported() {
         for(INodeAttribute atr : attributes)
             if(atr instanceof ExportAttribute)
