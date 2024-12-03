@@ -1,3 +1,10 @@
+type A = i32;
+type B = f64;
+
+type Matrix = f32[][];
+
+type AB = A | B;
+
 type Some = {
     field: {
         child: ((((((((((any | Some[])[][] | B)))))))) | A);

@@ -19,6 +19,10 @@ public class UnionTypeImplementation extends ITypeImplementation {
         return types;
     }
 
+    public void setImplementations(List<ITypeImplementation> types) {
+        this.types = types;
+    }
+
     @Override
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);

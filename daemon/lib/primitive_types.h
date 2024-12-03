@@ -20,4 +20,12 @@ static _type_info _i32_type_info = (_type_info) {
     .union_fields = 0
 };
 
+typedef void* any;
+static _type_info _any_type_info = (_type_info) {
+    .type_name = "any",
+    .category = Primitive,
+    .compound_fields = 0,
+    .union_fields = 0
+};
+
 #endif

@@ -1,5 +1,6 @@
 package org.hypnode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hypnode.ast.ArrayTypeImplementation;
@@ -105,7 +106,7 @@ public class FlattenTypesVisitor implements Visitor<Integer> {
             counter += visit((CompositeTypeImplementation) impl);
         } else if(impl instanceof TypeReferenceImplementation) {
             // builder.append("// Type Reference\n");
-			throw new UnsupportedOperationException("Type reference flatten '" + node.getTypeName() + "'");
+			// throw new UnsupportedOperationException("Type reference flatten '" + node.getTypeName() + "'");
         } else if(impl instanceof UnionTypeImplementation) {
             counter += visit((UnionTypeImplementation) impl);
         } else {
@@ -117,10 +118,20 @@ public class FlattenTypesVisitor implements Visitor<Integer> {
 
 	@Override
 	public Integer visit(ArrayTypeImplementation node) {
-		// TODO Auto-generated method stub
-		// throw new UnsupportedOperationException("Unimplemented method 'visit'");
+		Integer counter = 0;
 
-		return 0;
+		ITypeImplementation impl = node.getChildTypeImplementation();
+		if(!(impl instanceof TypeReferenceImplementation)) {
+			String typeName = "atsym_" + StringUtils.generateRandomString(16);
+
+			TypeDefinition def = new TypeDefinition(typeName, impl);
+			node.setChildTypeImplementation(new TypeReferenceImplementation(def.getSymbolName()));
+			module.addTypeDefinition(def);
+			
+			counter += 1;
+		}
+		
+		return counter;
 	}
 
 	@Override
@@ -129,10 +140,10 @@ public class FlattenTypesVisitor implements Visitor<Integer> {
 
 		for(FieldDefinition field : node.getFields()) {
 			ITypeImplementation impl = field.getTypeImplementation();
-
-			String typeName = "atsym_" + StringUtils.generateRandomString(16);
 			
 			if(!(impl instanceof TypeReferenceImplementation)) {
+				String typeName = "atsym_" + StringUtils.generateRandomString(16);
+
 				TypeDefinition def = new TypeDefinition(typeName, impl);
 				field.setTypeImplementation(new TypeReferenceImplementation(def.getSymbolName()));
 				module.addTypeDefinition(def);
@@ -155,13 +166,47 @@ public class FlattenTypesVisitor implements Visitor<Integer> {
 
 	@Override
 	public Integer visit(UnionTypeImplementation node) {
-		for(ITypeImplementation field : node.getTypes()) {
-			throw new UnsupportedOperationException("UnionTypeImplementation need to do that !!!!");
-			// if(!field.isTypeReferenceType())
-			// 	throw new UnsupportedOperationException("Composite type field needs to be flatten");
+		Integer counter = 0;
+
+		List<ITypeImplementation> implementations = new ArrayList<>();
+
+		for(ITypeImplementation impl : node.getTypes()) {
+			if(impl instanceof TypeReferenceImplementation)
+				implementations.add(impl);
+
+			if(impl instanceof CompositeTypeImplementation) {
+				String typeName = "atsym_" + StringUtils.generateRandomString(16);
+
+				TypeDefinition def = new TypeDefinition(typeName, impl);
+				implementations.add(new TypeReferenceImplementation(def.getSymbolName()));
+				module.addTypeDefinition(def);
+				
+				counter += 1;
+			}
+
+			if(impl instanceof ArrayTypeImplementation) {
+				String typeName = "atsym_" + StringUtils.generateRandomString(16);
+
+				TypeDefinition def = new TypeDefinition(typeName, impl);
+				implementations.add(new TypeReferenceImplementation(def.getSymbolName()));
+				module.addTypeDefinition(def);
+				
+				counter += 1;
+			}
+
+			if(impl instanceof UnionTypeImplementation) {
+				UnionTypeImplementation childUnion = (UnionTypeImplementation) impl;
+
+				for(ITypeImplementation child : childUnion.getTypes())
+					implementations.add(child);
+
+				counter += 1;
+			}
 		}
 
-		return 0;
+		node.setImplementations(implementations);
+
+		return counter;
 	}
 
 	@Override

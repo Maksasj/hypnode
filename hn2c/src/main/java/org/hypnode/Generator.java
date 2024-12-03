@@ -27,6 +27,10 @@ public class Generator {
                 System.out.println("Runned type flatten with " + result + " changes");
             } while (result > 0);
 
+            // Link all type references
+            TypeReferenceLinkerVisitor typeReferenceLinker = new TypeReferenceLinkerVisitor();
+            typeReferenceLinker.visit(module);
+
             // Do type checking
             // TypeCheckerVisitor typeChecker = new TypeCheckerVisitor();
             // Integer typeCheckResult = typeChecker.visit(module);

@@ -174,7 +174,7 @@ public class GeneratorVisitor implements Visitor<String> {
             if(field.getTypeImplementation() instanceof TypeReferenceImplementation) {
                 builder.append("    " + ((TypeReferenceImplementation) field.getTypeImplementation()).getReferenceTypeName() + "* " + field.getFieldName() + ";\n");
             } else {
-                throw new UnsupportedOperationException("Not type reference implementation found in union type implementation");
+                throw new UnsupportedOperationException("Not type reference implementation found in compisote type implementation");
             }
         }
 
@@ -194,7 +194,34 @@ public class GeneratorVisitor implements Visitor<String> {
     }
 
     private void appendUnionTypeImplementation(TypeDefinition node, UnionTypeImplementation implementation, StringBuilder builder) {
-        builder.append("// Union\n");
+        builder.append("// Type '" + node.getTypeName() + "' declaration\n");
+        builder.append("typedef struct { \n");
+
+        builder.append("    union {\n");
+
+        for(ITypeImplementation impl : implementation.getTypes()) {
+            if(impl instanceof TypeReferenceImplementation) {
+                builder.append("        " + ((TypeReferenceImplementation) impl).getReferenceTypeName() + " A" + ";\n");
+            } else {
+                throw new UnsupportedOperationException("Not type reference implementation found in union type implementation");
+            }
+        }
+
+        builder.append("    } as;\n");
+
+        builder.append("} " + node.getSymbolName() + ";\n");
+
+        builder.append("\n");
+        
+        builder.append("// Type '" + node.getTypeName() + "' meta information\n");
+        builder.append("static _type_info _" + node.getSymbolName() + "_type_info = (_type_info) {\n");
+        builder.append("    .type_name = \"" + node.getTypeName() + "\",\n");
+        builder.append("    .category = Union,\n");
+        builder.append("    .compound_fields = NULL,\n");
+        builder.append("    .union_fields = NULL\n");
+        builder.append("};");
+
+        builder.append("\n");
     }
 
     @Override

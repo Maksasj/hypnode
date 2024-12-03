@@ -13,6 +13,10 @@ public class ArrayTypeImplementation extends ITypeImplementation {
         return child;
     }
 
+    public void setChildTypeImplementation(ITypeImplementation typeImplementation) {
+        this.child = typeImplementation;
+    }
+
     @Override
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);
