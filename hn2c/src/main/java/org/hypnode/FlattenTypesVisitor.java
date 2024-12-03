@@ -24,32 +24,42 @@ import org.hypnode.ast.attributes.RequiredAttribute;
 import org.hypnode.ast.attributes.TriggerAttribute;
 import org.utils.StringUtils;
 
-public class FlattenTypesVisitor implements Visitor<Object> {
+public class FlattenTypesVisitor implements Visitor<Integer> {
 	private HypnodeModule module;
 
 	public FlattenTypesVisitor(HypnodeModule module) {
 		this.module = module;
 	}
 
-	public void flatten() {
-		visit(module);
+	public Integer flatten() {
+		return visit(module);
 	}
 
 	@Override
-	public Object visit(HypnodeModule node) {
-		for(TypeDefinition definition : node.getTypeDefinitions()) {
-			definition.accept(this);
-		}
+	public Integer visit(HypnodeModule node) {
+		Integer counter = 0;
 
-		for(NodeDefinition definition : node.getNodeDefinitions()) {
-			definition.accept(this);
-		}
+		List<TypeDefinition> listTypeDefs = node.getTypeDefinitions();
+		int typeDefCount = listTypeDefs.size();
+        for (int i = 0; i < typeDefCount; i++) {
+            TypeDefinition current = listTypeDefs.get(i);
+			counter += current.accept(this);
+        }
 
-		return null;
+		List<TypeDefinition> listNodeDefs = node.getTypeDefinitions();
+		int nodeDefCount = listNodeDefs.size();
+        for (int i = 0; i < nodeDefCount; i++) {
+            TypeDefinition current = listNodeDefs.get(i);
+			counter += current.accept(this);
+        }
+
+		return counter;
 	}
 
 	@Override
-	public Object visit(NodeDefinition node) {
+	public Integer visit(NodeDefinition node) {
+		Integer counter = 0;
+
         List<PortDefinition> inputPorts = node.getInputPorts();
 		for(PortDefinition port : inputPorts) {
 			ITypeImplementation impl = port.getTypeImplementation();
@@ -60,6 +70,8 @@ public class FlattenTypesVisitor implements Visitor<Object> {
 				TypeDefinition def = new TypeDefinition(typeName, impl);
 				port.setTypeImplementation(new TypeReferenceImplementation(def.getSymbolName()));
 				module.addTypeDefinition(def);
+				
+				counter += 1;
 			}
 		}
 
@@ -73,138 +85,153 @@ public class FlattenTypesVisitor implements Visitor<Object> {
 				TypeDefinition def = new TypeDefinition(typeName, impl);
 				port.setTypeImplementation(new TypeReferenceImplementation(def.getSymbolName()));
 				module.addTypeDefinition(def);
+
+				counter += 1;
 			}
 		}
 
-		return null;
+		return counter;
 	}
 
 	@Override
-	public Object visit(TypeDefinition node) {
+	public Integer visit(TypeDefinition node) {
+		Integer counter = 0;
+
 		ITypeImplementation impl = node.getImplementation();
 
 		if(impl instanceof ArrayTypeImplementation) {
-            visit((ArrayTypeImplementation) impl);
+            counter += visit((ArrayTypeImplementation) impl);
         } else if(impl instanceof CompositeTypeImplementation) {
-            visit((CompositeTypeImplementation) impl);
+            counter += visit((CompositeTypeImplementation) impl);
         } else if(impl instanceof TypeReferenceImplementation) {
             // builder.append("// Type Reference\n");
 			throw new UnsupportedOperationException("Type reference flatten '" + node.getTypeName() + "'");
         } else if(impl instanceof UnionTypeImplementation) {
-            visit((UnionTypeImplementation) impl);
+            counter += visit((UnionTypeImplementation) impl);
         } else {
 			throw new UnsupportedOperationException("Union type flatten");
         }
 
-		return null;
+		return counter;
 	}
 
 	@Override
-	public Object visit(ArrayTypeImplementation node) {
+	public Integer visit(ArrayTypeImplementation node) {
 		// TODO Auto-generated method stub
 		// throw new UnsupportedOperationException("Unimplemented method 'visit'");
 
-		return null;
+		return 0;
 	}
 
 	@Override
-	public Object visit(CompositeTypeImplementation node) {
+	public Integer visit(CompositeTypeImplementation node) {
+		Integer counter = 0;
+
 		for(FieldDefinition field : node.getFields()) {
-			if(!field.isTypeReferenceType())
-				throw new UnsupportedOperationException("Composite type field needs to be flatten");
+			ITypeImplementation impl = field.getTypeImplementation();
+
+			String typeName = "atsym_" + StringUtils.generateRandomString(16);
+			
+			if(!(impl instanceof TypeReferenceImplementation)) {
+				TypeDefinition def = new TypeDefinition(typeName, impl);
+				field.setTypeImplementation(new TypeReferenceImplementation(def.getSymbolName()));
+				module.addTypeDefinition(def);
+				
+				counter += 1;
+			}
 		}
 
-		return null;
+		return counter;
 	}
 
 	@Override
-	public Object visit(TypeReferenceImplementation node) {
+	public Integer visit(TypeReferenceImplementation node) {
 		// TODO Auto-generated method stub
 		// throw new UnsupportedOperationException("Unimplemented method 'visit'");
 
-		return null;
+		return 0;
 	}
 
 
 	@Override
-	public Object visit(UnionTypeImplementation node) {
+	public Integer visit(UnionTypeImplementation node) {
 		for(ITypeImplementation field : node.getTypes()) {
-			throw new UnsupportedOperationException("UnionTypeImplementation");
+			throw new UnsupportedOperationException("UnionTypeImplementation need to do that !!!!");
 			// if(!field.isTypeReferenceType())
 			// 	throw new UnsupportedOperationException("Composite type field needs to be flatten");
 		}
 
-		return null;
+		return 0;
 	}
 
 	@Override
-	public Object visit(FieldAccess node) {
+	public Integer visit(FieldAccess node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
 	@Override
-	public Object visit(FieldDefinition node) {
+	public Integer visit(FieldDefinition node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
 	@Override
-	public Object visit(NodeDeclaration node) {
+	public Integer visit(NodeDeclaration node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
 	@Override
-	public Object visit(StatementListNodeImplementation node) {
+	public Integer visit(StatementListNodeImplementation node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
 	@Override
-	public Object visit(ImportNodeImplementation node) {
+	public Integer visit(ImportNodeImplementation node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
 	@Override
-	public Object visit(PortDefinition node) {
+	public Integer visit(PortDefinition node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
 	@Override
-	public Object visit(ExportAttribute node) {
+	public Integer visit(ExportAttribute node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
 	@Override
-	public Object visit(RequiredAttribute node) {
+	public Integer visit(RequiredAttribute node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
 	@Override
-	public Object visit(OptionalAttribute node) {
+	public Integer visit(OptionalAttribute node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
 	@Override
-	public Object visit(TriggerAttribute node) {
+	public Integer visit(TriggerAttribute node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
 	@Override
-	public Object visit(NodeConnectionStatement node) {
+	public Integer visit(NodeConnectionStatement node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}
 
 	@Override
-	public Object visit(NodeInstanceStatement node) {
+	public Integer visit(NodeInstanceStatement node) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'visit'");
 	}

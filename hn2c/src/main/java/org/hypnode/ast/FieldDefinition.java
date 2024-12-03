@@ -23,6 +23,10 @@ public class FieldDefinition extends AstNode {
         return type instanceof TypeReferenceImplementation;
     }
 
+    public void setTypeImplementation(ITypeImplementation typeImplementation) {
+        this.type = typeImplementation;
+    }
+
     @Override
     public <T> T accept(Visitor<T> visitor) {
         return visitor.visit(this);

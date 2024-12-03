@@ -19,7 +19,13 @@ public class Generator {
             
             // Flatten all inlined and anonymous types 
             FlattenTypesVisitor flattenTypes = new FlattenTypesVisitor(module);
-            flattenTypes.flatten();
+
+            Integer result;
+
+            do {
+                result = flattenTypes.flatten();
+                System.out.println("Runned type flatten with " + result + " changes");
+            } while (result > 0);
 
             // Do type checking
             // TypeCheckerVisitor typeChecker = new TypeCheckerVisitor();
