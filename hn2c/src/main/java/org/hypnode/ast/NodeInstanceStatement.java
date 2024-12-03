@@ -5,10 +5,11 @@ import org.utils.StringUtils;
 
 public class NodeInstanceStatement extends IStatement {
     private String symbolName;
-    private String nodeSymbolName;
 
     private String name;
     private String nodeName;
+
+    private NodeDefinition linkedDefinition;
 
     public NodeInstanceStatement(String name, String nodeName) {
         this.name = name;
@@ -16,21 +17,33 @@ public class NodeInstanceStatement extends IStatement {
 
         generateSymbolName();
 
-        nodeSymbolName = "PLACE HOLDER";
+        linkedDefinition = null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getNodeName() {
+        return nodeName;
     }
 
     public String getSymbolName() {
         return symbolName;
     }
 
-    public String getNodeSymbolName() {
-        return nodeSymbolName;
+    public NodeDefinition getLinkedNodeDefinition() {
+        return linkedDefinition;
+    }
+
+    public void linkNodeDefinition(NodeDefinition linkedDefinition) {
+        this.linkedDefinition = linkedDefinition;
     }
 
     private void generateSymbolName() {
         symbolName = "nisym_" + StringUtils.generateRandomString(16);
     };
-    
+
     @Override
     public <T> T accept(Visitor<T> visitor) {
         // TODO Auto-generated method stub

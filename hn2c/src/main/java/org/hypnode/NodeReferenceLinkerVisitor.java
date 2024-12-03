@@ -1,5 +1,7 @@
 package org.hypnode;
 
+import java.util.List;
+
 import org.hypnode.ast.ArrayTypeImplementation;
 import org.hypnode.ast.CompositeTypeImplementation;
 import org.hypnode.ast.FieldAccess;
@@ -20,10 +22,10 @@ import org.hypnode.ast.attributes.OptionalAttribute;
 import org.hypnode.ast.attributes.RequiredAttribute;
 import org.hypnode.ast.attributes.TriggerAttribute;
 
-public class TypeReferenceLinkerVisitor implements Visitor<Object> {
+public class NodeReferenceLinkerVisitor implements Visitor<Object> {
     private HypnodeModule module;
     
-    public TypeReferenceLinkerVisitor(HypnodeModule node) {
+    public NodeReferenceLinkerVisitor(HypnodeModule node) {
         module = node;
     }
 
@@ -33,18 +35,36 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
     
     @Override
     public Object visit(HypnodeModule node) {
-        for(TypeDefinition definition : node.getTypeDefinitions())
-            definition.accept(this);
-
         for(NodeDefinition definition : node.getNodeDefinitions())
             definition.accept(this);
 
         return null;
     }
 
+    private NodeDefinition getNodeDefinitionByName(String nodeName) {
+        for(NodeDefinition definition : module.getNodeDefinitions())
+            if(definition.getNodeName().equals(nodeName))
+                return definition;
+
+        return null;
+    } 
+
     @Override
     public Object visit(NodeDefinition node) {
+        List<NodeInstanceStatement> childNodes = node.getChildNodes();
         
+        if(childNodes == null)
+            return null;
+
+        for(NodeInstanceStatement instance : childNodes) {
+            NodeDefinition def = getNodeDefinitionByName(instance.getNodeName());
+
+            if(def == null)
+                throw new UnsupportedOperationException("Node '" + instance.getNodeName() + "'' is not defined");
+
+            instance.linkNodeDefinition(def);
+        }
+
         return null;
     }
 

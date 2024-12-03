@@ -90,6 +90,10 @@ public class NodeDefinition extends IDefinition {
         return implementation instanceof ImportNodeImplementation;
     }
 
+    public INodeImplementation getImplementation() {
+        return implementation;
+    }
+
     private void generateSymbolName() {
         symbolName = "nsym_" + StringUtils.generateRandomString(16);
     };

@@ -28,8 +28,12 @@ public class Generator {
             } while (result > 0);
 
             // Link all type references
-            TypeReferenceLinkerVisitor typeReferenceLinker = new TypeReferenceLinkerVisitor();
-            typeReferenceLinker.visit(module);
+            TypeReferenceLinkerVisitor typeReferenceLinker = new TypeReferenceLinkerVisitor(module);
+            typeReferenceLinker.link();
+            
+            // Link all node references
+            NodeReferenceLinkerVisitor nodeReferenceLinker = new NodeReferenceLinkerVisitor(module);
+            nodeReferenceLinker.link();
 
             // Do type checking
             // TypeCheckerVisitor typeChecker = new TypeCheckerVisitor();

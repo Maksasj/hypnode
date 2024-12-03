@@ -402,9 +402,9 @@ public class GeneratorVisitor implements Visitor<String> {
 
             for(NodeInstanceStatement child : childNodes) {
                 String childSymbolName = child.getSymbolName();
-                String nodeSymbolName = child.getNodeSymbolName();
+                String nodeSymbolName = child.getLinkedNodeDefinition().getSymbolName();
 
-                builder.append("    " + nodeSymbolName + " " + childSymbolName + " = _node_" + nodeSymbolName + "_init();\n"); 
+                builder.append("    struct _node_" + nodeSymbolName + "_struct* " + childSymbolName + " = _node_" + nodeSymbolName + "_init(); // Initialized node '" + child.getName() + "' of type '" + child.getLinkedNodeDefinition().getNodeName() + "'\n"); 
             }
 
             builder.append("\n");
