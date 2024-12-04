@@ -2,6 +2,7 @@ package org.hypnode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 
 import org.hypnode.ast.ArrayTypeImplementation;
 import org.hypnode.ast.CompositeTypeImplementation;
@@ -23,8 +24,10 @@ import org.hypnode.ast.attributes.ExportAttribute;
 import org.hypnode.ast.attributes.OptionalAttribute;
 import org.hypnode.ast.attributes.RequiredAttribute;
 import org.hypnode.ast.attributes.TriggerAttribute;
+import org.hypnode.ast.value.ConstantValueExpression;
 import org.hypnode.ast.value.FieldAccessValueExpression;
 import org.hypnode.ast.value.StringValueExpression;
+import org.utils.Pair;
 
 public class GeneratorVisitor implements Visitor<String> {
     @Override
@@ -393,11 +396,30 @@ public class GeneratorVisitor implements Visitor<String> {
             builder.append("\n");
         }
 
-        List<NodeConnectionStatement> initialValueStatements = node.getConstantValueConnections();
+        // All connections to self ports
+        // List<NodeConnectionStatement> connectionsToSelfPorts = node.getConnections()
+        //     .stream()
+        //     .filter(st -> {
+        //         PortDefinition port = node.getSelfPort(st.getSink().get(0).getFieldName());
+        //         
+        //         if(port != null)
+        //             return true;
+// 
+        //         return false;
+        //     })
+        //     .toList();
+        // 
 
-        // Get all raw node connections
-        List<NodeConnectionStatement> connectionStatements = node.getConnections();
+        List<ConnectionPipe> con = node.getDataConnectionPipes();
         
+        for(ConnectionPipe k : con) {
+            System.out.println(k);
+        }
+       
+        // We need to get list of all sub connected graphs
+        // Basically
+        // List of (List of connections)
+
         List<Object> pipes = new ArrayList<>();
 
         if(!pipes.isEmpty()) {

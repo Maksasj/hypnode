@@ -259,7 +259,7 @@ value_expression ::=
 	{: RESULT = expr; :}
 	|
 	field_accesss_list:list
-	{: RESULT = new FieldAccessValueExpression(); :}
+	{: RESULT = new FieldAccessValueExpression(list); :}
 	|
 	L_PAREN value_expression:expr R_PAREN
 	{: RESULT = expr; :}

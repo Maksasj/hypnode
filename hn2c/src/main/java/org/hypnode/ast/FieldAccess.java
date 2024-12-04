@@ -9,6 +9,10 @@ public class FieldAccess extends AstNode {
         this.fieldName = fieldName;
     }
 
+    public String getFieldName() {
+        return fieldName;
+    }
+
     @Override
     public <T> T accept(Visitor<T> visitor) {
         // TODO Auto-generated method stub

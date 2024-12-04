@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hypnode.Visitor;
+import org.hypnode.ast.value.ConstantValueExpression;
 import org.hypnode.ast.value.FieldAccessValueExpression;
 
 public class StatementListNodeImplementation extends INodeImplementation {
@@ -22,7 +23,7 @@ public class StatementListNodeImplementation extends INodeImplementation {
 
         return childs;
     }
-
+ 
     public List<NodeConnectionStatement> getConnections() {
         List<NodeConnectionStatement> childs = new ArrayList<>();
 
@@ -38,7 +39,7 @@ public class StatementListNodeImplementation extends INodeImplementation {
 
         for(IStatement child : statements)
             if(child instanceof NodeConnectionStatement 
-                && ((NodeConnectionStatement) child).getSource() instanceof gasgasgasgasgasgasgas)
+                && ((NodeConnectionStatement) child).getSource() instanceof ConstantValueExpression)
                     childs.add((NodeConnectionStatement) child);
 
         return childs;

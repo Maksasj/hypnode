@@ -1,9 +1,21 @@
 package org.hypnode.ast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
+import javax.sound.sampled.Port;
+
+import org.hypnode.ConnectionPipe;
+import org.hypnode.NodeConnection;
 import org.hypnode.Visitor;
 import org.hypnode.ast.attributes.ExportAttribute;
+import org.hypnode.ast.value.FieldAccessValueExpression;
+import org.utils.Pair;
 import org.utils.StringUtils;
 
 public class NodeDefinition extends IDefinition {
@@ -22,6 +34,19 @@ public class NodeDefinition extends IDefinition {
 
         generateSymbolName();
     }
+
+    public PortDefinition getSelfPort(String portName) {
+        List<PortDefinition> ports = new ArrayList<>();
+        ports.addAll(declaration.getInputPorts());
+        ports.addAll(declaration.getInputPorts());
+        
+        Optional<PortDefinition> result = ports.stream().filter(pt -> pt.getPortName().equals(portName)).findFirst(); 
+
+        if(!result.isPresent())
+            return null;
+
+        return result.get();
+    } 
 
     @Override
     public <T> T accept(Visitor<T> visitor) {
@@ -99,6 +124,139 @@ public class NodeDefinition extends IDefinition {
 
     public INodeImplementation getImplementation() {
         return implementation;
+    }
+    
+    public static List<List<PortDefinition>> findGroups(List<NodeConnection> relations) {
+        // Build the adjacency list graph
+        Map<PortDefinition, Set<PortDefinition>> graph = new HashMap<>();
+        for (NodeConnection relation : relations) {
+            PortDefinition item1 = relation.getSink();
+            PortDefinition item2 = relation.getSource();
+            graph.putIfAbsent(item1, new HashSet<>());
+            graph.putIfAbsent(item2, new HashSet<>());
+            graph.get(item1).add(item2);
+            graph.get(item2).add(item1);
+        }
+
+        // Find connected components using dfs
+        List<List<PortDefinition>> groups = new ArrayList<>();
+        Set<PortDefinition> visited = new HashSet<>();
+
+        for (PortDefinition node : graph.keySet()) {
+            if (!visited.contains(node)) {
+                List<PortDefinition> group = new ArrayList<>();
+                dfs(node, graph, visited, group);
+                groups.add(group);
+            }
+        }
+
+        return groups;
+    }
+
+    private static void dfs(PortDefinition node, Map<PortDefinition, Set<PortDefinition>> graph, Set<PortDefinition> visited, List<PortDefinition> group) {
+        visited.add(node);
+        group.add(node);
+
+        for (PortDefinition neighbor : graph.get(node)) {
+            if (!visited.contains(neighbor)) {
+                dfs(neighbor, graph, visited, group);
+            }
+        }
+    }
+
+    public List<ConnectionPipe> getDataConnectionPipes() {
+        if(!(implementation instanceof StatementListNodeImplementation)) 
+            return null;
+
+        List<NodeConnection> connections = new ArrayList<>();
+
+        List<NodeConnectionStatement> statements = ((StatementListNodeImplementation) implementation).getConnections();
+        for(NodeConnectionStatement st : statements) {
+            if(!(st.getSource() instanceof FieldAccessValueExpression)) 
+                continue;
+
+            PortDefinition sink = null;
+
+            // We first check is it a self output port
+            for(PortDefinition out : getOutputPorts()) {
+                if(out.getPortName().equals(st.getSink().get(0).getFieldName())) {
+                    sink = out;
+                    break;
+                }
+            }
+
+            // If it is not, lets check for child nodes
+            for(NodeInstanceStatement node : getChildNodes()) {
+                if(!node.getName().equals(st.getSink().get(0).getFieldName())) {
+                    continue;
+                }
+
+                NodeDefinition linkedDef = node.getLinkedNodeDefinition();
+
+                for(PortDefinition p : linkedDef.getInputPorts()) {
+                    if(p.getPortName().equals(st.getSink().get(1).getFieldName())) {
+                        sink = p;
+                    }
+                }
+            }
+            
+            PortDefinition source = null;
+
+            List<FieldAccess> access = ((FieldAccessValueExpression) st.getSource()).getAccessList();
+
+            // We first check is it a self input port
+            for(PortDefinition input : getInputPorts()) {
+                if(input.getPortName().equals(access.get(0).getFieldName())) {
+                    source = input;
+                    break;
+                }
+            }
+
+            // If it is not, lets check for child nodes
+            for(NodeInstanceStatement node : getChildNodes()) {
+                if(!node.getName().equals(access.get(0).getFieldName())) {
+                    continue;
+                }
+
+                NodeDefinition linkedDef = node.getLinkedNodeDefinition();
+
+                for(PortDefinition p : linkedDef.getOutputPorts()) {
+                    if(p.getPortName().equals(access.get(1).getFieldName())) {
+                        source = p;
+                    }
+                }
+            }
+
+            if(sink == null)
+                throw new UnsupportedOperationException("This connections is not possible SINK is not pressent");
+
+            if(source == null)
+                throw new UnsupportedOperationException("This connections is not possible SOURCE is not pressent");
+
+            connections.add(new NodeConnection(st, source, sink));
+        }
+
+        List<List<PortDefinition>> portGroups = findGroups(connections);
+
+        List<ConnectionPipe> connectionPipes = new ArrayList<>();
+
+        for(List<PortDefinition> group : portGroups) {
+            List<NodeConnection> toGroup = new ArrayList<>();
+
+            for(NodeConnection con : connections) {
+                if(group.stream().anyMatch(port -> port == con.getSink())) {
+                    toGroup.add(con);
+                }
+
+                if(group.stream().anyMatch(port -> port == con.getSource())) {
+                    toGroup.add(con);
+                }
+            }
+
+            connectionPipes.add(new ConnectionPipe(toGroup));
+        }
+
+        return connectionPipes;
     }
 
     private void generateSymbolName() {

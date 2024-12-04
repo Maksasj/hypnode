@@ -14,6 +14,10 @@ public class NodeConnectionStatement extends IStatement {
         this.source = source;
     }
 
+    public List<FieldAccess> getSink() {
+        return sink;
+    }
+    
     public IValueExpression getSource() {
         return source;
     }
