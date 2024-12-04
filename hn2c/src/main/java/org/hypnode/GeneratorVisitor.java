@@ -396,36 +396,32 @@ public class GeneratorVisitor implements Visitor<String> {
             builder.append("\n");
         }
 
-        // All connections to self ports
-        // List<NodeConnectionStatement> connectionsToSelfPorts = node.getConnections()
-        //     .stream()
-        //     .filter(st -> {
-        //         PortDefinition port = node.getSelfPort(st.getSink().get(0).getFieldName());
-        //         
-        //         if(port != null)
-        //             return true;
-// 
-        //         return false;
-        //     })
-        //     .toList();
-        // 
-
-        List<ConnectionPipe> con = node.getDataConnectionPipes();
-        
-        for(ConnectionPipe k : con) {
-            System.out.println(k);
-        }
-       
-        // We need to get list of all sub connected graphs
-        // Basically
-        // List of (List of connections)
-
-        List<Object> pipes = new ArrayList<>();
+        List<ConnectionPipe> pipes = node.getDataConnectionPipes();
 
         if(!pipes.isEmpty()) {
             builder.append("    // Initialize all connections\n");
             
-            builder.append("\n");
+            for(ConnectionPipe k : pipes) {
+                if(k.haveConnectionNodeSink(node)) {
+                    builder.append("    // Connection pipe " + k.getSymbolName() + " is managed by top level node\n");
+                } else {
+                    builder.append("   _port_struct " + k.getSymbolName() + " = (_port_struct) {\n");
+                    builder.append("        .port_name = \"" + k.getSymbolName() + "\",\n");
+                    builder.append("        .value = NULL, // Initial value\n");
+                    builder.append("        .value_type_info = _i32_type_info // Todo this need to be fixed\n");
+                    builder.append("    };\n");
+                }
+
+                builder.append("\n");
+
+                for(NodeConnection con : k.getConnections()) {
+                    NodeInstanceStatement st = con.getSourceNodeInstance();
+
+                    builder.append("    " + st.getSymbolName() + "->" + con.getSink().getSymbolName() + " = &" + k.getSymbolName() + "; // " + st.getName() + "." + con.getSink().getPortName() + "\n");
+                }
+
+                builder.append("\n");
+            }
         }
 
         builder.append("    // Running flag\n");
@@ -433,11 +429,6 @@ public class GeneratorVisitor implements Visitor<String> {
 
         builder.append("    do {\n");
         builder.append("        running = 0;\n");
-
-
-        for(Object pipe : pipes) {
-            builder.append("    // pipe");
-        }
 
         builder.append("    } while(running > 0);\n");
 

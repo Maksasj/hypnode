@@ -176,11 +176,15 @@ public class NodeDefinition extends IDefinition {
                 continue;
 
             PortDefinition sink = null;
+            NodeDefinition linkedSinkDef = null;
+            NodeInstanceStatement sinkInstance = null;
 
             // We first check is it a self output port
             for(PortDefinition out : getOutputPorts()) {
                 if(out.getPortName().equals(st.getSink().get(0).getFieldName())) {
                     sink = out;
+                    linkedSinkDef = this;
+                    sinkInstance = null;
                     break;
                 }
             }
@@ -190,10 +194,11 @@ public class NodeDefinition extends IDefinition {
                 if(!node.getName().equals(st.getSink().get(0).getFieldName())) {
                     continue;
                 }
+                
+                sinkInstance = node;
+                linkedSinkDef = node.getLinkedNodeDefinition();
 
-                NodeDefinition linkedDef = node.getLinkedNodeDefinition();
-
-                for(PortDefinition p : linkedDef.getInputPorts()) {
+                for(PortDefinition p : linkedSinkDef.getInputPorts()) {
                     if(p.getPortName().equals(st.getSink().get(1).getFieldName())) {
                         sink = p;
                     }
@@ -201,6 +206,8 @@ public class NodeDefinition extends IDefinition {
             }
             
             PortDefinition source = null;
+            NodeDefinition linkedSourceDef = null;
+            NodeInstanceStatement sourceInstance = null;
 
             List<FieldAccess> access = ((FieldAccessValueExpression) st.getSource()).getAccessList();
 
@@ -208,6 +215,8 @@ public class NodeDefinition extends IDefinition {
             for(PortDefinition input : getInputPorts()) {
                 if(input.getPortName().equals(access.get(0).getFieldName())) {
                     source = input;
+                    linkedSourceDef = this;
+                    sourceInstance = null;
                     break;
                 }
             }
@@ -218,9 +227,10 @@ public class NodeDefinition extends IDefinition {
                     continue;
                 }
 
-                NodeDefinition linkedDef = node.getLinkedNodeDefinition();
+                sourceInstance = node;
+                linkedSourceDef = node.getLinkedNodeDefinition();
 
-                for(PortDefinition p : linkedDef.getOutputPorts()) {
+                for(PortDefinition p : linkedSourceDef.getOutputPorts()) {
                     if(p.getPortName().equals(access.get(1).getFieldName())) {
                         source = p;
                     }
@@ -233,7 +243,7 @@ public class NodeDefinition extends IDefinition {
             if(source == null)
                 throw new UnsupportedOperationException("This connections is not possible SOURCE is not pressent");
 
-            connections.add(new NodeConnection(st, source, sink));
+            connections.add(new NodeConnection(st, source, linkedSinkDef, sinkInstance, sink, linkedSourceDef, sourceInstance));
         }
 
         List<List<PortDefinition>> portGroups = findGroups(connections);
@@ -257,6 +267,14 @@ public class NodeDefinition extends IDefinition {
         }
 
         return connectionPipes;
+    }
+
+    public NodeInstanceStatement getNodeInstanceStatement(String name) {
+        for(NodeInstanceStatement child : getChildNodes())
+            if(child.getName().equals(name))
+                return child;
+ 
+        return null;
     }
 
     private void generateSymbolName() {
