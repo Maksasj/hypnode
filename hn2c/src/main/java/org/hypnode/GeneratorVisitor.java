@@ -429,6 +429,11 @@ public class GeneratorVisitor implements Visitor<String> {
 
         builder.append("    do {\n");
         builder.append("        running = 0;\n");
+        builder.append("\n");
+
+        for(NodeInstanceStatement child : childNodes) {
+            builder.append("        running += _" + child.getLinkedNodeDefinition().getSymbolName() + "_trigger(" + child.getSymbolName() + "); // Trigger node '" + child.getNodeName() + "' \n");
+        }
 
         builder.append("    } while(running > 0);\n");
 

@@ -16,11 +16,9 @@ node main (argc: i32, argv: string[]) => () = {
     let s: some;
 
     cool.pepe <- s.out;
-    l.message <- s.out;
+    l.message <- "Hello world";
 
     let a: A;
     let b: B;
     b.in <- a.out; 
-    l.message <- a.out; 
-    l.message <- b.out;
 }
