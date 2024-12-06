@@ -30,6 +30,12 @@ import org.hypnode.ast.value.StringValueExpression;
 import org.utils.Pair;
 
 public class GeneratorVisitor implements Visitor<String> {
+    private Features features;
+    
+    public GeneratorVisitor(Features features) {
+        this.features = features;
+    }
+
     @Override
     public String visit(HypnodeModule node) {
         StringBuilder builder = new StringBuilder();

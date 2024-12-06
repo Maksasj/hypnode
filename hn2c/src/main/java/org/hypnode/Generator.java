@@ -9,6 +9,12 @@ import gen.Scanner;
 import java_cup.runtime.Symbol;
 
 public class Generator {
+    private Features features;
+
+    public Generator(Features features) {
+        this.features = features;
+    }
+
     public String generate(Reader in) {
         Scanner scanner = new gen.Scanner(in);
         Parser parser = new Parser(scanner);
@@ -20,12 +26,12 @@ public class Generator {
             // Flatten all inlined and anonymous types 
             FlattenTypesVisitor flattenTypes = new FlattenTypesVisitor(module);
 
-            Integer result;
+            Integer flattenResult;
 
             do {
-                result = flattenTypes.flatten();
-                System.out.println("Runned type flatten with " + result + " changes");
-            } while (result > 0);
+                flattenResult = flattenTypes.flatten();
+                System.out.println("Runned type flatten with " + flattenResult + " changes");
+            } while (flattenResult > 0);
 
             // Link all type references
             TypeReferenceLinkerVisitor typeReferenceLinker = new TypeReferenceLinkerVisitor(module);
@@ -39,9 +45,10 @@ public class Generator {
             // TypeCheckerVisitor typeChecker = new TypeCheckerVisitor();
             // Integer typeCheckResult = typeChecker.visit(module);
 
-            GeneratorVisitor generator = new GeneratorVisitor();
+            GeneratorVisitor generator = new GeneratorVisitor(features);
+            String result = generator.visit(module);
             
-            return generator.visit(module);
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
