@@ -49,10 +49,10 @@ public class FlattenTypesVisitor implements Visitor<Integer> {
 			counter += current.accept(this);
         }
 
-		List<TypeDefinition> listNodeDefs = node.getTypeDefinitions();
+		List<NodeDefinition> listNodeDefs = node.getNodeDefinitions();
 		int nodeDefCount = listNodeDefs.size();
         for (int i = 0; i < nodeDefCount; i++) {
-            TypeDefinition current = listNodeDefs.get(i);
+            NodeDefinition current = listNodeDefs.get(i);
 			counter += current.accept(this);
         }
 
@@ -63,30 +63,28 @@ public class FlattenTypesVisitor implements Visitor<Integer> {
 	public Integer visit(NodeDefinition node) {
 		Integer counter = 0;
 
-        List<PortDefinition> inputPorts = node.getInputPorts();
-		for(PortDefinition port : inputPorts) {
+		for(PortDefinition port : node.getInputPorts()) {
 			ITypeImplementation impl = port.getTypeImplementation();
 
 			String typeName = "atsym_" + StringUtils.generateRandomString(16);
 			
 			if(!(impl instanceof TypeReferenceImplementation)) {
 				TypeDefinition def = new TypeDefinition(typeName, impl);
-				port.setTypeImplementation(new TypeReferenceImplementation(def.getSymbolName()));
+				port.setTypeImplementation(new TypeReferenceImplementation(def.getTypeName()));
 				module.addTypeDefinition(def);
 				
 				counter += 1;
 			}
 		}
 
-        List<PortDefinition> outputPorts = node.getOutputPorts();
-		for(PortDefinition port : outputPorts) {
+		for(PortDefinition port : node.getOutputPorts()) {
 			ITypeImplementation impl = port.getTypeImplementation();
 
 			String typeName = "atsym_" + StringUtils.generateRandomString(16);
 
 			if(!(impl instanceof TypeReferenceImplementation)) {
 				TypeDefinition def = new TypeDefinition(typeName, impl);
-				port.setTypeImplementation(new TypeReferenceImplementation(def.getSymbolName()));
+				port.setTypeImplementation(new TypeReferenceImplementation(def.getTypeName()));
 				module.addTypeDefinition(def);
 
 				counter += 1;
@@ -127,7 +125,7 @@ public class FlattenTypesVisitor implements Visitor<Integer> {
 			String typeName = "atsym_" + StringUtils.generateRandomString(16);
 
 			TypeDefinition def = new TypeDefinition(typeName, impl);
-			node.setChildTypeImplementation(new TypeReferenceImplementation(def.getSymbolName()));
+			node.setChildTypeImplementation(new TypeReferenceImplementation(def.getTypeName()));
 			module.addTypeDefinition(def);
 			
 			counter += 1;
@@ -147,7 +145,7 @@ public class FlattenTypesVisitor implements Visitor<Integer> {
 				String typeName = "atsym_" + StringUtils.generateRandomString(16);
 
 				TypeDefinition def = new TypeDefinition(typeName, impl);
-				field.setTypeImplementation(new TypeReferenceImplementation(def.getSymbolName()));
+				field.setTypeImplementation(new TypeReferenceImplementation(def.getTypeName()));
 				module.addTypeDefinition(def);
 				
 				counter += 1;
@@ -180,7 +178,7 @@ public class FlattenTypesVisitor implements Visitor<Integer> {
 				String typeName = "atsym_" + StringUtils.generateRandomString(16);
 
 				TypeDefinition def = new TypeDefinition(typeName, impl);
-				implementations.add(new TypeReferenceImplementation(def.getSymbolName()));
+				implementations.add(new TypeReferenceImplementation(def.getTypeName()));
 				module.addTypeDefinition(def);
 				
 				counter += 1;
@@ -190,7 +188,7 @@ public class FlattenTypesVisitor implements Visitor<Integer> {
 				String typeName = "atsym_" + StringUtils.generateRandomString(16);
 
 				TypeDefinition def = new TypeDefinition(typeName, impl);
-				implementations.add(new TypeReferenceImplementation(def.getSymbolName()));
+				implementations.add(new TypeReferenceImplementation(def.getTypeName()));
 				module.addTypeDefinition(def);
 				
 				counter += 1;

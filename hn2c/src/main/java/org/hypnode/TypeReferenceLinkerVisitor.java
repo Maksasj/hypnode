@@ -44,9 +44,46 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
         return null;
     }
 
+    private TypeDefinition getTypeDefinitionByName(String typeName) {
+        for(TypeDefinition definition : module.getTypeDefinitions()) {
+            System.out.println(definition.getSymbolName() + " | " + definition.getTypeName() + " | " + typeName);
+
+            if(definition.getTypeName().equals(typeName))
+                return definition;
+        }
+
+        return null;
+    } 
+
     @Override
     public Object visit(NodeDefinition node) {
+        for(PortDefinition port : node.getInputPorts()) {
+            if(!(port.getTypeImplementation() instanceof TypeReferenceImplementation))
+                throw new UnsupportedOperationException("Node '" + node.getNodeName() + "'' port '" + port.getPortName() + "' is not type reference implementation port on type reference linker stage");
+            
+            TypeReferenceImplementation impl = (TypeReferenceImplementation) port.getTypeImplementation();
+
+            System.out.println(impl.getReferenceTypeName());
+            if(impl.isPrimitiveType()) {
+                impl.setLinkedSymbolName(impl.getReferenceTypeName());
+            } else {
+                impl.setLinkedSymbolName(getTypeDefinitionByName(impl.getReferenceTypeName()).getSymbolName());
+            }
+        }
+
+        for(PortDefinition port : node.getOutputPorts()) {
+            if(!(port.getTypeImplementation() instanceof TypeReferenceImplementation))
+                throw new UnsupportedOperationException("Node '" + node.getNodeName() + "'' port '" + port.getPortName() + "' is not type reference implementation port on type reference linker stage");
         
+            TypeReferenceImplementation impl = (TypeReferenceImplementation) port.getTypeImplementation();
+
+            if(impl.isPrimitiveType()) {
+                impl.setLinkedSymbolName(impl.getReferenceTypeName());
+            } else {
+                impl.setLinkedSymbolName(getTypeDefinitionByName(impl.getReferenceTypeName()).getSymbolName());
+            }
+        }
+
         return null;
     }
 

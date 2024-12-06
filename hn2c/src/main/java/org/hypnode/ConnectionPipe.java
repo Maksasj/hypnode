@@ -2,7 +2,9 @@ package org.hypnode;
 
 import java.util.List;
 
+import org.hypnode.ast.ITypeImplementation;
 import org.hypnode.ast.NodeDefinition;
+import org.hypnode.ast.PortDefinition;
 import org.utils.StringUtils;
 
 public class ConnectionPipe {
@@ -19,6 +21,14 @@ public class ConnectionPipe {
         return symbolName;
     }
 
+    public ITypeImplementation getTopLevelTypeImplementation() {
+        return connections.get(0).getSource().getTypeImplementation();
+    }
+
+    public NodeConnection getConnectionNodeSink(NodeDefinition node) {
+        return connections.stream().filter((con) -> con.getSinkNode() == node).toList().get(0);
+    }
+    
     public boolean haveConnectionNodeSink(NodeDefinition node) {
         return connections.stream().anyMatch((con) -> con.getSinkNode() == node);
     }

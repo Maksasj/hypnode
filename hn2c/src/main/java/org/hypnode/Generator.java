@@ -45,8 +45,8 @@ public class Generator {
             // TypeCheckerVisitor typeChecker = new TypeCheckerVisitor();
             // Integer typeCheckResult = typeChecker.visit(module);
 
-            GeneratorVisitor generator = new GeneratorVisitor(features);
-            String result = generator.visit(module);
+            GeneratorVisitor generator = new GeneratorVisitor(module, features);
+            String result = generator.generate();
             
             return result;
         } catch (Exception e) {

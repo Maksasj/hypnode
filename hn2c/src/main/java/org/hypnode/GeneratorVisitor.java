@@ -1,8 +1,8 @@
 package org.hypnode;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 
 import org.hypnode.ast.ArrayTypeImplementation;
 import org.hypnode.ast.CompositeTypeImplementation;
@@ -24,16 +24,21 @@ import org.hypnode.ast.attributes.ExportAttribute;
 import org.hypnode.ast.attributes.OptionalAttribute;
 import org.hypnode.ast.attributes.RequiredAttribute;
 import org.hypnode.ast.attributes.TriggerAttribute;
-import org.hypnode.ast.value.ConstantValueExpression;
 import org.hypnode.ast.value.FieldAccessValueExpression;
+import org.hypnode.ast.value.IValueExpression;
 import org.hypnode.ast.value.StringValueExpression;
-import org.utils.Pair;
 
 public class GeneratorVisitor implements Visitor<String> {
     private Features features;
-    
-    public GeneratorVisitor(Features features) {
+    private HypnodeModule module;
+
+    public GeneratorVisitor(HypnodeModule module, Features features) {
         this.features = features;
+        this.module = module;
+    }
+
+    public String generate() {
+        return module.accept(this);
     }
 
     @Override
@@ -76,7 +81,13 @@ public class GeneratorVisitor implements Visitor<String> {
         if(!inputPorts.isEmpty()) {
             builder.append("    // Input ports\n");
             for(PortDefinition port : inputPorts) {
-                builder.append("    _port_struct* " + port.getSymbolName() + "; // " + port.getPortName() + "\n");
+                if(port.getTypeImplementation() instanceof TypeReferenceImplementation) {
+                    TypeReferenceImplementation impl = (TypeReferenceImplementation) port.getTypeImplementation();
+                    builder.append("    " + impl.getLinkedSymbolName() + "* " + port.getSymbolName() + "; // " + port.getPortName() + "\n");
+                } else {
+                    System.out.println(port.getTypeImplementation());
+                    throw new UnsupportedOperationException("Not type reference implementation found in node input port definition");
+                }
             }
         }
 
@@ -87,7 +98,13 @@ public class GeneratorVisitor implements Visitor<String> {
 
             builder.append("    // Output ports\n");
             for(PortDefinition port : outputPorts) {
-                builder.append("    _port_struct* " + port.getSymbolName() + "; // " + port.getPortName() + "\n");
+                if(port.getTypeImplementation() instanceof TypeReferenceImplementation) {
+                    TypeReferenceImplementation impl = (TypeReferenceImplementation) port.getTypeImplementation();
+                    builder.append("    " + impl.getReferenceTypeName() + "* " + port.getSymbolName() + "; // " + port.getPortName() + "\n");
+                } else {
+                    System.out.println(port.getTypeImplementation());
+                    throw new UnsupportedOperationException("Not type reference implementation found in node output port definition");
+                }
             }
         }
 
@@ -343,6 +360,27 @@ public class GeneratorVisitor implements Visitor<String> {
 
         builder.append("\n");
 
+        // Initialize ports
+        if(!node.getInputPorts().isEmpty())
+            builder.append("    // Initialize input ports\n");
+
+        for(PortDefinition p : node.getInputPorts()) {
+            builder.append("    node->" + p.getSymbolName() + " = NULL;\n");
+        }
+
+        if(!node.getInputPorts().isEmpty())
+            builder.append("\n");
+
+        if(!node.getOutputPorts().isEmpty())
+            builder.append("    // Initialize output ports\n");
+
+        for(PortDefinition p : node.getOutputPorts()) {
+            builder.append("    node->" + p.getSymbolName() + " = NULL;\n");
+        }
+
+        if(!node.getOutputPorts().isEmpty())
+            builder.append("\n");
+        
         builder.append("    // Initial trigger callback call;\n");
         builder.append("    _node_" + symbolName + "_trigger(node);\n");
         builder.append("\n");
@@ -408,22 +446,47 @@ public class GeneratorVisitor implements Visitor<String> {
             builder.append("    // Initialize all connections\n");
             
             for(ConnectionPipe k : pipes) {
+                boolean isReferenced = false;
+
                 if(k.haveConnectionNodeSink(node)) {
                     builder.append("    // Connection pipe " + k.getSymbolName() + " is managed by top level node\n");
+
+                    TypeReferenceImplementation impl = (TypeReferenceImplementation) k.getTopLevelTypeImplementation();
+                    builder.append("    " + impl.getLinkedSymbolName() + "* " + k.getSymbolName() + " = ((struct _node_" + symbolName + "_struct*) _self)->" + k.getSymbolName() + ";\n");
+                    builder.append("\n");
+
                 } else {
-                    builder.append("   _port_struct " + k.getSymbolName() + " = (_port_struct) {\n");
-                    builder.append("        .port_name = \"" + k.getSymbolName() + "\",\n");
-                    builder.append("        .value = NULL, // Initial value\n");
-                    builder.append("        .value_type_info = _i32_type_info // Todo this need to be fixed\n");
-                    builder.append("    };\n");
+                    TypeReferenceImplementation impl = (TypeReferenceImplementation) k.getTopLevelTypeImplementation();
+                    builder.append("    " + impl.getReferenceTypeName() + "* " + k.getSymbolName() + ";\n");
+                    builder.append("    // Todo, need to initialize this connection pipe\n");
+                    builder.append("\n");
+
+                    isReferenced = true;
                 }
 
-                builder.append("\n");
-
                 for(NodeConnection con : k.getConnections()) {
+                    NodeConnectionStatement ct = con.getConnection();
                     NodeInstanceStatement st = con.getSourceNodeInstance();
+                    
+                    // builder.append("    " + st.getSymbolName() + "->" + con.getSink().getSymbolName() + " = ");
+                    StringBuilder sinkFieldAccess = new StringBuilder();
 
-                    builder.append("    " + st.getSymbolName() + "->" + con.getSink().getSymbolName() + " = &" + k.getSymbolName() + "; // " + st.getName() + "." + con.getSink().getPortName() + "\n");
+                    for(FieldAccess fa : ct.getSink()) {
+                        sinkFieldAccess.append(fa.getFieldName() + ".");
+                    }
+
+                    builder.append("    " + sinkFieldAccess.toString()  + " = ");
+
+                    if(isReferenced)
+                        builder.append("&");
+
+                    StringBuilder sourceFieldAccess = new StringBuilder();
+                    
+                    for(FieldAccess fa : ct.getSink()) {
+                        sourceFieldAccess.append(fa.getFieldName() + ".");
+                    }
+
+                    builder.append(sourceFieldAccess.toString() + "; // " + st.getName() + "." + con.getSink().getPortName() + "\n");
                 }
 
                 builder.append("\n");

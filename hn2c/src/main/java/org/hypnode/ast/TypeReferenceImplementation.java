@@ -18,6 +18,10 @@ public class TypeReferenceImplementation extends ITypeImplementation {
         return linkedSymbolName;
     }
 
+    public void setLinkedSymbolName(String linkedSymbolName) {
+        this.linkedSymbolName = linkedSymbolName;
+    }
+
     public boolean isPrimitiveType() {
         switch (typeName) {
             case "i8": return true;
