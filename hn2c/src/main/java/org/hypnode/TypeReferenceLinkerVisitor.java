@@ -67,7 +67,12 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
             if(impl.isPrimitiveType()) {
                 impl.setLinkedSymbolName(impl.getReferenceTypeName());
             } else {
-                impl.setLinkedSymbolName(getTypeDefinitionByName(impl.getReferenceTypeName()).getSymbolName());
+                TypeDefinition typeDef = getTypeDefinitionByName(impl.getReferenceTypeName());
+
+                if(typeDef == null)
+                    throw new UnsupportedOperationException("Type '" + impl.getReferenceTypeName() + "' is not declared");
+
+                impl.setLinkedSymbolName(typeDef.getSymbolName());
             }
         }
 
@@ -80,7 +85,12 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
             if(impl.isPrimitiveType()) {
                 impl.setLinkedSymbolName(impl.getReferenceTypeName());
             } else {
-                impl.setLinkedSymbolName(getTypeDefinitionByName(impl.getReferenceTypeName()).getSymbolName());
+                TypeDefinition typeDef = getTypeDefinitionByName(impl.getReferenceTypeName());
+
+                if(typeDef == null)
+                    throw new UnsupportedOperationException("Type '" + impl.getReferenceTypeName() + "' is not declared");
+
+                impl.setLinkedSymbolName(typeDef.getSymbolName());
             }
         }
 

@@ -41,9 +41,8 @@ public class Generator {
             NodeReferenceLinkerVisitor nodeReferenceLinker = new NodeReferenceLinkerVisitor(module);
             nodeReferenceLinker.link();
 
-            // Do type checking
-            // TypeCheckerVisitor typeChecker = new TypeCheckerVisitor();
-            // Integer typeCheckResult = typeChecker.visit(module);
+            SemanticAnalyzer semAn = new SemanticAnalyzer(module);
+            semAn.analyze();
 
             GeneratorVisitor generator = new GeneratorVisitor(module, features);
             String result = generator.generate();

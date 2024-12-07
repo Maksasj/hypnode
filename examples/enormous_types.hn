@@ -9,7 +9,7 @@ type Some = {
     field: {
         child: ((((((((((any | Some[])[][] | B)))))))) | A);
         child2: ((any | (any | Some[])[][])[][] | (any | Some[])[][])[];
-        child2: A[] | {
+        child3: A[] | {
             hahah: (any | Some[])[][];
         };
     };
@@ -20,7 +20,7 @@ type Model = {
     field: {
         child: ((((((((((any | Some[])[][] | B)))))))) | A);
         child2: ((any | (any | Some[])[][])[][] | (any | Some[])[][])[];
-        child2: (any | Some[])[][] | {
+        child3: (any | Some[])[][] | {
             hahah: (any | Some[])[][];
         };
     };
@@ -37,7 +37,7 @@ type Model = {
                         field: {
                             child: ((((((((((any | Some[])[][] | B)))))))) | A);
                             child2: ((any | (any | Some[])[][])[][] | (any | Some[])[][])[];
-                            child2: A[] | {
+                            child3: A[] | {
                                 hahah: (any | Some[])[][];
                             };
                         };

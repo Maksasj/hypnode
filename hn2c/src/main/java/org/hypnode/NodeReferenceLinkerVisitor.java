@@ -62,7 +62,7 @@ public class NodeReferenceLinkerVisitor implements Visitor<Object> {
             NodeDefinition def = getNodeDefinitionByName(instance.getNodeName());
 
             if(def == null)
-                throw new UnsupportedOperationException("Node '" + instance.getNodeName() + "'' is not defined");
+                throw new UnsupportedOperationException("Node '" + instance.getNodeName() + "' is not defined");
 
             instance.linkNodeDefinition(def);
         }

@@ -522,6 +522,7 @@ public class GeneratorVisitor implements Visitor<String> {
         if(!pipes.isEmpty()) {
             builder.append("    // Initialize all connections\n");
             
+            /*
             for(ConnectionPipe k : pipes) {
                 if(k.haveConnectionNodeSink(node)) {
                     builder.append("    // Connection pipe " + k.getSymbolName() + " is managed by top level node\n");
@@ -550,6 +551,7 @@ public class GeneratorVisitor implements Visitor<String> {
 
                 builder.append("\n");
             }
+            */
         }
 
         builder.append("    // Running flag\n");
