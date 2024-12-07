@@ -72,7 +72,6 @@ public class NodeReferenceLinkerVisitor implements Visitor<Object> {
 
     @Override
     public Object visit(TypeDefinition node) {
-        
         return null;
     }
 

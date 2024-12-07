@@ -5,6 +5,7 @@ import org.hypnode.ast.CompositeTypeImplementation;
 import org.hypnode.ast.FieldAccess;
 import org.hypnode.ast.FieldDefinition;
 import org.hypnode.ast.HypnodeModule;
+import org.hypnode.ast.ITypeImplementation;
 import org.hypnode.ast.ImportNodeImplementation;
 import org.hypnode.ast.NodeConnectionStatement;
 import org.hypnode.ast.NodeDeclaration;
@@ -97,8 +98,94 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
         return null;
     }
 
+    private String getTypeSymbolName(String typeName) {
+        for(TypeDefinition defs : module.getTypeDefinitions()) {
+            if(defs.getTypeName().equals(typeName)) {
+                return defs.getSymbolName();
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public Object visit(TypeDefinition node) {
+        ITypeImplementation impl = node.getImplementation();
+
+        if(impl instanceof ArrayTypeImplementation) {
+            ITypeImplementation child = ((ArrayTypeImplementation)impl).getChildTypeImplementation();
+            
+            if(!(child instanceof TypeReferenceImplementation))
+                throw new UnsupportedOperationException("Unexpected type implementation type");
+
+            TypeReferenceImplementation ref = (TypeReferenceImplementation) child;
+
+            if(!ref.isPrimitiveType()) {
+                String sym = getTypeSymbolName(ref.getReferenceTypeName());
+
+                if(sym == null)
+                    throw new UnsupportedOperationException("Type '" + ref.getReferenceTypeName() + " does not exist");
+
+                ref.setLinkedSymbolName(sym);
+            } else {
+                ref.setLinkedSymbolName(ref.getReferenceTypeName());
+            }
+        } else if(impl instanceof CompositeTypeImplementation) {
+            CompositeTypeImplementation actuall = (CompositeTypeImplementation) impl;
+
+            for(FieldDefinition def : actuall.getFields()) {
+                ITypeImplementation child = def.getTypeImplementation();
+            
+                if(!(child instanceof TypeReferenceImplementation))
+                    throw new UnsupportedOperationException("Unexpected type implementation type");
+    
+                TypeReferenceImplementation ref = (TypeReferenceImplementation) child;
+    
+                if(!ref.isPrimitiveType()) {
+                    String sym = getTypeSymbolName(ref.getReferenceTypeName());
+    
+                    if(sym == null)
+                        throw new UnsupportedOperationException("Type '" + ref.getReferenceTypeName() + " does not exist");
+    
+                    ref.setLinkedSymbolName(sym);
+                } else {
+                    ref.setLinkedSymbolName(ref.getReferenceTypeName());
+                }
+            }
+        } else if(impl instanceof UnionTypeImplementation) {
+            UnionTypeImplementation actuall = (UnionTypeImplementation) impl;
+
+            for(ITypeImplementation child : actuall.getTypes()) {
+                if(!(child instanceof TypeReferenceImplementation))
+                    throw new UnsupportedOperationException("Unexpected type implementation type");
+    
+                TypeReferenceImplementation ref = (TypeReferenceImplementation) child;
+    
+                if(!ref.isPrimitiveType()) {
+                    String sym = getTypeSymbolName(ref.getReferenceTypeName());
+    
+                    if(sym == null)
+                        throw new UnsupportedOperationException("Type '" + ref.getReferenceTypeName() + " does not exist");
+    
+                    ref.setLinkedSymbolName(sym);
+                } else {
+                    ref.setLinkedSymbolName(ref.getReferenceTypeName());
+                }
+            }
+        } else if(impl instanceof TypeReferenceImplementation) {
+            TypeReferenceImplementation actuall = (TypeReferenceImplementation) impl;
+
+            if(!actuall.isPrimitiveType()) {
+                String sym = getTypeSymbolName(actuall.getReferenceTypeName());
+
+                if(sym == null)
+                    throw new UnsupportedOperationException("Type '" + actuall.getReferenceTypeName() + " does not exist");
+
+                actuall.setLinkedSymbolName(sym);
+            } else {
+                actuall.setLinkedSymbolName(actuall.getReferenceTypeName());
+            }
+        }
         
         return null;
     }

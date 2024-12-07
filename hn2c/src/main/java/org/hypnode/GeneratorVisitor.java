@@ -150,7 +150,7 @@ public class GeneratorVisitor implements Visitor<String> {
         } else if(impl instanceof CompositeTypeImplementation) {
             appendCompositeTypeImplementation(node, (CompositeTypeImplementation) impl, builder);
         } else if(impl instanceof TypeReferenceImplementation) {
-            builder.append("// Type Reference\n");
+            appendReferenceTypeImplementation(node, (TypeReferenceImplementation) impl, builder);
         } else if(impl instanceof UnionTypeImplementation) {
             appendUnionTypeImplementation(node, (UnionTypeImplementation) impl, builder);
         } else {
@@ -162,6 +162,15 @@ public class GeneratorVisitor implements Visitor<String> {
         return builder.toString();
     }
 
+    private void appendReferenceTypeImplementation(TypeDefinition node, TypeReferenceImplementation implementation, StringBuilder builder) {
+        builder.append("// Type '" + node.getTypeName() + "' declaration\n");
+
+        if(implementation.isPrimitiveType()) {
+            builder.append("typedef " + implementation.getReferenceTypeName() + " " + node.getSymbolName() + "; \n");
+        } else
+            builder.append("typedef " + implementation.getLinkedSymbolName() + " " + node.getSymbolName() + "; \n");
+    }
+
     private void appendArrayTypeImplementation(TypeDefinition node, ArrayTypeImplementation implementation, StringBuilder builder) {
         builder.append("// Type '" + node.getTypeName() + "' declaration\n");
         builder.append("typedef struct { \n");
@@ -169,7 +178,7 @@ public class GeneratorVisitor implements Visitor<String> {
         ITypeImplementation impl = implementation.getChildTypeImplementation();
 
         if(impl instanceof TypeReferenceImplementation) {
-            builder.append("    " + ((TypeReferenceImplementation) impl).getReferenceTypeName() + "* value;\n");
+            builder.append("    " + ((TypeReferenceImplementation) impl).getLinkedSymbolName() + "* value;\n");
         } else {
             throw new UnsupportedOperationException("Not type reference implementation found in array type implementation");
         }
@@ -195,7 +204,7 @@ public class GeneratorVisitor implements Visitor<String> {
 
         for(FieldDefinition field : implementation.getFields()) {
             if(field.getTypeImplementation() instanceof TypeReferenceImplementation) {
-                builder.append("    " + ((TypeReferenceImplementation) field.getTypeImplementation()).getReferenceTypeName() + "* " + field.getFieldName() + ";\n");
+                builder.append("    " + ((TypeReferenceImplementation) field.getTypeImplementation()).getLinkedSymbolName() + "* " + field.getFieldName() + ";\n");
             } else {
                 throw new UnsupportedOperationException("Not type reference implementation found in compisote type implementation");
             }
@@ -224,7 +233,7 @@ public class GeneratorVisitor implements Visitor<String> {
 
         for(ITypeImplementation impl : implementation.getTypes()) {
             if(impl instanceof TypeReferenceImplementation) {
-                builder.append("        " + ((TypeReferenceImplementation) impl).getReferenceTypeName() + " A" + ";\n");
+                builder.append("        " + ((TypeReferenceImplementation) impl).getLinkedSymbolName() + " A" + ";\n");
             } else {
                 throw new UnsupportedOperationException("Not type reference implementation found in union type implementation");
             }

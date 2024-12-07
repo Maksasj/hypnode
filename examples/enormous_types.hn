@@ -5,6 +5,13 @@ type Matrix = f32[][];
 
 type AB = A | B;
 
+type M = Matrix;
+
+type Node = {
+    r: Node;
+    l: Node;
+};
+
 type Some = {
     field: {
         child: ((((((((((any | Some[])[][] | B)))))))) | A);
