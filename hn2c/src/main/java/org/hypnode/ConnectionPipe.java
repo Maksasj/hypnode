@@ -22,6 +22,7 @@ public class ConnectionPipe {
     }
 
     public ITypeImplementation getTopLevelTypeImplementation() {
+        // This method is not correct
         return connections.get(0).getSource().getTypeImplementation();
     }
 

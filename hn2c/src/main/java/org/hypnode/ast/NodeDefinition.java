@@ -70,6 +70,15 @@ public class NodeDefinition extends IDefinition {
         return declaration.getOutputPorts();
     }
 
+    public List<PortDefinition> getPorts() {
+        List<PortDefinition> ports = new ArrayList<>();
+
+        ports.addAll(getInputPorts());
+        ports.addAll(getOutputPorts());
+
+        return ports;
+    }
+
     public String getNodeName() {
         return declaration.getNodeName();
     }
@@ -132,8 +141,10 @@ public class NodeDefinition extends IDefinition {
         for (NodeConnection relation : relations) {
             PortDefinition item1 = relation.getSink();
             PortDefinition item2 = relation.getSource();
+            
             graph.putIfAbsent(item1, new HashSet<>());
             graph.putIfAbsent(item2, new HashSet<>());
+
             graph.get(item1).add(item2);
             graph.get(item2).add(item1);
         }
@@ -256,9 +267,7 @@ public class NodeDefinition extends IDefinition {
             for(NodeConnection con : connections) {
                 if(group.stream().anyMatch(port -> port == con.getSink())) {
                     toGroup.add(con);
-                }
-
-                if(group.stream().anyMatch(port -> port == con.getSource())) {
+                } else if(group.stream().anyMatch(port -> port == con.getSource())) {
                     toGroup.add(con);
                 }
             }

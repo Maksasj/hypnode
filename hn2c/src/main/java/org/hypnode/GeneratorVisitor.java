@@ -394,9 +394,6 @@ public class GeneratorVisitor implements Visitor<String> {
         String symbolName = node.getSymbolName();
 
         builder.append("void _node_" + symbolName + "_dispose(void* _node) {\n");
-        builder.append("    // Dispose port values\n");
-        builder.append("    // Todo\n");
-        builder.append("\n");
         builder.append("    // Dispose node structure\n");
         builder.append("    free(_node);\n");
         builder.append("}\n");
@@ -418,6 +415,86 @@ public class GeneratorVisitor implements Visitor<String> {
         builder.append("}\n");
 
         builder.append("\n");
+    }
+
+    private TypeDefinition getTypeFromReference(TypeReferenceImplementation reference) {
+        for(TypeDefinition impl : module.getTypeDefinitions()) {
+            System.out.println("AAA: " + impl.getSymbolName() + " | " + reference.getLinkedSymbolName());
+            if(impl.getSymbolName().equals(reference.getLinkedSymbolName())) {
+                return impl;
+            }
+        }
+
+        return null;
+    }
+
+    private String constructFieldAccess(NodeDefinition node, ConnectionPipe pipe, NodeConnection con) {
+        List<NodeInstanceStatement> childNodes = node.getChildNodes();
+
+        StringBuilder builder = new StringBuilder();
+
+        // First access thing should be a port or a child node
+        NodeConnectionStatement ct = con.getConnection();
+
+        List<List<FieldAccess>> directions = new ArrayList<>();
+        directions.add(ct.getSink());
+        directions.add(((FieldAccessValueExpression) ct.getSource()).getAccessList());
+
+        for(List<FieldAccess> access : directions) {
+            NodeInstanceStatement firstChildNode = childNodes
+                .stream()
+                .filter(x -> x.getName().equals(access.get(0).getFieldName()))
+                .findFirst()
+                .orElse(null); 
+
+            if(firstChildNode != null) {  
+                builder.append(firstChildNode.getSymbolName() + "->");
+                // Next one should be port name
+                NodeDefinition def = firstChildNode.getLinkedNodeDefinition(); 
+                
+                PortDefinition port = def
+                    .getPorts()
+                    .stream()
+                    .filter(x -> x.getPortName().equals(access.get(1).getFieldName()))
+                    .findFirst()
+                    .orElse(null);
+
+                if(port == null)
+                    throw new UnsupportedOperationException("There is not port " + access.get(1).getFieldName() + " in node " + def.getNodeName());
+            
+                ITypeImplementation impl = port.getTypeImplementation();
+                
+                if(!(impl instanceof TypeReferenceImplementation))
+                    throw new UnsupportedOperationException("Found not type reference implementation inside port usage");
+
+                if(((TypeReferenceImplementation) impl).isPrimitiveType()) {
+                    builder.append(port.getSymbolName());
+                } else {
+                    TypeDefinition actuall = getTypeFromReference((TypeReferenceImplementation) impl);
+
+                    if(actuall == null)
+                        throw new UnsupportedOperationException("Failed to find associated type definition");
+                    
+                    ITypeImplementation actuallImpl = actuall.getImplementation();
+        
+                    if (actuallImpl instanceof CompositeTypeImplementation) {
+                        builder.append("some.");
+                    } if (actuallImpl instanceof UnionTypeImplementation) {
+                        builder.append("some.as..");
+                    } if (actuallImpl instanceof ArrayTypeImplementation) {
+                        builder.append("some[]");
+                    } else {
+                        throw new UnsupportedOperationException("Top level type definition is a type reference");
+                    }
+                }
+
+                builder.append(" = VALUE;\n");
+            } else {
+                builder.append("    ((struct _node_" + node.getSymbolName() + "_struct*) _self)->SOME_THING; \n");
+            }
+        }
+
+        return builder.toString();
     }
 
     private void appendNodeImplementationCallbackImplementation(NodeDefinition node, StringBuilder builder) {
@@ -446,47 +523,29 @@ public class GeneratorVisitor implements Visitor<String> {
             builder.append("    // Initialize all connections\n");
             
             for(ConnectionPipe k : pipes) {
-                boolean isReferenced = false;
-
                 if(k.haveConnectionNodeSink(node)) {
                     builder.append("    // Connection pipe " + k.getSymbolName() + " is managed by top level node\n");
 
-                    TypeReferenceImplementation impl = (TypeReferenceImplementation) k.getTopLevelTypeImplementation();
-                    builder.append("    " + impl.getLinkedSymbolName() + "* " + k.getSymbolName() + " = ((struct _node_" + symbolName + "_struct*) _self)->" + k.getSymbolName() + ";\n");
-                    builder.append("\n");
+                    // TypeReferenceImplementation impl = (TypeReferenceImplementation) k.getTopLevelTypeImplementation();
+                    // builder.append("    " + impl.getLinkedSymbolName() + "* " + k.getSymbolName() + " = ((struct _node_" + symbolName + "_struct*) _self)->" + k.getSymbolName() + ";\n");
+                    // builder.append("\n");
+
+                    builder.append("    Pipe\n");
 
                 } else {
-                    TypeReferenceImplementation impl = (TypeReferenceImplementation) k.getTopLevelTypeImplementation();
-                    builder.append("    " + impl.getReferenceTypeName() + "* " + k.getSymbolName() + ";\n");
-                    builder.append("    // Todo, need to initialize this connection pipe\n");
-                    builder.append("\n");
-
-                    isReferenced = true;
+                    builder.append("    Pipe\n");
+                    // TypeReferenceImplementation impl = (TypeReferenceImplementation) k.getTopLevelTypeImplementation();
+                    // builder.append("    " + impl.getReferenceTypeName() + "* " + k.getSymbolName() + ";\n");
+                    // builder.append("    // Todo, need to initialize this connection pipe\n");
+                    // builder.append("\n");
                 }
 
                 for(NodeConnection con : k.getConnections()) {
                     NodeConnectionStatement ct = con.getConnection();
                     NodeInstanceStatement st = con.getSourceNodeInstance();
                     
-                    // builder.append("    " + st.getSymbolName() + "->" + con.getSink().getSymbolName() + " = ");
-                    StringBuilder sinkFieldAccess = new StringBuilder();
-
-                    for(FieldAccess fa : ct.getSink()) {
-                        sinkFieldAccess.append(fa.getFieldName() + ".");
-                    }
-
-                    builder.append("    " + sinkFieldAccess.toString()  + " = ");
-
-                    if(isReferenced)
-                        builder.append("&");
-
-                    StringBuilder sourceFieldAccess = new StringBuilder();
-                    
-                    for(FieldAccess fa : ct.getSink()) {
-                        sourceFieldAccess.append(fa.getFieldName() + ".");
-                    }
-
-                    builder.append(sourceFieldAccess.toString() + "; // " + st.getName() + "." + con.getSink().getPortName() + "\n");
+                    String access = constructFieldAccess(node, k, con);
+                    builder.append("    " + access.toString() + "\n");
                 }
 
                 builder.append("\n");
@@ -506,38 +565,7 @@ public class GeneratorVisitor implements Visitor<String> {
 
         builder.append("    } while(running > 0);\n");
 
-        /*
-        List<PortDefinition> inputPorts = node.getInputPorts();
-        if(!inputPorts.isEmpty())
-            builder.append("    // Initialize input ports\n");
-
-        for(PortDefinition port : inputPorts) {
-            builder.append("    node->" + port.getSymbolName() + " = (_port_struct) {\n");
-            builder.append("        .port_name = \"" + port.getPortName() + "\",\n");
-            builder.append("        .value = NULL, // Initial value\n");
-            builder.append("        .value_type_info = _" + ((TypeReferenceImplementation) port.getTypeImplementation()).getReferenceTypeName() + "_type_info\n");
-            builder.append("    };\n");
-        }
-        builder.append("\n");
-        */
-
-        /*
-        List<PortDefinition> outputPorts = node.getOutputPorts();
-        if(!outputPorts.isEmpty())
-            builder.append("    // Initialize output ports\n");
-        
-        for(PortDefinition port : outputPorts) {
-            builder.append("    node->" + port.getSymbolName() + " = (_port_struct) {\n");
-            builder.append("        .port_name = \"" + port.getPortName() + "\",\n");
-            builder.append("        .value = NULL, // Initial value\n");
-            builder.append("        .value_type_info = _" + ((TypeReferenceImplementation) port.getTypeImplementation()).getReferenceTypeName() + "_type_info\n");
-            builder.append("    };\n");
-        }
-        builder.append("\n");
-        */
-
         builder.append("}\n");
-
         builder.append("\n");
     }
 
