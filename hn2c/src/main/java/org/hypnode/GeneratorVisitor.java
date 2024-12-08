@@ -191,8 +191,8 @@ public class GeneratorVisitor implements Visitor<String> {
         builder.append("static _type_info _" + node.getSymbolName() + "_type_info = (_type_info) {\n");
         builder.append("    .type_name = \"" + node.getTypeName() + "\",\n");
         builder.append("    .category = Array,\n");
-        builder.append("    .compound_fields = NULL,\n");
-        builder.append("    .union_fields = NULL\n");
+        // builder.append("    .compound_fields = NULL,\n");
+        // builder.append("    .union_fields = NULL\n");
         builder.append("};");
 
         builder.append("\n");
@@ -218,8 +218,8 @@ public class GeneratorVisitor implements Visitor<String> {
         builder.append("static _type_info _" + node.getSymbolName() + "_type_info = (_type_info) {\n");
         builder.append("    .type_name = \"" + node.getTypeName() + "\",\n");
         builder.append("    .category = Compound,\n");
-        builder.append("    .compound_fields = NULL,\n");
-        builder.append("    .union_fields = NULL\n");
+        // builder.append("    .compound_fields = NULL,\n");
+        // builder.append("    .union_fields = NULL\n");
         builder.append("};");
 
         builder.append("\n");
@@ -231,12 +231,15 @@ public class GeneratorVisitor implements Visitor<String> {
 
         builder.append("    union {\n");
 
+        int child = 0;
         for(ITypeImplementation impl : implementation.getTypes()) {
             if(impl instanceof TypeReferenceImplementation) {
-                builder.append("        " + ((TypeReferenceImplementation) impl).getLinkedSymbolName() + " A" + ";\n");
+                builder.append("        " + ((TypeReferenceImplementation) impl).getLinkedSymbolName() + " child" + child + ";\n");
             } else {
                 throw new UnsupportedOperationException("Not type reference implementation found in union type implementation");
             }
+
+            ++child;
         }
 
         builder.append("    } as;\n");
@@ -249,8 +252,8 @@ public class GeneratorVisitor implements Visitor<String> {
         builder.append("static _type_info _" + node.getSymbolName() + "_type_info = (_type_info) {\n");
         builder.append("    .type_name = \"" + node.getTypeName() + "\",\n");
         builder.append("    .category = Union,\n");
-        builder.append("    .compound_fields = NULL,\n");
-        builder.append("    .union_fields = NULL\n");
+        // builder.append("    .compound_fields = NULL,\n");
+        // builder.append("    .union_fields = NULL\n");
         builder.append("};");
 
         builder.append("\n");

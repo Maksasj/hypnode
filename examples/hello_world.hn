@@ -13,9 +13,5 @@ node some(@required struct: MyStruct) => () = {
 @export("entrypoint")
 node main (argc: i32, argv: string[]) => () = {
     let s: some;
-    
-    s.struct <- {
-        a: 0,
-        message: "Hello world"
-    };
+    s.struct <- "Hello world";
 }

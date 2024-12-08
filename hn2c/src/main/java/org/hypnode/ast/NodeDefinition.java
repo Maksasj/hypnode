@@ -249,10 +249,10 @@ public class NodeDefinition extends IDefinition {
             }
 
             if(sink == null)
-                throw new UnsupportedOperationException("This connections is not possible SINK is not pressent");
+                throw new UnsupportedOperationException("Invalid sink usage in node '" + getNodeName() + "'");
 
             if(source == null)
-                throw new UnsupportedOperationException("This connections is not possible SOURCE is not pressent");
+                throw new UnsupportedOperationException("Invalid source usage in node '" + getNodeName() + "'");
 
             connections.add(new NodeConnection(st, source, linkedSinkDef, sinkInstance, sink, linkedSourceDef, sourceInstance));
         }
