@@ -4,7 +4,7 @@ node if_zero (a: i32) => (c: bool) = {
     let e: equal;
 
     e.a <- a;
-    e.b <- zero;
+    e.b <- 0;
     
     c <- e.c;
 }
@@ -17,19 +17,19 @@ node mylog (
 
 node first (a: any) => () = {
     let c: mylog;
-    c.message <- one;
+    c.message <- 1;
 }
 
 node second (a: any) => () = {
     let c: mylog;
-    c.message <- zero;
+    c.message <- 0;
 }
 
 @export("entrypoint")
 node main (argc: i32, argv: string[]) => () = {
     let f: first;
-    f.a <- zero;
+    f.a <- 0;
 
     let c: second;
-    c.a <- zero;
+    c.a <- 0;
 }

@@ -1,6 +1,5 @@
 package org.hypnode;
 
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import org.hypnode.ast.attributes.OptionalAttribute;
 import org.hypnode.ast.attributes.RequiredAttribute;
 import org.hypnode.ast.attributes.TriggerAttribute;
 import org.hypnode.ast.value.FieldAccessValueExpression;
-import org.hypnode.ast.value.IValueExpression;
 import org.hypnode.ast.value.StringValueExpression;
 
 public class GeneratorVisitor implements Visitor<String> {
@@ -85,7 +83,6 @@ public class GeneratorVisitor implements Visitor<String> {
                     TypeReferenceImplementation impl = (TypeReferenceImplementation) port.getTypeImplementation();
                     builder.append("    " + impl.getLinkedSymbolName() + "* " + port.getSymbolName() + "; // " + port.getPortName() + "\n");
                 } else {
-                    System.out.println(port.getTypeImplementation());
                     throw new UnsupportedOperationException("Not type reference implementation found in node input port definition");
                 }
             }
@@ -102,7 +99,6 @@ public class GeneratorVisitor implements Visitor<String> {
                     TypeReferenceImplementation impl = (TypeReferenceImplementation) port.getTypeImplementation();
                     builder.append("    " + impl.getReferenceTypeName() + "* " + port.getSymbolName() + "; // " + port.getPortName() + "\n");
                 } else {
-                    System.out.println(port.getTypeImplementation());
                     throw new UnsupportedOperationException("Not type reference implementation found in node output port definition");
                 }
             }
@@ -431,7 +427,6 @@ public class GeneratorVisitor implements Visitor<String> {
 
     private TypeDefinition getTypeFromReference(TypeReferenceImplementation reference) {
         for(TypeDefinition impl : module.getTypeDefinitions()) {
-            System.out.println("AAA: " + impl.getSymbolName() + " | " + reference.getLinkedSymbolName());
             if(impl.getSymbolName().equals(reference.getLinkedSymbolName())) {
                 return impl;
             }

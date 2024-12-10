@@ -13,12 +13,12 @@ node loop (@required l: i32 = 0) => (lo: i32) = {
     s.a <- l;
     s.b <- 1; 
     
-    l <- s.c;
+    lo <- s.c;
     log.message <- s.c;
 }
 
 @export("entrypoint")
 node main (argc: i32, argv: string[]) => () = {
     let l: loop;
-    l.l <- l.l;
+    l.l <- l.lo;
 }
