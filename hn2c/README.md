@@ -16,7 +16,7 @@ mvn install
 mvn test
 ```
 
-## Run the compiler
+## Run the compiler (on Linux)
 
 ```sh
 sh run.sh
