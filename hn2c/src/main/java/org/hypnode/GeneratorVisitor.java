@@ -590,7 +590,7 @@ public class GeneratorVisitor implements Visitor<String> {
         builder.append("} _node_import_symbols[] = {\n");
 
         for(NodeDefinition imp : imported) {
-            builder.append("    { \"" + imp.getImportedName() + "\", \"_node_" + imp.getSymbolName() + "_implementation\" }\n");
+            builder.append("    { \"" + imp.getImportedName() + "\", \"_node_" + imp.getSymbolName() + "_implementation\" },\n");
         }
 
         builder.append("};\n");
