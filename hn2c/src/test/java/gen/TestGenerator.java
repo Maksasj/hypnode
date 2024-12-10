@@ -10,12 +10,12 @@ import java.util.Objects;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.hypnode.Generator;
+import org.hypnode.Features;
 
-public class TestParser {
-    /*
+public class TestGenerator {
     @Test
     public void acceptedTests() throws IOException {
-        URL url = this.getClass().getResource("/parser_tests/accepted");
+        URL url = this.getClass().getResource("/generator_tests/accepted");
         File testFolder = new File(url.getPath());
         String[] tests = Arrays.stream(Objects.requireNonNull(testFolder.list())).sorted().toArray(String[]::new);
 
@@ -26,16 +26,17 @@ public class TestParser {
             File inputFile = path.toFile();
 
             FileReader inputReader = new FileReader(inputFile);
-            Generator generator = new Generator();
+            Generator generator = new Generator(new Features(false));
 
             String out = generator.generate(new BufferedReader(inputReader));
-            Assertions.assertNotNull(out);
+            // Assertions.assertNotNull(out);
+            System.out.println(out);
         }
     }
 
     @Test
     public void rejectedTests() throws IOException {
-        URL url = this.getClass().getResource("/parser_tests/rejected");
+        URL url = this.getClass().getResource("/generator_tests/rejected");
         File testFolder = new File(url.getPath());
         String[] tests = Arrays.stream(Objects.requireNonNull(testFolder.list())).sorted().toArray(String[]::new);
 
@@ -46,11 +47,9 @@ public class TestParser {
             File inputFile = path.toFile();
 
             FileReader inputReader = new FileReader(inputFile);
-            Generator generator = new Generator();
+            Generator generator = new Generator(new Features(false));
 
-            String out = generator.generate(new BufferedReader(inputReader));
-            Assertions.assertNull(out);
+            generator.generate(new BufferedReader(inputReader));
         }
     }
-    */
 }

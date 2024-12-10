@@ -1,0 +1,63 @@
+type Error = u64;
+type Message = string;
+
+type Result = Message | Error;
+type Result = Message | Error;
+
+node type_equal (a: any, b: any) => (c: bool) = @import("std_experimental_type_equal")
+node not (a: bool) => (c: bool) = @import("std_experimental_not")
+
+# trigger
+node is_error (a: any) => (c: bool) = {
+    let e: type_equal;
+    
+    e.a <- a;
+    e.b <- "Error";
+
+    c <- e.c;
+}
+
+# trigger
+node is_ok (a: any) => (c: bool) = {
+    let e: is_error;
+    let n: not;
+    
+    e.a <- a;
+    n.a <- e.c;
+    c <- n.c;
+}
+
+node side_effect (@required message: any) => (result: Result) = @import("std_experimental_log")
+
+node mylog (@required message: string) => () = @import("std_experimental_log")
+
+node handle_ok(
+    @trigger(is_ok) # Propagate only if trigger was satisfied
+    result: Message
+) => () = {
+    let l: mylog;
+
+    l.message <- "Ok";
+}
+
+node handle_error(
+    @trigger(is_ok) # Propagate only if trigger was satisfied
+    error: Error
+) => () = {
+    let l: mylog;
+
+    l.message <- "Error";
+}
+
+@export("entrypoint")
+node main (argc: i32, argv: string[]) => () = {
+    let side: side_effect;
+
+    side.message <- "Do stuff";
+
+    let ok: handle_ok;
+    ok.result <- "Message";
+    
+    let error: handle_error;
+    error.error <- "Error";
+}

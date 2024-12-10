@@ -1,0 +1,41 @@
+# Mazgo implitacija importuojama iš standartinės bibliotekos
+node sum (
+    @required a: i32, 
+    @required b: i32
+) => (c: i32) = @import("std_arithmetic_sum")
+
+# Tipas, kuriame saugoma mazgo būsena.
+type FibState = {
+    a: i32;
+    b: i32;
+};
+
+# Testinis komentaras
+
+# Fibonačio mazgas
+node fib(ins: FibState) => (ous: FibState) = {
+    let s: sum;
+    s.a <- ins.a;
+    s.b <- ins.b;
+
+    ous.a <- ins.b;
+    ous.b <- s.c;
+}
+
+# Fibonačio mazgas
+node fib(ins: FibState) => (ous: FibState) = {
+    let s: sum;
+    s.a <- ins.a;
+    s.b <- ins.b;
+
+    ous.a <- ins.b;
+    ous.b <- s.c;
+}
+
+@export("entrypoint")
+node main (argc: i32, argv: string[]) => () = {
+    let f: fib;
+
+    # Mazgas yra sujungtas su pačiu savimi
+    f.ins <- f.ous;
+}
