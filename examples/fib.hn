@@ -15,8 +15,8 @@ type FibState = {
 # Fibonačio mazgas
 node fib(ins: FibState) => (ous: FibState) = {
     let s: sum;
-    s.a <- ous.a;
-    s.b <- ous.b;
+    s.a <- ins.a;
+    s.b <- ins.b;
 
     ous.a <- ins.b;
     ous.b <- s.c;
@@ -27,5 +27,5 @@ node main (argc: i32, argv: string[]) => () = {
     let f: fib;
 
     # Mazgas yra sujungtas su pačiu savimi
-    f.state <- f.state;
+    f.ins <- f.ous;
 }

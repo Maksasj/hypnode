@@ -47,8 +47,6 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
 
     private TypeDefinition getTypeDefinitionByName(String typeName) {
         for(TypeDefinition definition : module.getTypeDefinitions()) {
-            System.out.println(definition.getSymbolName() + " | " + definition.getTypeName() + " | " + typeName);
-
             if(definition.getTypeName().equals(typeName))
                 return definition;
         }
@@ -64,7 +62,6 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
             
             TypeReferenceImplementation impl = (TypeReferenceImplementation) port.getTypeImplementation();
 
-            System.out.println(impl.getReferenceTypeName());
             if(impl.isPrimitiveType()) {
                 impl.setLinkedSymbolName(impl.getReferenceTypeName());
             } else {
@@ -124,7 +121,7 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
                 String sym = getTypeSymbolName(ref.getReferenceTypeName());
 
                 if(sym == null)
-                    throw new UnsupportedOperationException("Type '" + ref.getReferenceTypeName() + " does not exist");
+                    throw new UnsupportedOperationException("Type '" + ref.getReferenceTypeName() + " ' does not exist");
 
                 ref.setLinkedSymbolName(sym);
             } else {
@@ -145,7 +142,7 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
                     String sym = getTypeSymbolName(ref.getReferenceTypeName());
     
                     if(sym == null)
-                        throw new UnsupportedOperationException("Type '" + ref.getReferenceTypeName() + " does not exist");
+                        throw new UnsupportedOperationException("Type '" + ref.getReferenceTypeName() + " ' does not exist");
     
                     ref.setLinkedSymbolName(sym);
                 } else {
@@ -165,7 +162,7 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
                     String sym = getTypeSymbolName(ref.getReferenceTypeName());
     
                     if(sym == null)
-                        throw new UnsupportedOperationException("Type '" + ref.getReferenceTypeName() + " does not exist");
+                        throw new UnsupportedOperationException("Type '" + ref.getReferenceTypeName() + " ' does not exist");
     
                     ref.setLinkedSymbolName(sym);
                 } else {
@@ -179,7 +176,7 @@ public class TypeReferenceLinkerVisitor implements Visitor<Object> {
                 String sym = getTypeSymbolName(actuall.getReferenceTypeName());
 
                 if(sym == null)
-                    throw new UnsupportedOperationException("Type '" + actuall.getReferenceTypeName() + " does not exist");
+                    throw new UnsupportedOperationException("Type '" + actuall.getReferenceTypeName() + " ' does not exist");
 
                 actuall.setLinkedSymbolName(sym);
             } else {

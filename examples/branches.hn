@@ -1,4 +1,4 @@
-type u64 = Error;
+type Error = u64;
 type Message = string;
 
 type Result = Message | Error;
@@ -11,7 +11,7 @@ node is_error (a: any) => (c: bool) = {
     let e: type_equal;
     
     e.a <- a;
-    e.b <- Error;
+    e.b <- "Error";
 
     c <- e.c;
 }
@@ -27,6 +27,8 @@ node is_ok (a: any) => (c: bool) = {
 }
 
 node side_effect (@required message: any) => (result: Result) = @import("std_experimental_log")
+
+node mylog (@required message: string) => () = @import("std_experimental_log")
 
 node handle_ok(
     @trigger(is_ok) # Propagate only if trigger was satisfied

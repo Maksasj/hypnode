@@ -8,14 +8,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.sound.sampled.Port;
-
 import org.hypnode.ConnectionPipe;
 import org.hypnode.NodeConnection;
 import org.hypnode.Visitor;
 import org.hypnode.ast.attributes.ExportAttribute;
 import org.hypnode.ast.value.FieldAccessValueExpression;
-import org.utils.Pair;
 import org.utils.StringUtils;
 
 public class NodeDefinition extends IDefinition {
@@ -210,6 +207,9 @@ public class NodeDefinition extends IDefinition {
                 linkedSinkDef = node.getLinkedNodeDefinition();
 
                 for(PortDefinition p : linkedSinkDef.getInputPorts()) {
+                    if(st.getSink().size() <= 1)
+                        throw new UnsupportedOperationException("Invalid field access configuration");
+
                     if(p.getPortName().equals(st.getSink().get(1).getFieldName())) {
                         sink = p;
                     }
