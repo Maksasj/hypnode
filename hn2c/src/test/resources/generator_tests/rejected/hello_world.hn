@@ -1,0 +1,17 @@
+type MyStruct = {
+    a: i32;
+    message: i32;
+};
+
+node mylog (@required message: string) => () = @import("std_experimental_log")
+
+node some(@required struct: MyStruct) => () = {
+    let l: mylog;
+    l.message <- struct.message;
+}
+
+@export("entrypoint")
+node main (argc: i32, argc: string[]) => () = {
+    let s: some;
+    s.struct <- "Hello world";
+}

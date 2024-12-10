@@ -1,0 +1,34 @@
+node equal (a: any, b: any) => (c: bool) = @import("std_experimental_equal")
+
+node if_zero (a: i32) => (c: bool) = {
+    let e: equal;
+
+    e.a <- a;
+    e.b <- 0;
+    
+    c <- e.c;
+}
+
+node mylog (
+    @required 
+    @trigger(if_zero) # Propagate only if trigger was satisfied
+    message: i32
+) => () = @import("std_experimental_log")
+
+node first (a: any) => () = {
+    let c: mylog;
+    c.message <- 1;
+}
+
+node second (a: any) => () = {
+    c.message <- 0;
+}
+
+@export("entrypoint")
+node main (argc: i32, argv: string[]) => () = {
+    let f: first;
+    f.a <- 0;
+
+    let c: second;
+    c.a <- 0;
+}

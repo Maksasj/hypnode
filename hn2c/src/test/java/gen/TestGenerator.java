@@ -36,21 +36,20 @@ public class TestGenerator {
 
     @Test
     public void rejectedTests() throws IOException {
-        // URL url = this.getClass().getResource("/generator_tests/rejected");
-        // File testFolder = new File(url.getPath());
-        // String[] tests = Arrays.stream(Objects.requireNonNull(testFolder.list())).sorted().toArray(String[]::new);
+        URL url = this.getClass().getResource("/generator_tests/rejected");
+        File testFolder = new File(url.getPath());
+        String[] tests = Arrays.stream(Objects.requireNonNull(testFolder.list())).sorted().toArray(String[]::new);
 
-        // for (int i = 0; i < tests.length; ++i) {
-        //     String test = tests[i];
+        for (int i = 0; i < tests.length; ++i) {
+            String test = tests[i];
 
-        //     Path path = Paths.get(testFolder.getPath(), test);
-        //     File inputFile = path.toFile();
+            Path path = Paths.get(testFolder.getPath(), test);
+            File inputFile = path.toFile();
 
-        //     FileReader inputReader = new FileReader(inputFile);
-        //     Generator generator = new Generator(new Features(false));
+            FileReader inputReader = new FileReader(inputFile);
+            Generator generator = new Generator(new Features(false));
 
-        //     String out = generator.generate(new BufferedReader(inputReader));
-        //     Assertions.assertNull(out);
-        // }
+            generator.generate(new BufferedReader(inputReader));
+        }
     }
 }
