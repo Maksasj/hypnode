@@ -97,7 +97,7 @@ public class GeneratorVisitor implements Visitor<String> {
             for(PortDefinition port : outputPorts) {
                 if(port.getTypeImplementation() instanceof TypeReferenceImplementation) {
                     TypeReferenceImplementation impl = (TypeReferenceImplementation) port.getTypeImplementation();
-                    builder.append("    " + impl.getReferenceTypeName() + "* " + port.getSymbolName() + "; // " + port.getPortName() + "\n");
+                    builder.append("    " + impl.getLinkedSymbolName() + "* " + port.getSymbolName() + "; // " + port.getPortName() + "\n");
                 } else {
                     throw new UnsupportedOperationException("Not type reference implementation found in node output port definition");
                 }
