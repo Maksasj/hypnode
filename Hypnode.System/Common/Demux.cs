@@ -1,6 +1,6 @@
 ﻿using Hypnode.Core;
 
-namespace Hypnode.System
+namespace Hypnode.System.Common
 {
     public class Demux<T> : INode
     {
@@ -33,7 +33,7 @@ namespace Hypnode.System
             {
                 var packet = inputPort.Receive();
 
-                foreach(var connection in outputPorts) 
+                foreach (var connection in outputPorts)
                     connection?.Send(packet);
             }
         }

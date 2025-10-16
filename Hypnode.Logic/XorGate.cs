@@ -2,20 +2,20 @@
 
 namespace Hypnode.Logic
 {
-    public class Xor : INode
+    public class XorGate : INode
     {
         private IConnection<LogicValue>? inputPortA = null;
         private IConnection<LogicValue>? inputPortB = null;
         private IConnection<LogicValue>? outputPort = null;
 
-        public Xor SetInput(string portName, IConnection<LogicValue> connection)
+        public XorGate SetInput(string portName, IConnection<LogicValue> connection)
         {
             if (portName == "INA") inputPortA = connection;
             if (portName == "INB") inputPortB = connection;
             return this;
         }
 
-        public Xor SetOutput(string portName, IConnection<LogicValue> connection)
+        public XorGate SetOutput(string portName, IConnection<LogicValue> connection)
         {
             if (portName == "OUT") outputPort = connection;
             return this;

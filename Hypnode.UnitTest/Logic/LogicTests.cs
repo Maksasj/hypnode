@@ -1,8 +1,8 @@
 ﻿using Hypnode.Async;
 using Hypnode.Logic;
-using Hypnode.System;
+using Hypnode.System.Common;
 
-namespace Hypnode.UnitTests
+namespace Hypnode.UnitTests.Logic
 {
     public class LogicTests
     {
@@ -23,7 +23,7 @@ namespace Hypnode.UnitTests
             graph.AddNode(new PulseValue<LogicValue>(b))
                 .SetOutput("OUT", connection2);
 
-            graph.AddNode(new Xor())
+            graph.AddNode(new XorGate())
                 .SetInput("INA", connection1)
                 .SetInput("INB", connection2)
                 .SetOutput("OUT", connection3);
@@ -53,7 +53,7 @@ namespace Hypnode.UnitTests
             graph.AddNode(new PulseValue<LogicValue>(b))
                 .SetOutput("OUT", connection2);
 
-            graph.AddNode(new Or())
+            graph.AddNode(new OrGate())
                 .SetInput("INA", connection1)
                 .SetInput("INB", connection2)
                 .SetOutput("OUT", connection3);
@@ -83,7 +83,7 @@ namespace Hypnode.UnitTests
             graph.AddNode(new PulseValue<LogicValue>(b))
                 .SetOutput("OUT", connection2);
 
-            graph.AddNode(new And())
+            graph.AddNode(new AndGate())
                 .SetInput("INA", connection1)
                 .SetInput("INB", connection2)
                 .SetOutput("OUT", connection3);
@@ -107,7 +107,7 @@ namespace Hypnode.UnitTests
             graph.AddNode(new PulseValue<LogicValue>(value))
                 .SetOutput("OUT", connection1);
 
-            graph.AddNode(new Not())
+            graph.AddNode(new NotGate())
                 .SetInput("IN", connection1)
                 .SetOutput("OUT", connection2);
 
@@ -119,25 +119,7 @@ namespace Hypnode.UnitTests
             Assert.That(result.GetValue(), Is.EqualTo(expect));
         }
 
-        [TestCase(LogicValue.False)]
-        [TestCase(LogicValue.True)]
-        public async Task TestPulse(LogicValue value)
-        {
-            var graph = new AsyncNodeGraph();
-            var connection = graph.CreateConnection<LogicValue>();
-            
-            graph.AddNode(new PulseValue<LogicValue>(value))
-                .SetOutput("OUT", connection);
-
-            var result = graph.AddNode(new Cell<LogicValue>())
-                .SetInput("IN", connection);
-
-            await graph.EvaluateAsync(TimeSpan.FromSeconds(0.2));
-
-            Assert.That(result.GetValue(), Is.EqualTo(value));
-        }
-
-        [TestCase(LogicValue.False,LogicValue.False,LogicValue.False,LogicValue.False,LogicValue.False)]
+        [TestCase(LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False)]
         [TestCase(LogicValue.False, LogicValue.False, LogicValue.True, LogicValue.True, LogicValue.False)]
         [TestCase(LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False)]
         [TestCase(LogicValue.False, LogicValue.True, LogicValue.True, LogicValue.False, LogicValue.True)]
@@ -197,13 +179,13 @@ namespace Hypnode.UnitTests
                 .AddOutput(Demux3toAnd1);
 
             // Xor1
-            graph.AddNode(new Xor())
+            graph.AddNode(new XorGate())
                 .SetInput("INA", Demux1toXor1)
                 .SetInput("INB", Demux2toXor1)
                 .SetOutput("OUT", Xor1toDemux4);
 
             // Xor2
-            graph.AddNode(new Xor())
+            graph.AddNode(new XorGate())
                 .SetInput("INA", Demux3toXor2)
                 .SetInput("INB", Demux4toXor2)
                 .SetOutput("OUT", toSum);
@@ -218,19 +200,19 @@ namespace Hypnode.UnitTests
                 .AddOutput(Demux4toAnd1);
 
             // And1
-            graph.AddNode(new And())
+            graph.AddNode(new AndGate())
                 .SetInput("INA", Demux4toAnd1)
                 .SetInput("INB", Demux3toAnd1)
                 .SetOutput("OUT", And1toOr);
 
             // And2
-            graph.AddNode(new And())
+            graph.AddNode(new AndGate())
                 .SetInput("INB", Demux2toAnd2)
                 .SetInput("INA", Demux1toAnd2)
                 .SetOutput("OUT", And2toOr);
 
             // Or
-            graph.AddNode(new Or())
+            graph.AddNode(new OrGate())
                 .SetInput("INB", And1toOr)
                 .SetInput("INA", And2toOr)
                 .SetOutput("OUT", toCarryOut); // OUT

@@ -2,18 +2,18 @@
 
 namespace Hypnode.Logic
 {
-    public class Not : INode
+    public class NotGate : INode
     {
         private IConnection<LogicValue>? inputPort = null;
         private IConnection<LogicValue>? outputPort = null;
 
-        public Not SetInput(string portName, IConnection<LogicValue> connection)
+        public NotGate SetInput(string portName, IConnection<LogicValue> connection)
         {
             if (portName == "IN") inputPort = connection;
             return this;
         }
 
-        public Not SetOutput(string portName, IConnection<LogicValue> connection)
+        public NotGate SetOutput(string portName, IConnection<LogicValue> connection)
         {
             if (portName == "OUT") outputPort = connection;
             return this;

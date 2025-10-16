@@ -2,20 +2,20 @@
 
 namespace Hypnode.Logic
 {
-    public class Or : INode
+    public class OrGate : INode
     {
         private IConnection<LogicValue>? inputPortA = null;
         private IConnection<LogicValue>? inputPortB = null;
         private IConnection<LogicValue>? outputPort = null;
 
-        public Or SetInput(string portName, IConnection<LogicValue> connection)
+        public OrGate SetInput(string portName, IConnection<LogicValue> connection)
         {
             if (portName == "INA") inputPortA = connection;
             if (portName == "INB") inputPortB = connection;
             return this;
         }
 
-        public Or SetOutput(string portName, IConnection<LogicValue> connection)
+        public OrGate SetOutput(string portName, IConnection<LogicValue> connection)
         {
             if (portName == "OUT") outputPort = connection;
             return this;

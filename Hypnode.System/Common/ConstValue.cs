@@ -1,6 +1,6 @@
 ﻿using Hypnode.Core;
 
-namespace Hypnode.System
+namespace Hypnode.System.Common
 {
     public class ConstValue<T> : INode
     {

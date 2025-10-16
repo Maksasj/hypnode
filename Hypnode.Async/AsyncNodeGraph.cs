@@ -1,5 +1,4 @@
 ﻿using Hypnode.Core;
-using System.Threading;
 
 namespace Hypnode.Async
 {

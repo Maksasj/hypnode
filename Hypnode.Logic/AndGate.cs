@@ -2,20 +2,20 @@
 
 namespace Hypnode.Logic
 {
-    public class And : INode
+    public class AndGate : INode
     {
         private IConnection<LogicValue>? inputPortA = null;
         private IConnection<LogicValue>? inputPortB = null;
         private IConnection<LogicValue>? outputPort = null;
 
-        public And SetInput(string portName, IConnection<LogicValue> connection)
+        public AndGate SetInput(string portName, IConnection<LogicValue> connection)
         {
             if (portName == "INA") inputPortA = connection;
             if (portName == "INB") inputPortB = connection;
             return this;
         }
 
-        public And SetOutput(string portName, IConnection<LogicValue> connection)
+        public AndGate SetOutput(string portName, IConnection<LogicValue> connection)
         {
             if (portName == "OUT") outputPort = connection;
             return this;

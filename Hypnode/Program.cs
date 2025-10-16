@@ -1,7 +1,8 @@
 ﻿using Hypnode.Async;
 using Hypnode.Logic;
-using Hypnode.System;
-using System.Reflection.Metadata;
+using Hypnode.System.Common;
+using Hypnode.System.IO;
+using Hypnode.System.Math;
 
 namespace Hypnode.Example
 {
@@ -77,13 +78,13 @@ namespace Hypnode.Example
                 .AddOutput(Demux3toAnd1);
 
             // Xor1
-            graph.AddNode(new Xor())
+            graph.AddNode(new XorGate())
                 .SetInput("INA", Demux1toXor1)
                 .SetInput("INB", Demux2toXor1)
                 .SetOutput("OUT", Xor1toDemux4);
 
             // Xor2
-            graph.AddNode(new Xor())
+            graph.AddNode(new XorGate())
                 .SetInput("INA", Demux3toXor2)
                 .SetInput("INB", Demux4toXor2);
 
@@ -94,26 +95,26 @@ namespace Hypnode.Example
                 .AddOutput(Demux4toAnd1);
 
             // And1
-            graph.AddNode(new And())
+            graph.AddNode(new AndGate())
                 .SetInput("INA", Demux4toAnd1)
                 .SetInput("INB", Demux3toAnd1)
                 .SetOutput("OUT", And1toOr);
 
             // And2
-            graph.AddNode(new And())
+            graph.AddNode(new AndGate())
                 .SetInput("INB", Demux2toAnd2)
                 .SetInput("INA", Demux1toAnd2)
                 .SetOutput("OUT", And2toOr);
 
             // Or
-            graph.AddNode(new Or())
+            graph.AddNode(new OrGate())
                 .SetInput("INB", And1toOr)
                 .SetInput("INA", And2toOr)
                 .SetOutput("OUT", toPrinter); // OUT
 
             // Printer
             graph.AddNode(new Printer<LogicValue>())
-                .SetInput("IN", toPrinter); 
+                .SetInput("IN", toPrinter);
 
             await graph.EvaluateAsync(TimeSpan.FromSeconds(1));
         }
@@ -134,7 +135,7 @@ namespace Hypnode.Example
 
         public static async Task Main()
         {
-            await TestSome();
+            await Adder();
         }
     }
 }

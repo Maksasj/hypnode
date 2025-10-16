@@ -1,6 +1,6 @@
 ﻿using Hypnode.Core;
 
-namespace Hypnode.System
+namespace Hypnode.System.Math
 {
     public class Squarer : INode
     {

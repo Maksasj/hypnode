@@ -1,6 +1,6 @@
 ﻿using Hypnode.Core;
 
-namespace Hypnode.System
+namespace Hypnode.System.IO
 {
     public class Printer<T> : INode
     {
