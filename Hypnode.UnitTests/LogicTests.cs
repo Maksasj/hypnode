@@ -109,7 +109,7 @@ namespace Hypnode.UnitTests
             var carry = graph.AddNode(new Cell<LogicValue>())
                 .SetInput("IN", toCarryOut);
 
-            graph.Evaluate();
+            graph.Evaluate(TimeSpan.FromSeconds(0.5));
         }
     }
 }

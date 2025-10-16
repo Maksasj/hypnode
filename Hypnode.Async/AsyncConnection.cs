@@ -5,10 +5,17 @@ namespace Hypnode.Async
 {
     public class AsyncConnection<T> : IConnection<T>
     {
-        public BlockingCollection<T> Buffer { get; } = new BlockingCollection<T>(1);
+        public BlockingCollection<T> Buffer { get; }
 
-        public T Receive() => Buffer.Take();
+        public AsyncConnection()
+        {
+            Buffer = new BlockingCollection<T>(1);
+        }
 
-        public void Send(T packet) => Buffer.Add(packet);
+        public override T Receive() => Buffer.Take();
+
+        public override void Send(T packet) => Buffer.Add(packet);
+
+        public override void Close() => Buffer.CompleteAdding();
     }
 }

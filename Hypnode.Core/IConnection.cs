@@ -1,9 +1,11 @@
 ﻿namespace Hypnode.Core
 {
-    public interface IConnection<T>
+    public abstract class IConnection<T> : ICloseableConnection
     {
-        public T Receive();
+        public abstract T Receive();
 
-        public void Send(T packet);
+        public abstract void Send(T packet);
+
+        public abstract void Close();
     }
 }

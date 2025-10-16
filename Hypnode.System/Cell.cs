@@ -20,11 +20,8 @@ namespace Hypnode.System
             if (inputPort is null)
                 throw new InvalidOperationException("Input port is not set");
 
-            while (true)
-            {
-                var packet = inputPort.Receive();
-                value = packet;
-            }
+            var packet = inputPort.Receive();
+            value = packet;
         }
     }
 }

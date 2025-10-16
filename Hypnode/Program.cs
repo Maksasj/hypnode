@@ -7,7 +7,7 @@ namespace Hypnode.Example
 {
     class Program
     {
-        private static void TestCircuit()
+        private static async Task TestCircuit()
         {
             var graph = new AsyncNodeGraph();
             var conn1 = graph.CreateConnection<int>();
@@ -23,10 +23,10 @@ namespace Hypnode.Example
             graph.AddNode(new Printer<int>())
                 .SetInput("IN", conn2);
 
-            graph.Evaluate();
+            await graph.EvaluateAsync();
         }
 
-        private static void Adder()
+        private static async Task Adder()
         {
             var graph = new AsyncNodeGraph();
             var AtoDemux1 = graph.CreateConnection<LogicValue>();
@@ -115,12 +115,26 @@ namespace Hypnode.Example
             graph.AddNode(new Printer<LogicValue>())
                 .SetInput("IN", toPrinter); 
 
-            graph.Evaluate();
+            await graph.EvaluateAsync(TimeSpan.FromSeconds(1));
         }
 
-        public static void Main()
+        private static async Task TestSome()
         {
-            Adder();
+            var graph = new AsyncNodeGraph();
+            var connection = graph.CreateConnection<LogicValue>();
+
+            graph.AddNode(new PulseValue<LogicValue>(LogicValue.False))
+                .SetOutput("OUT", connection);
+
+            var result = graph.AddNode(new Cell<LogicValue>())
+                .SetInput("IN", connection);
+
+            await graph.EvaluateAsync(TimeSpan.FromSeconds(2.0));
+        }
+
+        public static async Task Main()
+        {
+            await TestSome();
         }
     }
 }
