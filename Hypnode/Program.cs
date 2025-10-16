@@ -45,7 +45,8 @@ namespace Hypnode.Example
             var And1toOr = graph.CreateConnection<LogicValue>();
             var And2toOr = graph.CreateConnection<LogicValue>();
 
-            var toPrinter = graph.CreateConnection<LogicValue>();
+            var toCarryOut = graph.CreateConnection<LogicValue>();
+            var toSum = graph.CreateConnection<LogicValue>();
 
             // A
             graph.AddNode(new PulseValue<LogicValue>(LogicValue.True))
@@ -58,7 +59,7 @@ namespace Hypnode.Example
                 .AddOutput(Demux1toAnd2);
 
             // B
-            graph.AddNode(new PulseValue<LogicValue>(LogicValue.False))
+            graph.AddNode(new PulseValue<LogicValue>(LogicValue.True))
                 .SetOutput("OUT", BtoDemux2);
 
             // Demux2
@@ -68,7 +69,7 @@ namespace Hypnode.Example
                 .AddOutput(Demux2toAnd2);
 
             // C
-            graph.AddNode(new PulseValue<LogicValue>(LogicValue.False))
+            graph.AddNode(new PulseValue<LogicValue>(LogicValue.True))
                 .SetOutput("OUT", CtoDemux3);
 
             // Demux3
@@ -86,7 +87,11 @@ namespace Hypnode.Example
             // Xor2
             graph.AddNode(new XorGate())
                 .SetInput("INA", Demux3toXor2)
-                .SetInput("INB", Demux4toXor2);
+                .SetInput("INB", Demux4toXor2)
+                .SetOutput("OUT", toSum);
+
+            var sumCell = graph.AddNode(new Cell<LogicValue>())
+                .SetInput("IN", toSum);
 
             // Demux4
             graph.AddNode(new Demux<LogicValue>())
@@ -110,11 +115,11 @@ namespace Hypnode.Example
             graph.AddNode(new OrGate())
                 .SetInput("INB", And1toOr)
                 .SetInput("INA", And2toOr)
-                .SetOutput("OUT", toPrinter); // OUT
+                .SetOutput("OUT", toCarryOut); // OUT
 
             // Printer
             graph.AddNode(new Printer<LogicValue>())
-                .SetInput("IN", toPrinter);
+                .SetInput("IN", toCarryOut);
 
             await graph.EvaluateAsync(TimeSpan.FromSeconds(1));
         }
