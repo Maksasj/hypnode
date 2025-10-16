@@ -4,7 +4,7 @@ namespace Hypnode.System
 {
     public class Printer<T> : INode
     {
-        private IConnection<T> inputPort;
+        private IConnection<T>? inputPort = null;
 
         public void SetInput(string portName, IConnection<T> connection)
         {
@@ -13,9 +13,12 @@ namespace Hypnode.System
 
         public void Execute()
         {
+            if (inputPort is null)
+                throw new InvalidOperationException("Input port is not set");
+
             while (true)
             {
-                var packet = inputPort.Buffer.Take();
+                var packet = inputPort.Receive();
                 Console.WriteLine($"{packet}");
             }
         }

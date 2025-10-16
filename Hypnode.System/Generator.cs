@@ -4,7 +4,7 @@ namespace Hypnode.System
 {
     public class Generator : INode
     {
-        private IConnection<int> outputPort;
+        private IConnection<int>? outputPort = null;
 
         public void SetOutput(string portName, IConnection<int> connection)
         {
@@ -17,8 +17,6 @@ namespace Hypnode.System
 
             while (true)
                 outputPort?.Send(i++);
-
-            outputPort?.Close();
         }
     }
 }

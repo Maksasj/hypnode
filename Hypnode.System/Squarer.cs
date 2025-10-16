@@ -4,38 +4,31 @@ namespace Hypnode.System
 {
     public class Squarer : INode
     {
-        private IConnection<int> inputPort;
-        private IConnection<int> outputPort;
+        private IConnection<int>? inputPort = null;
+        private IConnection<int>? outputPort = null;
 
-        public void SetInput(string portName, IConnection<int> connection)
+        public Squarer SetInput(string portName, IConnection<int> connection)
         {
             if (portName == "IN") inputPort = connection;
+            return this;
         }
 
-        public void SetOutput(string portName, IConnection<int> connection)
+        public Squarer SetOutput(string portName, IConnection<int> connection)
         {
             if (portName == "OUT") outputPort = connection;
+            return this;
         }
 
         public void Execute()
         {
-            Console.WriteLine("Squarer: Ready to process data...");
-            try
+            if (inputPort is null)
+                throw new InvalidOperationException("Input port is not set");
+
+            while (true)
             {
-                while (true)
-                {
-                    var packet = inputPort.Buffer.Take();
-                    var result = packet * packet;
-                    outputPort?.Send(result);
-                }
-            }
-            catch (InvalidOperationException)
-            {
-                Console.WriteLine("Squarer: Input stream closed. Finished processing.");
-            }
-            finally
-            {
-                outputPort?.Close();
+                var packet = inputPort.Receive();
+                var result = packet * packet;
+                outputPort?.Send(result);
             }
         }
     }
