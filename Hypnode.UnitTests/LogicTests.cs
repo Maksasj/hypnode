@@ -1,32 +1,21 @@
 ﻿using Hypnode.Async;
 using Hypnode.Logic;
 using Hypnode.System;
-using System.Reflection.Metadata;
+using NUnit.Framework;
 
-namespace Hypnode.Example
+namespace Hypnode.UnitTests
 {
-    class Program
+    public class LogicTests
     {
-        private static void TestCircuit()
-        {
-            var graph = new AsyncNodeGraph();
-            var conn1 = graph.CreateConnection<int>();
-            var conn2 = graph.CreateConnection<int>();
-
-            graph.AddNode(new Generator())
-                .SetOutput("OUT", conn1);
-
-            graph.AddNode(new Squarer())
-                .SetInput("IN", conn1)
-                .SetOutput("OUT", conn2);
-
-            graph.AddNode(new Printer<int>())
-                .SetInput("IN", conn2);
-
-            graph.Evaluate();
-        }
-
-        private static void Adder()
+        [TestCase(LogicValue.False,LogicValue.False,LogicValue.False,LogicValue.False,LogicValue.False)]
+        [TestCase(LogicValue.False, LogicValue.False, LogicValue.True, LogicValue.True, LogicValue.False)]
+        [TestCase(LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False)]
+        [TestCase(LogicValue.False, LogicValue.True, LogicValue.True, LogicValue.False, LogicValue.True)]
+        [TestCase(LogicValue.True, LogicValue.False, LogicValue.False, LogicValue.True, LogicValue.False)]
+        [TestCase(LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True)]
+        [TestCase(LogicValue.True, LogicValue.True, LogicValue.False, LogicValue.False, LogicValue.True)]
+        [TestCase(LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True)]
+        public void TestAdder(LogicValue a, LogicValue b, LogicValue cIn, LogicValue Sum, LogicValue cOut)
         {
             var graph = new AsyncNodeGraph();
             var AtoDemux1 = graph.CreateConnection<LogicValue>();
@@ -44,7 +33,8 @@ namespace Hypnode.Example
             var And1toOr = graph.CreateConnection<LogicValue>();
             var And2toOr = graph.CreateConnection<LogicValue>();
 
-            var toPrinter = graph.CreateConnection<LogicValue>();
+            var toCarryOut = graph.CreateConnection<LogicValue>();
+            var toSum = graph.CreateConnection<LogicValue>();
 
             // A
             graph.AddNode(new PulseValue<LogicValue>(LogicValue.True))
@@ -85,7 +75,11 @@ namespace Hypnode.Example
             // Xor2
             graph.AddNode(new Xor())
                 .SetInput("INA", Demux3toXor2)
-                .SetInput("INB", Demux4toXor2);
+                .SetInput("INB", Demux4toXor2)
+                .SetOutput("OUT", toSum);
+
+            var sum = graph.AddNode(new Cell<LogicValue>())
+                .SetInput("IN", toSum);
 
             // Demux4
             graph.AddNode(new Demux<LogicValue>())
@@ -109,18 +103,13 @@ namespace Hypnode.Example
             graph.AddNode(new Or())
                 .SetInput("INB", And1toOr)
                 .SetInput("INA", And2toOr)
-                .SetOutput("OUT", toPrinter); // OUT
+                .SetOutput("OUT", toCarryOut); // OUT
 
             // Printer
-            graph.AddNode(new Printer<LogicValue>())
-                .SetInput("IN", toPrinter); 
+            var carry = graph.AddNode(new Cell<LogicValue>())
+                .SetInput("IN", toCarryOut);
 
             graph.Evaluate();
-        }
-
-        public static void Main()
-        {
-            Adder();
         }
     }
 }

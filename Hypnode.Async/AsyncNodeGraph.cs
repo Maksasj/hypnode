@@ -23,7 +23,7 @@ namespace Hypnode.Async
         {
             var tasks = new List<Task>();
 
-            foreach(var node in Nodes) 
+            foreach (var node in Nodes)
                 tasks.Add(Task.Run(() => node.Execute()));
 
             Task.WaitAll([.. tasks]);
