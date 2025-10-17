@@ -10,9 +10,16 @@ namespace Hypnode.Logic.Gates
 
         public INode SetPort(string portName, IConnection connection)
         {
-            if (portName == "INA" && connection is Connection<LogicValue> con0) inputPortA = con0;
-            if (portName == "INB" && connection is Connection<LogicValue> con1) inputPortB = con1;
-            if (portName == "OUT" && connection is Connection<LogicValue> con2) outputPort = con2;
+            var result = portName switch
+            {
+                "INA" => NodeExtensions.TryAttach(ref inputPortA, connection),
+                "INB" => NodeExtensions.TryAttach(ref inputPortB, connection),
+                "OUT" => NodeExtensions.TryAttach(ref outputPort, connection),
+                _ => throw new InvalidOperationException($"Port {portName} is invalid"),
+            };
+
+            if (!result)
+                throw new InvalidOperationException($"Port {portName} is already set or type is invalid");
 
             return this;
         }

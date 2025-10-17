@@ -3,11 +3,10 @@ using Hypnode.Core;
 using Hypnode.Logic;
 using Hypnode.Logic.Utils;
 using Hypnode.System.Common;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Hypnode.UnitTests.Logic.Utils
 {
-    public class ByteMultiplexerTests
+    public abstract class ByteSplitterOutTests<TGraph> where TGraph : INodeGraph, new()
     {
 
         [TestCase(0b00000000, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False)]
@@ -47,5 +46,11 @@ namespace Hypnode.UnitTests.Logic.Utils
 
             Assert.That(result.GetValue(), Is.EqualTo(expected));
         }
+    }
+
+    [TestFixture]
+    public class AsyncNodeGraph_ByteSplitterOutTests : ByteSplitterOutTests<AsyncNodeGraph>
+    {
+
     }
 }

@@ -5,7 +5,7 @@ using Hypnode.System.Common;
 
 namespace Hypnode.UnitTests.System.Common
 {
-    public class PulseTests
+    public abstract class PulseTests<TGraph> where TGraph : INodeGraph, new()
     {
         [TestCase(LogicValue.False)]
         [TestCase(LogicValue.True)]
@@ -22,5 +22,11 @@ namespace Hypnode.UnitTests.System.Common
 
             Assert.That(result.GetValue(), Is.EqualTo(value));
         }
+    }
+
+    [TestFixture]
+    public class AsyncNodeGraph_PulseTests : PulseTests<AsyncNodeGraph>
+    {
+
     }
 }

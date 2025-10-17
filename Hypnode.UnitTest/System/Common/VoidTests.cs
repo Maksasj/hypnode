@@ -1,14 +1,15 @@
 ﻿using Hypnode.Async;
+using Hypnode.Core;
 using Hypnode.System.Common;
 
 namespace Hypnode.UnitTests.System.Common
 {
-    public class VoidTests
+    public abstract class VoidTests<TGraph> where TGraph : INodeGraph, new()
     {
         [Test]
         public async Task TestVoid_SingleConnection()
         {
-            var graph = new AsyncNodeGraph();
+            var graph = new TGraph();
             var connection = graph.CreateConnection<byte>();
 
             graph.AddNode(new PulseValue<byte>(1))
@@ -25,7 +26,7 @@ namespace Hypnode.UnitTests.System.Common
         [Test]
         public async Task TestVoid_MultipleConnections()
         {
-            var graph = new AsyncNodeGraph();
+            var graph = new TGraph();
             var connection1 = graph.CreateConnection<byte>();
             var connection2 = graph.CreateConnection<byte>();
 
@@ -43,5 +44,11 @@ namespace Hypnode.UnitTests.System.Common
 
             Assert.Pass();
         }
+    }
+
+    [TestFixture]
+    public class AsyncNodeGraph_VoidTests : VoidTests<AsyncNodeGraph>
+    {
+
     }
 }

@@ -1,11 +1,12 @@
 ﻿using Hypnode.Async;
+using Hypnode.Core;
 using Hypnode.Logic;
 using Hypnode.Logic.Gates;
 using Hypnode.System.Common;
 
 namespace Hypnode.UnitTests.Logic.Gates
 {
-    public class NotGateTests
+    public abstract class NotGateTests<TGraph> where TGraph : INodeGraph, new()
     {
         [TestCase(LogicValue.False, LogicValue.True)]
         [TestCase(LogicValue.True, LogicValue.False)]
@@ -29,5 +30,11 @@ namespace Hypnode.UnitTests.Logic.Gates
 
             Assert.That(result.GetValue(), Is.EqualTo(expect));
         }
+    }
+
+    [TestFixture]
+    public class AsyncNodeGrap_NotGateTests : NotGateTests<AsyncNodeGraph>
+    {
+
     }
 }

@@ -1,11 +1,12 @@
 ﻿using Hypnode.Async;
+using Hypnode.Core;
 using Hypnode.Logic;
 using Hypnode.Logic.Gates;
 using Hypnode.System.Common;
 
 namespace Hypnode.UnitTests.Logic.Gates
 {
-    public class XorGateTests
+    public abstract class XorGateTests<TGraph> where TGraph : INodeGraph, new()
     {
         [TestCase(LogicValue.False, LogicValue.False, LogicValue.False)]
         [TestCase(LogicValue.False, LogicValue.True, LogicValue.True)]
@@ -36,5 +37,11 @@ namespace Hypnode.UnitTests.Logic.Gates
 
             Assert.That(expect, Is.EqualTo(result.GetValue()));
         }
+    }
+
+    [TestFixture]
+    public class AsyncNodeGrap_XorGateTests : XorGateTests<AsyncNodeGraph>
+    {
+
     }
 }

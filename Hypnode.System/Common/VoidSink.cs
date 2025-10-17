@@ -4,7 +4,7 @@ namespace Hypnode.System.Common
 {
     public class VoidSink<T> : INode
     {
-        private List<Connection<T>> inputPorts;
+        private readonly List<Connection<T>> inputPorts;
 
         public VoidSink()
         {

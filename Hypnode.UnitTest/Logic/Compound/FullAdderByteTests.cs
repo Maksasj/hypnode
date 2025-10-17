@@ -1,10 +1,11 @@
 ﻿using Hypnode.Async;
+using Hypnode.Core;
 using Hypnode.Logic.Compound;
 using Hypnode.System.Common;
 
 namespace Hypnode.UnitTests.Logic.Compound
 {
-    public class FullAdderByteTests
+    public abstract class FullAdderByteTests<TGraph> where TGraph : INodeGraph, new()
     {
         [TestCase(0b00000000, 0b00000000)]
         [TestCase(0b00001010, 0b00000000)]
@@ -43,5 +44,11 @@ namespace Hypnode.UnitTests.Logic.Compound
 
             Assert.That(sumCell.GetValue(), Is.EqualTo(a + b));
         }
+    }
+
+    [TestFixture]
+    public class AsyncNodeGrap_FullAdderByteTests : FullAdderByteTests<AsyncNodeGraph>
+    {
+
     }
 }

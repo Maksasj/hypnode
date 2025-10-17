@@ -1,11 +1,12 @@
 ﻿using Hypnode.Async;
+using Hypnode.Core;
 using Hypnode.Logic;
 using Hypnode.Logic.Utils;
 using Hypnode.System.Common;
 
 namespace Hypnode.UnitTests.Logic.Utils
 {
-    public class ByteDemuxTests
+    public abstract class ByteSplitterInTests<TGraph> where TGraph : INodeGraph, new()
     {
 
         [TestCase(0b00000000, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False)]
@@ -76,5 +77,12 @@ namespace Hypnode.UnitTests.Logic.Utils
             Assert.That(b6.GetValue(), Is.EqualTo(b6e));
             Assert.That(b7.GetValue(), Is.EqualTo(b7e));
         }
+    }
+
+
+    [TestFixture]
+    public class AsyncNodeGraph_ByteSplitterInTests : ByteSplitterInTests<AsyncNodeGraph>
+    {
+
     }
 }

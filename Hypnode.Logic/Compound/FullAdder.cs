@@ -32,7 +32,6 @@ namespace Hypnode.Logic.Compound
 
         public override async Task ExecuteAsync()
         {
-
             if (aPort is null)
                 throw new InvalidOperationException("Input port A is not set");
 
