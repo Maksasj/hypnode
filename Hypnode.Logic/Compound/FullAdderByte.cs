@@ -5,14 +5,18 @@ using Hypnode.System.Common;
 
 namespace Hypnode.Logic.Compound
 {
-    public class FullAdderByte : INode
+    public class FullAdderByte : ICompoundNode
     {
-        private IConnection<byte>? aPort = null;
-        private IConnection<byte>? bPort = null;
+        private Connection<byte>? aPort = null;
+        private Connection<byte>? bPort = null;
+        private Connection<byte>? sum = null;
 
-        private IConnection<byte>? sum = null;
+        public FullAdderByte(INodeGraph nodeGraph) : base(nodeGraph)
+        {
 
-        public FullAdderByte SetInput(string portName, IConnection<byte> connection)
+        }
+
+        public FullAdderByte SetInput(string portName, Connection<byte> connection)
         {
 
             if (portName == "INA") aPort = connection;
@@ -20,13 +24,13 @@ namespace Hypnode.Logic.Compound
             return this;
         }
 
-        public FullAdderByte SetOutput(string portName, IConnection<byte> connection)
+        public FullAdderByte SetOutput(string portName, Connection<byte> connection)
         {
             if (portName == "OUTSUM") sum = connection;
             return this;
         }
 
-        public async Task ExecuteAsync()
+        public override async Task ExecuteAsync()
         {
             if (aPort is null)
                 throw new InvalidOperationException("Input port A is not set");
@@ -50,18 +54,18 @@ namespace Hypnode.Logic.Compound
                 graph.AddNode(new PulseValue<LogicValue>(LogicValue.False))
                     .SetOutput("OUT", cIn);
 
-                var aDemux = graph.AddNode(new ByteDemux())
+                var aDemux = graph.AddNode(new ByteSplitterIn())
                     .SetInput("IN", aIn);
 
-                var bDemux = graph.AddNode(new ByteDemux())
+                var bDemux = graph.AddNode(new ByteSplitterIn())
                     .SetInput("IN", bIn);
 
-                IConnection<LogicValue>? carry = null;
-                var sumWires = new IConnection<LogicValue>[8];
+                Connection<LogicValue>? carry = null;
+                var sumWires = new Connection<LogicValue>[8];
 
                 for (int i = 0; i < 8; ++i)
                 {
-                    var adder = graph.AddNode(new FullAdder());
+                    var adder = graph.AddNode(new FullAdder(new AsyncNodeGraph()));
 
                     if (i == 0)
                     {
@@ -104,7 +108,7 @@ namespace Hypnode.Logic.Compound
                     }
                 }
 
-                var sumMux = graph.AddNode(new ByteMultiplexer());
+                var sumMux = graph.AddNode(new ByteSplitterOut());
                 var resultWire = graph.CreateConnection<byte>();
 
                 for (int i = 0; i < 8; ++i)

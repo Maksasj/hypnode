@@ -4,18 +4,18 @@ namespace Hypnode.Logic.Gates
 {
     public class XorGate : INode
     {
-        private IConnection<LogicValue>? inputPortA = null;
-        private IConnection<LogicValue>? inputPortB = null;
-        private IConnection<LogicValue>? outputPort = null;
+        private Connection<LogicValue>? inputPortA = null;
+        private Connection<LogicValue>? inputPortB = null;
+        private Connection<LogicValue>? outputPort = null;
 
-        public XorGate SetInput(string portName, IConnection<LogicValue> connection)
+        public XorGate SetInput(string portName, Connection<LogicValue> connection)
         {
             if (portName == "INA") inputPortA = connection;
             if (portName == "INB") inputPortB = connection;
             return this;
         }
 
-        public XorGate SetOutput(string portName, IConnection<LogicValue> connection)
+        public XorGate SetOutput(string portName, Connection<LogicValue> connection)
         {
             if (portName == "OUT") outputPort = connection;
             return this;

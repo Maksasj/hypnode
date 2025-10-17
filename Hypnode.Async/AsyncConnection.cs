@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace Hypnode.Async
 {
-    public class AsyncConnection<T> : IConnection<T>
+    public class AsyncConnection<T> : Connection<T>
     {
         public BlockingCollection<T> Buffer { get; }
 

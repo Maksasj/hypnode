@@ -5,7 +5,7 @@ namespace Hypnode.Async
     public class AsyncNodeGraph : INodeGraph
     {
         public List<INode> Nodes { get; set; }
-        public List<ICloseableConnection> Connections { get; set; }
+        public List<IConnection> Connections { get; set; }
 
         public AsyncNodeGraph()
         {
@@ -13,7 +13,7 @@ namespace Hypnode.Async
             Connections = [];
         }
 
-        public IConnection<T> CreateConnection<T>()
+        public Connection<T> CreateConnection<T>()
         {
             var connection = new AsyncConnection<T>();
             Connections.Add(connection);

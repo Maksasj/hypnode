@@ -31,7 +31,7 @@ namespace Hypnode.UnitTests.Logic.Compound
             graph.AddNode(new PulseValue<byte>(b))
                .SetOutput("OUT", bin);
 
-            graph.AddNode(new FullAdderByte())
+            graph.AddNode(new FullAdderByte(new AsyncNodeGraph()))
                 .SetInput("INA", ain)
                 .SetInput("INB", bin)
                 .SetOutput("OUTSUM", outsum);

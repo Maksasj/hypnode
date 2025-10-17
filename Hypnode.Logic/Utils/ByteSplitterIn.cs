@@ -2,24 +2,24 @@
 
 namespace Hypnode.Logic.Utils
 {
-    public class ByteDemux : INode
+    public class ByteSplitterIn : INode
     {
-        private IConnection<byte>? inputPort = null;
-        private readonly IConnection<LogicValue>[] outputPorts;
+        private Connection<byte>? inputPort = null;
+        private readonly Connection<LogicValue>[] outputPorts;
 
-        public ByteDemux()
+        public ByteSplitterIn()
         {
             outputPorts = [];
-            outputPorts = new IConnection<LogicValue>[8];
+            outputPorts = new Connection<LogicValue>[8];
         }
 
-        public ByteDemux SetInput(string portName, IConnection<byte> connection)
+        public ByteSplitterIn SetInput(string portName, Connection<byte> connection)
         {
             if (portName == "IN") inputPort = connection;
             return this;
         }
 
-        public ByteDemux SetOutput(int index, IConnection<LogicValue> connection)
+        public ByteSplitterIn SetOutput(int index, Connection<LogicValue> connection)
         {
             outputPorts[index] = connection;
             return this;

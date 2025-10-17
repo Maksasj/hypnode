@@ -2,23 +2,23 @@
 
 namespace Hypnode.System.Common
 {
-    public class Demux<T> : INode
+    public class Splitter<T> : INode
     {
-        private IConnection<T>? inputPort = null;
-        private readonly List<IConnection<T>> outputPorts;
+        private Connection<T>? inputPort = null;
+        private readonly List<Connection<T>> outputPorts;
 
-        public Demux()
+        public Splitter()
         {
             outputPorts = [];
         }
 
-        public Demux<T> SetInput(string portName, IConnection<T> connection)
+        public Splitter<T> SetInput(string portName, Connection<T> connection)
         {
             if (portName == "IN") inputPort = connection;
             return this;
         }
 
-        public Demux<T> AddOutput(IConnection<T> connection)
+        public Splitter<T> AddOutput(Connection<T> connection)
         {
             outputPorts.Add(connection);
             return this;
@@ -29,7 +29,6 @@ namespace Hypnode.System.Common
             if (inputPort is null)
                 throw new InvalidOperationException("Input port is not set");
 
-            // Demux buggy: should send each packet to all output ports
             while (inputPort.TryReceive(out var packet))
             {
                 foreach (var connection in outputPorts)

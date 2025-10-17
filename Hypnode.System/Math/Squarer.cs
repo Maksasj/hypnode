@@ -4,16 +4,16 @@ namespace Hypnode.System.Math
 {
     public class Squarer : INode
     {
-        private IConnection<int>? inputPort = null;
-        private IConnection<int>? outputPort = null;
+        private Connection<int>? inputPort = null;
+        private Connection<int>? outputPort = null;
 
-        public Squarer SetInput(string portName, IConnection<int> connection)
+        public Squarer SetInput(string portName, Connection<int> connection)
         {
             if (portName == "IN") inputPort = connection;
             return this;
         }
 
-        public Squarer SetOutput(string portName, IConnection<int> connection)
+        public Squarer SetOutput(string portName, Connection<int> connection)
         {
             if (portName == "OUT") outputPort = connection;
             return this;

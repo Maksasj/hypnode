@@ -5,9 +5,9 @@ namespace Hypnode.System.Common
     public class Register<T> : INode
     {
         private T? value;
-        private IConnection<T>? inputPort = null;
+        private Connection<T>? inputPort = null;
 
-        public Register<T> SetInput(string portName, IConnection<T> connection)
+        public Register<T> SetInput(string portName, Connection<T> connection)
         {
             if (portName == "IN") inputPort = connection;
             return this;

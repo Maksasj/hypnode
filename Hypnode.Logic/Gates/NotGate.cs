@@ -4,16 +4,16 @@ namespace Hypnode.Logic.Gates
 {
     public class NotGate : INode
     {
-        private IConnection<LogicValue>? inputPort = null;
-        private IConnection<LogicValue>? outputPort = null;
+        private Connection<LogicValue>? inputPort = null;
+        private Connection<LogicValue>? outputPort = null;
 
-        public NotGate SetInput(string portName, IConnection<LogicValue> connection)
+        public NotGate SetInput(string portName, Connection<LogicValue> connection)
         {
             if (portName == "IN") inputPort = connection;
             return this;
         }
 
-        public NotGate SetOutput(string portName, IConnection<LogicValue> connection)
+        public NotGate SetOutput(string portName, Connection<LogicValue> connection)
         {
             if (portName == "OUT") outputPort = connection;
             return this;

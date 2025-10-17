@@ -54,7 +54,7 @@ namespace Hypnode.Example
                 .SetOutput("OUT", AtoDemux1);
 
             // Demux1
-            graph.AddNode(new Demux<LogicValue>())
+            graph.AddNode(new Splitter<LogicValue>())
                 .SetInput("IN", AtoDemux1)
                 .AddOutput(Demux1toXor1)
                 .AddOutput(Demux1toAnd2);
@@ -64,7 +64,7 @@ namespace Hypnode.Example
                 .SetOutput("OUT", BtoDemux2);
 
             // Demux2
-            graph.AddNode(new Demux<LogicValue>())
+            graph.AddNode(new Splitter<LogicValue>())
                 .SetInput("IN", BtoDemux2)
                 .AddOutput(Demux2toXor1)
                 .AddOutput(Demux2toAnd2);
@@ -74,7 +74,7 @@ namespace Hypnode.Example
                 .SetOutput("OUT", CtoDemux3);
 
             // Demux3
-            graph.AddNode(new Demux<LogicValue>())
+            graph.AddNode(new Splitter<LogicValue>())
                 .SetInput("IN", CtoDemux3)
                 .AddOutput(Demux3toXor2)
                 .AddOutput(Demux3toAnd1);
@@ -95,7 +95,7 @@ namespace Hypnode.Example
                 .SetInput("IN", toSum);
 
             // Demux4
-            graph.AddNode(new Demux<LogicValue>())
+            graph.AddNode(new Splitter<LogicValue>())
                 .SetInput("IN", Xor1toDemux4)
                 .AddOutput(Demux4toXor2)
                 .AddOutput(Demux4toAnd1);

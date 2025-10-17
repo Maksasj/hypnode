@@ -4,9 +4,9 @@ namespace Hypnode.System.Math
 {
     public class Generator : INode
     {
-        private IConnection<int>? outputPort = null;
+        private Connection<int>? outputPort = null;
 
-        public void SetOutput(string portName, IConnection<int> connection)
+        public void SetOutput(string portName, Connection<int> connection)
         {
             if (portName == "OUT") outputPort = connection;
         }

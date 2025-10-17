@@ -1,6 +1,6 @@
 ﻿namespace Hypnode.Core
 {
-    public abstract class IConnection<T> : ICloseableConnection
+    public abstract class Connection<T> : IConnection
     {
         public abstract T Receive();
 

@@ -5,16 +5,21 @@ using Hypnode.System.Common;
 
 namespace Hypnode.Logic.Compound
 {
-    public class FullAdder : INode
+    public class FullAdder : ICompoundNode
     {
-        private IConnection<LogicValue>? aPort = null;
-        private IConnection<LogicValue>? bPort = null;
-        private IConnection<LogicValue>? carryIn = null;
+        private Connection<LogicValue>? aPort = null;
+        private Connection<LogicValue>? bPort = null;
+        private Connection<LogicValue>? carryIn = null;
 
-        private IConnection<LogicValue>? sum = null;
-        private IConnection<LogicValue>? carryOut = null;
+        private Connection<LogicValue>? sum = null;
+        private Connection<LogicValue>? carryOut = null;
 
-        public FullAdder SetInput(string portName, IConnection<LogicValue> connection)
+        public FullAdder(INodeGraph nodeGraph) : base(nodeGraph)
+        {
+
+        }
+
+        public FullAdder SetInput(string portName, Connection<LogicValue> connection)
         {
 
             if (portName == "INA") aPort = connection;
@@ -23,14 +28,14 @@ namespace Hypnode.Logic.Compound
             return this;
         }
 
-        public FullAdder SetOutput(string portName, IConnection<LogicValue> connection)
+        public FullAdder SetOutput(string portName, Connection<LogicValue> connection)
         {
             if (portName == "OUTSUM") sum = connection;
             if (portName == "OUTC") carryOut = connection;
             return this;
         }
 
-        public async Task ExecuteAsync()
+        public override async Task ExecuteAsync()
         {
 
             if (aPort is null)
@@ -68,7 +73,7 @@ namespace Hypnode.Logic.Compound
                     .SetOutput("OUT", AtoDemux1);
 
                 // Demux1
-                graph.AddNode(new Demux<LogicValue>())
+                graph.AddNode(new Splitter<LogicValue>())
                     .SetInput("IN", AtoDemux1)
                     .AddOutput(Demux1toXor1)
                     .AddOutput(Demux1toAnd2);
@@ -78,7 +83,7 @@ namespace Hypnode.Logic.Compound
                     .SetOutput("OUT", BtoDemux2);
 
                 // Demux2
-                graph.AddNode(new Demux<LogicValue>())
+                graph.AddNode(new Splitter<LogicValue>())
                     .SetInput("IN", BtoDemux2)
                     .AddOutput(Demux2toXor1)
                     .AddOutput(Demux2toAnd2);
@@ -88,7 +93,7 @@ namespace Hypnode.Logic.Compound
                     .SetOutput("OUT", CtoDemux3);
 
                 // Demux3
-                graph.AddNode(new Demux<LogicValue>())
+                graph.AddNode(new Splitter<LogicValue>())
                     .SetInput("IN", CtoDemux3)
                     .AddOutput(Demux3toXor2)
                     .AddOutput(Demux3toAnd1);
@@ -109,7 +114,7 @@ namespace Hypnode.Logic.Compound
                     .SetInput("IN", toSum);
 
                 // Demux4
-                graph.AddNode(new Demux<LogicValue>())
+                graph.AddNode(new Splitter<LogicValue>())
                     .SetInput("IN", Xor1toDemux4)
                     .AddOutput(Demux4toXor2)
                     .AddOutput(Demux4toAnd1);

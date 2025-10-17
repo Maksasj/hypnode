@@ -30,7 +30,7 @@ namespace Hypnode.UnitTests.Logic.Utils
             graph.AddNode(new PulseValue<byte>(value))
                 .SetOutput("OUT", input);
 
-            graph.AddNode(new ByteDemux())
+            graph.AddNode(new ByteSplitterIn())
                 .SetInput("IN", input)
                 .SetOutput(0, b0c)
                 .SetOutput(1, b1c)

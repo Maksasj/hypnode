@@ -5,14 +5,14 @@ namespace Hypnode.System.Common
     public class ConstValue<T> : INode
     {
         private T Value { get; set; }
-        private IConnection<T>? outputPort = null;
+        private Connection<T>? outputPort = null;
 
         public ConstValue(T value)
         {
             this.Value = value;
         }
 
-        public void SetOutput(string portName, IConnection<T> connection)
+        public void SetOutput(string portName, Connection<T> connection)
         {
             if (portName == "OUT") outputPort = connection;
         }

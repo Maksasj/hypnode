@@ -4,9 +4,9 @@ namespace Hypnode.System.IO
 {
     public class Printer<T> : INode
     {
-        private IConnection<T>? inputPort = null;
+        private Connection<T>? inputPort = null;
 
-        public void SetInput(string portName, IConnection<T> connection)
+        public void SetInput(string portName, Connection<T> connection)
         {
             if (portName == "IN") inputPort = connection;
         }

@@ -4,14 +4,14 @@ namespace Hypnode.System.Common
 {
     public class VoidSink<T> : INode
     {
-        private List<IConnection<T>> inputPorts;
+        private List<Connection<T>> inputPorts;
 
         public VoidSink()
         {
             inputPorts = [];
         }
 
-        public VoidSink<T> AddInput(IConnection<T> connection)
+        public VoidSink<T> AddInput(Connection<T> connection)
         {
             inputPorts.Add(connection);
             return this;
@@ -30,7 +30,7 @@ namespace Hypnode.System.Common
             await Task.WhenAll(consumptionTasks);
         }
 
-        private static void ConsumeConnection(IConnection<T> connection)
+        private static void ConsumeConnection(Connection<T> connection)
         {
             while (connection.TryReceive(out _))
             {

@@ -2,17 +2,17 @@
 
 namespace Hypnode.Logic.Utils
 {
-    public class ByteMultiplexer : INode
+    public class ByteSplitterOut : INode
     {
-        private readonly IConnection<LogicValue>[] inputPorts;
-        private IConnection<byte>? outputPort = null;
+        private readonly Connection<LogicValue>[] inputPorts;
+        private Connection<byte>? outputPort = null;
 
-        public ByteMultiplexer()
+        public ByteSplitterOut()
         {
-            inputPorts = new IConnection<LogicValue>[8];
+            inputPorts = new Connection<LogicValue>[8];
         }
 
-        public ByteMultiplexer SetInput(int index, IConnection<LogicValue> connection)
+        public ByteSplitterOut SetInput(int index, Connection<LogicValue> connection)
         {
             if (index >= 0 && index < 8)
                 inputPorts[index] = connection;
@@ -20,7 +20,7 @@ namespace Hypnode.Logic.Utils
             return this;
         }
 
-        public ByteMultiplexer SetOutput(string portName, IConnection<byte> connection)
+        public ByteSplitterOut SetOutput(string portName, Connection<byte> connection)
         {
             if (portName == "OUT") outputPort = connection;
             return this;

@@ -4,9 +4,9 @@ namespace Hypnode.System.IO
 {
     public class Assert : INode
     {
-        private IConnection<bool>? inputPort = null;
+        private Connection<bool>? inputPort = null;
 
-        public void SetInput(string portName, IConnection<bool> connection)
+        public void SetInput(string portName, Connection<bool> connection)
         {
             if (portName == "IN") inputPort = connection;
         }

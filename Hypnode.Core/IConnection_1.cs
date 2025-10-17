@@ -1,6 +1,6 @@
 ﻿namespace Hypnode.Core
 {
-    public interface ICloseableConnection
+    public interface IConnection
     {
         public void Close();
     }
