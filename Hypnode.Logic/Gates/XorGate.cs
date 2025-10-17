@@ -1,21 +1,21 @@
 ﻿using Hypnode.Core;
 
-namespace Hypnode.Logic
+namespace Hypnode.Logic.Gates
 {
-    public class AndGate : INode
+    public class XorGate : INode
     {
         private IConnection<LogicValue>? inputPortA = null;
         private IConnection<LogicValue>? inputPortB = null;
         private IConnection<LogicValue>? outputPort = null;
 
-        public AndGate SetInput(string portName, IConnection<LogicValue> connection)
+        public XorGate SetInput(string portName, IConnection<LogicValue> connection)
         {
             if (portName == "INA") inputPortA = connection;
             if (portName == "INB") inputPortB = connection;
             return this;
         }
 
-        public AndGate SetOutput(string portName, IConnection<LogicValue> connection)
+        public XorGate SetOutput(string portName, IConnection<LogicValue> connection)
         {
             if (portName == "OUT") outputPort = connection;
             return this;
@@ -31,7 +31,7 @@ namespace Hypnode.Logic
 
             while (inputPortA.TryReceive(out var packetA) && inputPortB.TryReceive(out var packetB))
             {
-                var result = (packetA == LogicValue.True && packetB == LogicValue.True) ? LogicValue.True : LogicValue.False;
+                var result = (packetA != packetB) ? LogicValue.True : LogicValue.False;
                 outputPort?.Send(result);
             }
 

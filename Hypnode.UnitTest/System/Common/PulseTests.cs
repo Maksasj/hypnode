@@ -2,13 +2,13 @@
 using Hypnode.Logic;
 using Hypnode.System.Common;
 
-namespace Hypnode.UnitTests.System
+namespace Hypnode.UnitTests.System.Common
 {
-    public class SystemTests
+    public class PulseTests
     {
         [TestCase(LogicValue.False)]
         [TestCase(LogicValue.True)]
-        public async Task TestPulse(LogicValue value)
+        public async Task TestPulse_CorrectValue(LogicValue value)
         {
             var graph = new AsyncNodeGraph();
             var connection = graph.CreateConnection<LogicValue>();

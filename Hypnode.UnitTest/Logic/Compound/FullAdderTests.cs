@@ -15,115 +15,7 @@ namespace Hypnode.UnitTests.Logic.Compound
         [TestCase(LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True)]
         [TestCase(LogicValue.True, LogicValue.True, LogicValue.False, LogicValue.False, LogicValue.True)]
         [TestCase(LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True)]
-        public async Task TestAdderSimple(LogicValue a, LogicValue b, LogicValue cIn, LogicValue sum, LogicValue cOut)
-        {
-            var graph = new AsyncNodeGraph();
-            var AtoDemux1 = graph.CreateConnection<LogicValue>();
-            var Demux1toXor1 = graph.CreateConnection<LogicValue>();
-            var BtoDemux2 = graph.CreateConnection<LogicValue>();
-            var Demux2toXor1 = graph.CreateConnection<LogicValue>();
-            var CtoDemux3 = graph.CreateConnection<LogicValue>();
-            var Demux3toXor2 = graph.CreateConnection<LogicValue>();
-            var Xor1toDemux4 = graph.CreateConnection<LogicValue>();
-            var Demux4toXor2 = graph.CreateConnection<LogicValue>();
-            var Demux4toAnd1 = graph.CreateConnection<LogicValue>();
-            var Demux3toAnd1 = graph.CreateConnection<LogicValue>();
-            var Demux1toAnd2 = graph.CreateConnection<LogicValue>();
-            var Demux2toAnd2 = graph.CreateConnection<LogicValue>();
-            var And1toOr = graph.CreateConnection<LogicValue>();
-            var And2toOr = graph.CreateConnection<LogicValue>();
-
-            var toCarryOut = graph.CreateConnection<LogicValue>();
-            var toSum = graph.CreateConnection<LogicValue>();
-
-            // A
-            graph.AddNode(new PulseValue<LogicValue>(a))
-                .SetOutput("OUT", AtoDemux1);
-
-            // Demux1
-            graph.AddNode(new Demux<LogicValue>())
-                .SetInput("IN", AtoDemux1)
-                .AddOutput(Demux1toXor1)
-                .AddOutput(Demux1toAnd2);
-
-            // B
-            graph.AddNode(new PulseValue<LogicValue>(b))
-                .SetOutput("OUT", BtoDemux2);
-
-            // Demux2
-            graph.AddNode(new Demux<LogicValue>())
-                .SetInput("IN", BtoDemux2)
-                .AddOutput(Demux2toXor1)
-                .AddOutput(Demux2toAnd2);
-
-            // C
-            graph.AddNode(new PulseValue<LogicValue>(cIn))
-                .SetOutput("OUT", CtoDemux3);
-
-            // Demux3
-            graph.AddNode(new Demux<LogicValue>())
-                .SetInput("IN", CtoDemux3)
-                .AddOutput(Demux3toXor2)
-                .AddOutput(Demux3toAnd1);
-
-            // Xor1
-            graph.AddNode(new XorGate())
-                .SetInput("INA", Demux1toXor1)
-                .SetInput("INB", Demux2toXor1)
-                .SetOutput("OUT", Xor1toDemux4);
-
-            // Xor2
-            graph.AddNode(new XorGate())
-                .SetInput("INA", Demux3toXor2)
-                .SetInput("INB", Demux4toXor2)
-                .SetOutput("OUT", toSum);
-
-            var sumCell = graph.AddNode(new Register<LogicValue>())
-                .SetInput("IN", toSum);
-
-            // Demux4
-            graph.AddNode(new Demux<LogicValue>())
-                .SetInput("IN", Xor1toDemux4)
-                .AddOutput(Demux4toXor2)
-                .AddOutput(Demux4toAnd1);
-
-            // And1
-            graph.AddNode(new AndGate())
-                .SetInput("INA", Demux4toAnd1)
-                .SetInput("INB", Demux3toAnd1)
-                .SetOutput("OUT", And1toOr);
-
-            // And2
-            graph.AddNode(new AndGate())
-                .SetInput("INB", Demux2toAnd2)
-                .SetInput("INA", Demux1toAnd2)
-                .SetOutput("OUT", And2toOr);
-
-            // Or
-            graph.AddNode(new OrGate())
-                .SetInput("INB", And1toOr)
-                .SetInput("INA", And2toOr)
-                .SetOutput("OUT", toCarryOut); // OUT
-
-            // Printer
-            var carryCell = graph.AddNode(new Register<LogicValue>())
-                .SetInput("IN", toCarryOut);
-
-            await graph.EvaluateAsync();
-
-            Assert.That(sumCell.GetValue(), Is.EqualTo(sum));
-            Assert.That(carryCell.GetValue(), Is.EqualTo(cOut));
-        }
-
-        [TestCase(LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False)]
-        [TestCase(LogicValue.False, LogicValue.False, LogicValue.True, LogicValue.True, LogicValue.False)]
-        [TestCase(LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False)]
-        [TestCase(LogicValue.False, LogicValue.True, LogicValue.True, LogicValue.False, LogicValue.True)]
-        [TestCase(LogicValue.True, LogicValue.False, LogicValue.False, LogicValue.True, LogicValue.False)]
-        [TestCase(LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True)]
-        [TestCase(LogicValue.True, LogicValue.True, LogicValue.False, LogicValue.False, LogicValue.True)]
-        [TestCase(LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True)]
-        public async Task TestAdderCompound(LogicValue a, LogicValue b, LogicValue cIn, LogicValue sum, LogicValue cOut)
+        public async Task TestAdderCompound_CorrectValues(LogicValue a, LogicValue b, LogicValue cIn, LogicValue sum, LogicValue cOut)
         {
             var graph = new AsyncNodeGraph();
             var ain = graph.CreateConnection<LogicValue>();
@@ -159,6 +51,44 @@ namespace Hypnode.UnitTests.Logic.Compound
 
             Assert.That(sumCell.GetValue(), Is.EqualTo(sum));
             Assert.That(carryCell.GetValue(), Is.EqualTo(cOut));
+        }
+
+        [TestCase(0b00000000, 0b00000000)]
+        [TestCase(0b00001010, 0b00000000)]
+        [TestCase(0b00000000, 0b00001010)]
+        [TestCase(0b00000001, 0b00000001)]
+        [TestCase(0b00001010, 0b00110010)]
+        [TestCase(0b01100100, 0b01100100)]
+        [TestCase(0b10000000, 0b01111111)]
+        [TestCase(0b11001000, 0b00110111)]
+        [TestCase(0b11111010, 0b00000101)]
+        [TestCase(0b00000000, 0b11111111)]
+        [TestCase(0b11111111, 0b00000000)]
+        public async Task TestAdderByteCompound_CorrectValues(byte a, byte b)
+        {
+            var graph = new AsyncNodeGraph();
+            var ain = graph.CreateConnection<byte>();
+            var bin = graph.CreateConnection<byte>();
+
+            var outsum = graph.CreateConnection<byte>();
+
+            graph.AddNode(new PulseValue<byte>(a))
+                .SetOutput("OUT", ain);
+
+            graph.AddNode(new PulseValue<byte>(b))
+               .SetOutput("OUT", bin);
+
+            graph.AddNode(new FullAdderByte())
+                .SetInput("INA", ain)
+                .SetInput("INB", bin)
+                .SetOutput("OUTSUM", outsum);
+
+            var sumCell = graph.AddNode(new Register<byte>())
+                .SetInput("IN", outsum);
+
+            await graph.EvaluateAsync();
+
+            Assert.That(sumCell.GetValue(), Is.EqualTo(a + b));
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Hypnode.Core;
 
-namespace Hypnode.Logic
+namespace Hypnode.Logic.Gates
 {
     public class NotGate : INode
     {

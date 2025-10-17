@@ -1,5 +1,6 @@
 ﻿using Hypnode.Async;
 using Hypnode.Core;
+using Hypnode.Logic.Gates;
 using Hypnode.System.Common;
 
 namespace Hypnode.Logic.Compound

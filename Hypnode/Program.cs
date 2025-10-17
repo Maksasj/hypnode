@@ -1,5 +1,6 @@
 ﻿using Hypnode.Async;
 using Hypnode.Logic;
+using Hypnode.Logic.Gates;
 using Hypnode.System.Common;
 using Hypnode.System.IO;
 using Hypnode.System.Math;

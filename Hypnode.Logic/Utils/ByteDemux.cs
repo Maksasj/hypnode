@@ -1,6 +1,6 @@
 ﻿using Hypnode.Core;
 
-namespace Hypnode.Logic
+namespace Hypnode.Logic.Utils
 {
     public class ByteDemux : INode
     {
@@ -36,11 +36,8 @@ namespace Hypnode.Logic
                         .Select(i => (packet & (1 << i)) != 0)
                         .Select(b => b ? LogicValue.True : LogicValue.False)];
 
-                int portIndex = 0;
-                foreach (var connection in outputPorts)
-                {
-                    connection?.Send(values[portIndex]);
-                }
+                for (int i = 0; i < 8; ++i)
+                    outputPorts[i]?.Send(values[i]);
             }
 
             foreach (var connection in outputPorts)
