@@ -90,7 +90,7 @@ namespace Hypnode.Example
                 .SetInput("INB", Demux4toXor2)
                 .SetOutput("OUT", toSum);
 
-            var sumCell = graph.AddNode(new Cell<LogicValue>())
+            var sumCell = graph.AddNode(new Register<LogicValue>())
                 .SetInput("IN", toSum);
 
             // Demux4
@@ -121,7 +121,7 @@ namespace Hypnode.Example
             graph.AddNode(new Printer<LogicValue>())
                 .SetInput("IN", toCarryOut);
 
-            await graph.EvaluateAsync(TimeSpan.FromSeconds(1));
+            await graph.EvaluateAsync();
         }
 
         private static async Task TestSome()
@@ -132,10 +132,10 @@ namespace Hypnode.Example
             graph.AddNode(new PulseValue<LogicValue>(LogicValue.False))
                 .SetOutput("OUT", connection);
 
-            var result = graph.AddNode(new Cell<LogicValue>())
+            var result = graph.AddNode(new Register<LogicValue>())
                 .SetInput("IN", connection);
 
-            await graph.EvaluateAsync(TimeSpan.FromSeconds(2.0));
+            await graph.EvaluateAsync();
         }
 
         public static async Task Main()

@@ -24,18 +24,20 @@ namespace Hypnode.System.Common
             return this;
         }
 
-        public void Execute()
+        public async Task ExecuteAsync()
         {
             if (inputPort is null)
                 throw new InvalidOperationException("Input port is not set");
 
-            while (true)
+            // Demux buggy: should send each packet to all output ports
+            while (inputPort.TryReceive(out var packet))
             {
-                var packet = inputPort.Receive();
-
                 foreach (var connection in outputPorts)
                     connection?.Send(packet);
             }
+
+            foreach (var connection in outputPorts)
+                connection?.Close();
         }
     }
 }

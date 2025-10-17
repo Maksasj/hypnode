@@ -16,10 +16,10 @@ namespace Hypnode.UnitTests.System
             graph.AddNode(new PulseValue<LogicValue>(value))
                 .SetOutput("OUT", connection);
 
-            var result = graph.AddNode(new Cell<LogicValue>())
+            var result = graph.AddNode(new Register<LogicValue>())
                 .SetInput("IN", connection);
 
-            await graph.EvaluateAsync(TimeSpan.FromSeconds(0.2));
+            await graph.EvaluateAsync();
 
             Assert.That(result.GetValue(), Is.EqualTo(value));
         }

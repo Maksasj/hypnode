@@ -19,20 +19,18 @@ namespace Hypnode.Logic
             return this;
         }
 
-        public void Execute()
+        public async Task ExecuteAsync()
         {
             if (inputPort is null)
                 throw new InvalidOperationException("Input port A is not set");
 
-            while (true)
+            while (inputPort.TryReceive(out var packet))
             {
-                var packet = inputPort.Receive();
-
-                if (packet == LogicValue.True)
-                    outputPort?.Send(LogicValue.False);
-                else
-                    outputPort?.Send(LogicValue.True);
+                var result = (packet == LogicValue.True) ? LogicValue.False : LogicValue.True;
+                outputPort?.Send(result);
             }
+
+            outputPort?.Close();
         }
     }
 }

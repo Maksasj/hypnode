@@ -28,18 +28,8 @@ namespace Hypnode.Async
 
         public async Task EvaluateAsync()
         {
-            var tasks = new List<Task>();
-
-            foreach (var node in Nodes)
-                tasks.Add(Task.Run(() => node.Execute()));
-
-            Task.WaitAll([.. tasks]);
-        }
-
-        public async Task EvaluateAsync(TimeSpan timeout)
-        {
-            var nodeExecutionTasks = Nodes.Select(node => Task.Run(() => node.Execute())).ToList();
-            await Task.WhenAll(nodeExecutionTasks);
+            var executionTasks = Nodes.Select(node => Task.Run(async () => await node.ExecuteAsync())).ToList();
+            await Task.WhenAll(executionTasks);
         }
     }
 }

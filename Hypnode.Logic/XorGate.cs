@@ -21,7 +21,7 @@ namespace Hypnode.Logic
             return this;
         }
 
-        public void Execute()
+        public async Task ExecuteAsync()
         {
             if (inputPortA is null)
                 throw new InvalidOperationException("Input port A is not set");
@@ -29,16 +29,13 @@ namespace Hypnode.Logic
             if (inputPortB is null)
                 throw new InvalidOperationException("Input port B is not set");
 
-            while (true)
+            while (inputPortA.TryReceive(out var packetA) && inputPortB.TryReceive(out var packetB))
             {
-                var packetA = inputPortA.Receive();
-                var packetB = inputPortB.Receive();
-
-                if (packetA != packetB)
-                    outputPort?.Send(LogicValue.True);
-                else
-                    outputPort?.Send(LogicValue.False);
+                var result = (packetA != packetB) ? LogicValue.True : LogicValue.False;
+                outputPort?.Send(result);
             }
+
+            outputPort?.Close();
         }
     }
 }

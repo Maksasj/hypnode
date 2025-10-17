@@ -2,6 +2,6 @@
 {
     public interface INode
     {
-        void Execute();
+        Task ExecuteAsync();
     }
 }

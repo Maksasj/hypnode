@@ -1,10 +1,11 @@
 ﻿using Hypnode.Async;
 using Hypnode.Logic;
+using Hypnode.Logic.Compound;
 using Hypnode.System.Common;
 
-namespace Hypnode.UnitTests.Logic
+namespace Hypnode.UnitTests.Logic.Compound
 {
-    public class LogicTests
+    public class FullAdderTests
     {
         [TestCase(LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False)]
         [TestCase(LogicValue.False, LogicValue.False, LogicValue.True, LogicValue.True, LogicValue.False)]
@@ -14,7 +15,7 @@ namespace Hypnode.UnitTests.Logic
         [TestCase(LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True)]
         [TestCase(LogicValue.True, LogicValue.True, LogicValue.False, LogicValue.False, LogicValue.True)]
         [TestCase(LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True)]
-        public async Task TestAdder(LogicValue a, LogicValue b, LogicValue cIn, LogicValue sum, LogicValue cOut)
+        public async Task TestAdderSimple(LogicValue a, LogicValue b, LogicValue cIn, LogicValue sum, LogicValue cOut)
         {
             var graph = new AsyncNodeGraph();
             var AtoDemux1 = graph.CreateConnection<LogicValue>();
@@ -77,7 +78,7 @@ namespace Hypnode.UnitTests.Logic
                 .SetInput("INB", Demux4toXor2)
                 .SetOutput("OUT", toSum);
 
-            var sumCell = graph.AddNode(new Cell<LogicValue>())
+            var sumCell = graph.AddNode(new Register<LogicValue>())
                 .SetInput("IN", toSum);
 
             // Demux4
@@ -105,13 +106,59 @@ namespace Hypnode.UnitTests.Logic
                 .SetOutput("OUT", toCarryOut); // OUT
 
             // Printer
-            var carry = graph.AddNode(new Cell<LogicValue>())
+            var carryCell = graph.AddNode(new Register<LogicValue>())
                 .SetInput("IN", toCarryOut);
 
-            await graph.EvaluateAsync(TimeSpan.FromSeconds(0.2));
+            await graph.EvaluateAsync();
 
             Assert.That(sumCell.GetValue(), Is.EqualTo(sum));
-            // Assert.That(cOut, Is.EqualTo(carry.GetValue()));
+            Assert.That(carryCell.GetValue(), Is.EqualTo(cOut));
+        }
+
+        [TestCase(LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False, LogicValue.False)]
+        [TestCase(LogicValue.False, LogicValue.False, LogicValue.True, LogicValue.True, LogicValue.False)]
+        [TestCase(LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False)]
+        [TestCase(LogicValue.False, LogicValue.True, LogicValue.True, LogicValue.False, LogicValue.True)]
+        [TestCase(LogicValue.True, LogicValue.False, LogicValue.False, LogicValue.True, LogicValue.False)]
+        [TestCase(LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True)]
+        [TestCase(LogicValue.True, LogicValue.True, LogicValue.False, LogicValue.False, LogicValue.True)]
+        [TestCase(LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True)]
+        public async Task TestAdderCompound(LogicValue a, LogicValue b, LogicValue cIn, LogicValue sum, LogicValue cOut)
+        {
+            var graph = new AsyncNodeGraph();
+            var ain = graph.CreateConnection<LogicValue>();
+            var bin = graph.CreateConnection<LogicValue>();
+            var cin = graph.CreateConnection<LogicValue>();
+
+            var outsum = graph.CreateConnection<LogicValue>();
+            var outc = graph.CreateConnection<LogicValue>();
+
+            graph.AddNode(new PulseValue<LogicValue>(a))
+                .SetOutput("OUT", ain);
+
+            graph.AddNode(new PulseValue<LogicValue>(b))
+               .SetOutput("OUT", bin);
+
+            graph.AddNode(new PulseValue<LogicValue>(cIn))
+                .SetOutput("OUT", cin);
+
+            graph.AddNode(new FullAdder())
+                .SetInput("INA", ain)
+                .SetInput("INB", bin)
+                .SetInput("INC", cin)
+                .SetOutput("OUTSUM", outsum)
+                .SetOutput("OUTC", outc);
+
+            var sumCell = graph.AddNode(new Register<LogicValue>())
+                .SetInput("IN", outsum);
+
+            var carryCell = graph.AddNode(new Register<LogicValue>())
+                .SetInput("IN", outc);
+
+            await graph.EvaluateAsync();
+
+            Assert.That(sumCell.GetValue(), Is.EqualTo(sum));
+            Assert.That(carryCell.GetValue(), Is.EqualTo(cOut));
         }
     }
 }

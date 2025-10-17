@@ -19,7 +19,7 @@ namespace Hypnode.System.Math
             return this;
         }
 
-        public void Execute()
+        public async Task ExecuteAsync()
         {
             if (inputPort is null)
                 throw new InvalidOperationException("Input port is not set");

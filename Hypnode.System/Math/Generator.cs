@@ -11,7 +11,7 @@ namespace Hypnode.System.Math
             if (portName == "OUT") outputPort = connection;
         }
 
-        public void Execute()
+        public async Task ExecuteAsync()
         {
             var i = 0;
 

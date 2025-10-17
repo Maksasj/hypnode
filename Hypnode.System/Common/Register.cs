@@ -2,12 +2,12 @@
 
 namespace Hypnode.System.Common
 {
-    public class Cell<T> : INode
+    public class Register<T> : INode
     {
         private T? value;
         private IConnection<T>? inputPort = null;
 
-        public Cell<T> SetInput(string portName, IConnection<T> connection)
+        public Register<T> SetInput(string portName, IConnection<T> connection)
         {
             if (portName == "IN") inputPort = connection;
             return this;
@@ -15,13 +15,15 @@ namespace Hypnode.System.Common
 
         public T? GetValue() => value;
 
-        public void Execute()
+        public async Task ExecuteAsync()
         {
             if (inputPort is null)
                 throw new InvalidOperationException("Input port is not set");
 
-            var packet = inputPort.Receive();
-            value = packet;
+            while (inputPort.TryReceive(out var packet))
+            {
+                value = packet;
+            }
         }
     }
 }

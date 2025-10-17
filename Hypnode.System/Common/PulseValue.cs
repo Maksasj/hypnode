@@ -17,9 +17,10 @@ namespace Hypnode.System.Common
             if (portName == "OUT") outputPort = connection;
         }
 
-        public void Execute()
+        public async Task ExecuteAsync()
         {
             outputPort?.Send(Value);
+            outputPort?.Close();
         }
     }
 }

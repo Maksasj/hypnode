@@ -4,7 +4,7 @@ using Hypnode.System.Common;
 
 namespace Hypnode.UnitTests.Logic
 {
-    public class GatesTests
+    public class LogicGatesTests
     {
         [TestCase(LogicValue.False, LogicValue.False, LogicValue.False)]
         [TestCase(LogicValue.False, LogicValue.True, LogicValue.True)]
@@ -28,10 +28,10 @@ namespace Hypnode.UnitTests.Logic
                 .SetInput("INB", connection2)
                 .SetOutput("OUT", connection3);
 
-            var result = graph.AddNode(new Cell<LogicValue>())
+            var result = graph.AddNode(new Register<LogicValue>())
                 .SetInput("IN", connection3);
 
-            await graph.EvaluateAsync(TimeSpan.FromSeconds(0.2));
+            await graph.EvaluateAsync();
 
             Assert.That(expect, Is.EqualTo(result.GetValue()));
         }
@@ -58,10 +58,10 @@ namespace Hypnode.UnitTests.Logic
                 .SetInput("INB", connection2)
                 .SetOutput("OUT", connection3);
 
-            var result = graph.AddNode(new Cell<LogicValue>())
+            var result = graph.AddNode(new Register<LogicValue>())
                 .SetInput("IN", connection3);
 
-            await graph.EvaluateAsync(TimeSpan.FromSeconds(0.2));
+            await graph.EvaluateAsync();
 
             Assert.That(expect, Is.EqualTo(result.GetValue()));
         }
@@ -88,10 +88,10 @@ namespace Hypnode.UnitTests.Logic
                 .SetInput("INB", connection2)
                 .SetOutput("OUT", connection3);
 
-            var result = graph.AddNode(new Cell<LogicValue>())
+            var result = graph.AddNode(new Register<LogicValue>())
                 .SetInput("IN", connection3);
 
-            await graph.EvaluateAsync(TimeSpan.FromSeconds(0.2));
+            await graph.EvaluateAsync();
 
             Assert.That(result.GetValue(), Is.EqualTo(expect));
         }
@@ -111,10 +111,10 @@ namespace Hypnode.UnitTests.Logic
                 .SetInput("IN", connection1)
                 .SetOutput("OUT", connection2);
 
-            var result = graph.AddNode(new Cell<LogicValue>())
+            var result = graph.AddNode(new Register<LogicValue>())
                 .SetInput("IN", connection2);
 
-            await graph.EvaluateAsync(TimeSpan.FromSeconds(0.2));
+            await graph.EvaluateAsync();
 
             Assert.That(result.GetValue(), Is.EqualTo(expect));
         }
