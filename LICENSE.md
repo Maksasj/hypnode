@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2024 Maksim Jaroslavcevas
+Copyright (c) Maksim Jaroslavcevas
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

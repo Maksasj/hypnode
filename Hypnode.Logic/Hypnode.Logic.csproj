@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+	<WarningsAsErrors>Nullable</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hypnode.Async\Hypnode.Async.csproj" />
+    <ProjectReference Include="..\Hypnode.Core\Hypnode.Core.csproj" />
+    <ProjectReference Include="..\Hypnode.System\Hypnode.System.csproj" />
+  </ItemGroup>
+
+</Project>
