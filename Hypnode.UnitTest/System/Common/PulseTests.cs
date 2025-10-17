@@ -1,4 +1,5 @@
 ﻿using Hypnode.Async;
+using Hypnode.Core;
 using Hypnode.Logic;
 using Hypnode.System.Common;
 
@@ -11,13 +12,11 @@ namespace Hypnode.UnitTests.System.Common
         public async Task TestPulse_CorrectValue(LogicValue value)
         {
             var graph = new AsyncNodeGraph();
-            var connection = graph.CreateConnection<LogicValue>();
 
-            graph.AddNode(new PulseValue<LogicValue>(value))
-                .SetPort("OUT", connection);
+            var pulse = graph.AddNode(new PulseValue<LogicValue>(value));
+            var result = graph.AddNode(new Register<LogicValue>());
 
-            var result = new Register<LogicValue>();
-            graph.AddNode(result).SetPort("IN", connection);
+            graph.AddConnection<LogicValue>(pulse, "OUT", result, "IN");
 
             await graph.EvaluateAsync();
 

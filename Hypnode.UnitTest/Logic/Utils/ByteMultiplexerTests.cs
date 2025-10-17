@@ -1,7 +1,9 @@
 ﻿using Hypnode.Async;
+using Hypnode.Core;
 using Hypnode.Logic;
 using Hypnode.Logic.Utils;
 using Hypnode.System.Common;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Hypnode.UnitTests.Logic.Utils
 {
@@ -17,39 +19,29 @@ namespace Hypnode.UnitTests.Logic.Utils
         {
             var graph = new AsyncNodeGraph();
 
-            var b0c = graph.CreateConnection<LogicValue>();
-            var b1c = graph.CreateConnection<LogicValue>();
-            var b2c = graph.CreateConnection<LogicValue>();
-            var b3c = graph.CreateConnection<LogicValue>();
-            var b4c = graph.CreateConnection<LogicValue>();
-            var b5c = graph.CreateConnection<LogicValue>();
-            var b6c = graph.CreateConnection<LogicValue>();
-            var b7c = graph.CreateConnection<LogicValue>();
+            var b0n = graph.AddNode(new PulseValue<LogicValue>(b0));
+            var b1n = graph.AddNode(new PulseValue<LogicValue>(b1));
+            var b2n = graph.AddNode(new PulseValue<LogicValue>(b2));
+            var b3n = graph.AddNode(new PulseValue<LogicValue>(b3));
+            var b4n = graph.AddNode(new PulseValue<LogicValue>(b4));
+            var b5n = graph.AddNode(new PulseValue<LogicValue>(b5));
+            var b6n = graph.AddNode(new PulseValue<LogicValue>(b6));
+            var b7n = graph.AddNode(new PulseValue<LogicValue>(b7));
 
-            var output = graph.CreateConnection<byte>();
+            var splitter = graph.AddNode(new ByteSplitterOut());
 
-            graph.AddNode(new PulseValue<LogicValue>(b0)).SetPort("OUT", b0c);
-            graph.AddNode(new PulseValue<LogicValue>(b1)).SetPort("OUT", b1c);
-            graph.AddNode(new PulseValue<LogicValue>(b2)).SetPort("OUT", b2c);
-            graph.AddNode(new PulseValue<LogicValue>(b3)).SetPort("OUT", b3c);
-            graph.AddNode(new PulseValue<LogicValue>(b4)).SetPort("OUT", b4c);
-            graph.AddNode(new PulseValue<LogicValue>(b5)).SetPort("OUT", b5c);
-            graph.AddNode(new PulseValue<LogicValue>(b6)).SetPort("OUT", b6c);
-            graph.AddNode(new PulseValue<LogicValue>(b7)).SetPort("OUT", b7c);
+            graph.AddConnection<LogicValue>(b0n, "OUT", splitter, "0");
+            graph.AddConnection<LogicValue>(b1n, "OUT", splitter, "1");
+            graph.AddConnection<LogicValue>(b2n, "OUT", splitter, "2");
+            graph.AddConnection<LogicValue>(b3n, "OUT", splitter, "3");
+            graph.AddConnection<LogicValue>(b4n, "OUT", splitter, "4");
+            graph.AddConnection<LogicValue>(b5n, "OUT", splitter, "5");
+            graph.AddConnection<LogicValue>(b6n, "OUT", splitter, "6");
+            graph.AddConnection<LogicValue>(b7n, "OUT", splitter, "7");
 
-            graph.AddNode(new ByteSplitterOut())
-                .SetPort("0".ToString(), b0c)
-                .SetPort("1".ToString(), b1c)
-                .SetPort("2".ToString(), b2c)
-                .SetPort("3".ToString(), b3c)
-                .SetPort("4".ToString(), b4c)
-                .SetPort("5".ToString(), b5c)
-                .SetPort("6".ToString(), b6c)
-                .SetPort("7".ToString(), b7c)
-                .SetPort("OUT", output);
+            var result = graph.AddNode(new Register<byte>());
 
-            var result = new Register<byte>();
-            graph.AddNode(result).SetPort("IN", output);
+            graph.AddConnection<byte>(splitter, "OUT", result, "IN");
 
             await graph.EvaluateAsync();
 
