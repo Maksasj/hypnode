@@ -14,10 +14,10 @@ namespace Hypnode.UnitTests.System.Common
             var connection = graph.CreateConnection<LogicValue>();
 
             graph.AddNode(new PulseValue<LogicValue>(value))
-                .SetOutput("OUT", connection);
+                .SetPort("OUT", connection);
 
-            var result = graph.AddNode(new Register<LogicValue>())
-                .SetInput("IN", connection);
+            var result = new Register<LogicValue>();
+            graph.AddNode(result).SetPort("IN", connection);
 
             await graph.EvaluateAsync();
 

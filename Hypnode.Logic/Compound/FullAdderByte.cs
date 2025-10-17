@@ -16,17 +16,13 @@ namespace Hypnode.Logic.Compound
 
         }
 
-        public FullAdderByte SetInput(string portName, Connection<byte> connection)
+        public override INode SetPort(string portName, IConnection connection)
         {
 
-            if (portName == "INA") aPort = connection;
-            if (portName == "INB") bPort = connection;
-            return this;
-        }
+            if (portName == "INA" && connection is Connection<byte> conn0) aPort = conn0;
+            if (portName == "INB" && connection is Connection<byte> conn1) bPort = conn1;
+            if (portName == "OUTSUM" && connection is Connection<byte> conn2) sum = conn2;
 
-        public FullAdderByte SetOutput(string portName, Connection<byte> connection)
-        {
-            if (portName == "OUTSUM") sum = connection;
             return this;
         }
 
@@ -46,19 +42,19 @@ namespace Hypnode.Logic.Compound
                 var cIn = graph.CreateConnection<LogicValue>();
 
                 graph.AddNode(new PulseValue<byte>(a))
-                    .SetOutput("OUT", aIn);
+                    .SetPort("OUT", aIn);
 
                 graph.AddNode(new PulseValue<byte>(b))
-                    .SetOutput("OUT", bIn);
+                    .SetPort("OUT", bIn);
 
                 graph.AddNode(new PulseValue<LogicValue>(LogicValue.False))
-                    .SetOutput("OUT", cIn);
+                    .SetPort("OUT", cIn);
 
                 var aDemux = graph.AddNode(new ByteSplitterIn())
-                    .SetInput("IN", aIn);
+                    .SetPort("IN", aIn);
 
                 var bDemux = graph.AddNode(new ByteSplitterIn())
-                    .SetInput("IN", bIn);
+                    .SetPort("IN", bIn);
 
                 Connection<LogicValue>? carry = null;
                 var sumWires = new Connection<LogicValue>[8];
@@ -73,38 +69,38 @@ namespace Hypnode.Logic.Compound
                         var bWire = graph.CreateConnection<LogicValue>();
                         carry = graph.CreateConnection<LogicValue>();
 
-                        aDemux.SetOutput(i, aWire);
-                        bDemux.SetOutput(i, bWire);
+                        aDemux.SetPort(i.ToString(), aWire);
+                        bDemux.SetPort(i.ToString(), bWire);
 
-                        adder.SetInput("INA", aWire);
-                        adder.SetInput("INB", bWire);
-                        adder.SetInput("INC", cIn);
+                        adder.SetPort("INA", aWire);
+                        adder.SetPort("INB", bWire);
+                        adder.SetPort("INC", cIn);
 
                         var sumWire = graph.CreateConnection<LogicValue>();
                         sumWires[i] = sumWire;
 
-                        adder.SetOutput("OUTSUM", sumWire);
-                        adder.SetOutput("OUTC", carry);
+                        adder.SetPort("OUTSUM", sumWire);
+                        adder.SetPort("OUTC", carry);
                     }
                     else
                     {
                         var aWire = graph.CreateConnection<LogicValue>();
                         var bWire = graph.CreateConnection<LogicValue>();
 
-                        aDemux.SetOutput(i, aWire);
-                        bDemux.SetOutput(i, bWire);
+                        aDemux.SetPort(i.ToString(), aWire);
+                        bDemux.SetPort(i.ToString(), bWire);
 
-                        adder.SetInput("INA", aWire);
-                        adder.SetInput("INB", bWire);
-                        adder.SetInput("INC", carry!);
+                        adder.SetPort("INA", aWire);
+                        adder.SetPort("INB", bWire);
+                        adder.SetPort("INC", carry!);
 
                         carry = graph.CreateConnection<LogicValue>();
 
                         var sumWire = graph.CreateConnection<LogicValue>();
                         sumWires[i] = sumWire;
 
-                        adder.SetOutput("OUTSUM", sumWire);
-                        adder.SetOutput("OUTC", carry!);
+                        adder.SetPort("OUTSUM", sumWire);
+                        adder.SetPort("OUTC", carry!);
                     }
                 }
 
@@ -112,15 +108,15 @@ namespace Hypnode.Logic.Compound
                 var resultWire = graph.CreateConnection<byte>();
 
                 for (int i = 0; i < 8; ++i)
-                    sumMux.SetInput(i, sumWires[i]);
+                    sumMux.SetPort(i.ToString(), sumWires[i]);
 
-                sumMux.SetOutput("OUT", resultWire);
+                sumMux.SetPort("OUT", resultWire);
 
-                var result = graph.AddNode(new Register<byte>())
-                    .SetInput("IN", resultWire);
+                var result = new Register<byte>();
+                graph.AddNode(result).SetPort("IN", resultWire);
 
                 graph.AddNode(new VoidSink<LogicValue>())
-                    .AddInput(carry!);
+                    .SetPort("_", carry!);
 
                 await graph.EvaluateAsync();
 

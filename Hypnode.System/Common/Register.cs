@@ -7,9 +7,10 @@ namespace Hypnode.System.Common
         private T? value;
         private Connection<T>? inputPort = null;
 
-        public Register<T> SetInput(string portName, Connection<T> connection)
+        public INode SetPort(string portName, IConnection connection)
         {
-            if (portName == "IN") inputPort = connection;
+            if (portName == "IN" && connection is Connection<T> con) inputPort = con;
+
             return this;
         }
 

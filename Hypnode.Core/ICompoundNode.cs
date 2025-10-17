@@ -8,6 +8,7 @@
         {
             NodeGraph = nodeGraph;
         }
+        public abstract INode SetPort(string portName, IConnection connection);
 
         public abstract Task ExecuteAsync();
     }

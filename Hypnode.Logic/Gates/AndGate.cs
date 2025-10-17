@@ -8,16 +8,12 @@ namespace Hypnode.Logic.Gates
         private Connection<LogicValue>? inputPortB = null;
         private Connection<LogicValue>? outputPort = null;
 
-        public AndGate SetInput(string portName, Connection<LogicValue> connection)
+        public INode SetPort(string portName, IConnection connection)
         {
-            if (portName == "INA") inputPortA = connection;
-            if (portName == "INB") inputPortB = connection;
-            return this;
-        }
+            if (portName == "INA" && connection is Connection<LogicValue> con0) inputPortA = con0;
+            if (portName == "INB" && connection is Connection<LogicValue> con1) inputPortB = con1;
+            if (portName == "OUT" && connection is Connection<LogicValue> con2) outputPort = con2;
 
-        public AndGate SetOutput(string portName, Connection<LogicValue> connection)
-        {
-            if (portName == "OUT") outputPort = connection;
             return this;
         }
 

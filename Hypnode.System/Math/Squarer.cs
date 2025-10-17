@@ -7,15 +7,11 @@ namespace Hypnode.System.Math
         private Connection<int>? inputPort = null;
         private Connection<int>? outputPort = null;
 
-        public Squarer SetInput(string portName, Connection<int> connection)
+        public INode SetPort(string portName, IConnection connection)
         {
-            if (portName == "IN") inputPort = connection;
-            return this;
-        }
+            if (portName == "INA" && connection is Connection<int> con0) inputPort = con0;
+            if (portName == "OUT" && connection is Connection<int> con1) outputPort = con1;
 
-        public Squarer SetOutput(string portName, Connection<int> connection)
-        {
-            if (portName == "OUT") outputPort = connection;
             return this;
         }
 

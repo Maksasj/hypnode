@@ -12,10 +12,10 @@ namespace Hypnode.UnitTests.System.Common
             var connection = graph.CreateConnection<byte>();
 
             graph.AddNode(new PulseValue<byte>(1))
-                .SetOutput("OUT", connection);
+                .SetPort("OUT", connection);
 
-            var result = graph.AddNode(new VoidSink<byte>())
-                .AddInput(connection);
+            graph.AddNode(new VoidSink<byte>())
+                .SetPort("_", connection);
 
             await graph.EvaluateAsync();
 
@@ -30,14 +30,14 @@ namespace Hypnode.UnitTests.System.Common
             var connection2 = graph.CreateConnection<byte>();
 
             graph.AddNode(new PulseValue<byte>(1))
-                .SetOutput("OUT", connection1);
+                .SetPort("OUT", connection1);
 
             graph.AddNode(new PulseValue<byte>(1))
-                .SetOutput("OUT", connection2);
+                .SetPort("OUT", connection2);
 
             graph.AddNode(new VoidSink<byte>())
-                .AddInput(connection1)
-                .AddInput(connection2);
+                .SetPort("_", connection1)
+                .SetPort("_", connection2);
 
             await graph.EvaluateAsync();
 

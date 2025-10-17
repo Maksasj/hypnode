@@ -26,18 +26,18 @@ namespace Hypnode.UnitTests.Logic.Compound
             var outsum = graph.CreateConnection<byte>();
 
             graph.AddNode(new PulseValue<byte>(a))
-                .SetOutput("OUT", ain);
+                .SetPort("OUT", ain);
 
             graph.AddNode(new PulseValue<byte>(b))
-               .SetOutput("OUT", bin);
+               .SetPort("OUT", bin);
 
             graph.AddNode(new FullAdderByte(new AsyncNodeGraph()))
-                .SetInput("INA", ain)
-                .SetInput("INB", bin)
-                .SetOutput("OUTSUM", outsum);
+                .SetPort("INA", ain)
+                .SetPort("INB", bin)
+                .SetPort("OUTSUM", outsum);
 
-            var sumCell = graph.AddNode(new Register<byte>())
-                .SetInput("IN", outsum);
+            var sumCell = new Register<byte>();
+            graph.AddNode(sumCell).SetPort("IN", outsum);
 
             await graph.EvaluateAsync();
 

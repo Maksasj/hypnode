@@ -12,15 +12,11 @@ namespace Hypnode.System.Common
             outputPorts = [];
         }
 
-        public Splitter<T> SetInput(string portName, Connection<T> connection)
+        public INode SetPort(string portName, IConnection connection)
         {
-            if (portName == "IN") inputPort = connection;
-            return this;
-        }
+            if (portName == "IN" && connection is Connection<T> con0) inputPort = con0;
+            if (portName == "OUT" && connection is Connection<T> con1) outputPorts.Add(con1);
 
-        public Splitter<T> AddOutput(Connection<T> connection)
-        {
-            outputPorts.Add(connection);
             return this;
         }
 

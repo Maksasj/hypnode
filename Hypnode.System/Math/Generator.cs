@@ -6,9 +6,11 @@ namespace Hypnode.System.Math
     {
         private Connection<int>? outputPort = null;
 
-        public void SetOutput(string portName, Connection<int> connection)
+        public INode SetPort(string portName, IConnection connection)
         {
-            if (portName == "OUT") outputPort = connection;
+            if (portName == "OUT" && connection is Connection<int> con1) outputPort = con1;
+
+            return this;
         }
 
         public async Task ExecuteAsync()

@@ -13,15 +13,19 @@ namespace Hypnode.Logic.Utils
             outputPorts = new Connection<LogicValue>[8];
         }
 
-        public ByteSplitterIn SetInput(string portName, Connection<byte> connection)
+        public INode SetPort(string portName, IConnection connection)
         {
-            if (portName == "IN") inputPort = connection;
-            return this;
-        }
+            if (portName == "IN" && connection is Connection<byte> connIn) inputPort = connIn;
+            if (portName == "0" && connection is Connection<LogicValue> conn0) outputPorts[0] = conn0;
+            if (portName == "1" && connection is Connection<LogicValue> conn1) outputPorts[1] = conn1;
+            if (portName == "2" && connection is Connection<LogicValue> conn2) outputPorts[2] = conn2;
+            if (portName == "3" && connection is Connection<LogicValue> conn3) outputPorts[3] = conn3;
+            if (portName == "4" && connection is Connection<LogicValue> conn4) outputPorts[4] = conn4;
+            if (portName == "5" && connection is Connection<LogicValue> conn5) outputPorts[5] = conn5;
+            if (portName == "6" && connection is Connection<LogicValue> conn6) outputPorts[6] = conn6;
+            if (portName == "7" && connection is Connection<LogicValue> conn7) outputPorts[7] = conn7;
+            if (portName == "8" && connection is Connection<LogicValue> conn8) outputPorts[8] = conn8;
 
-        public ByteSplitterIn SetOutput(int index, Connection<LogicValue> connection)
-        {
-            outputPorts[index] = connection;
             return this;
         }
 

@@ -20,18 +20,19 @@ namespace Hypnode.UnitTests.Logic.Gates
             var connection3 = graph.CreateConnection<LogicValue>();
 
             graph.AddNode(new PulseValue<LogicValue>(a))
-                .SetOutput("OUT", connection1);
+                .SetPort("OUT", connection1);
 
             graph.AddNode(new PulseValue<LogicValue>(b))
-                .SetOutput("OUT", connection2);
+                .SetPort("OUT", connection2);
 
             graph.AddNode(new AndGate())
-                .SetInput("INA", connection1)
-                .SetInput("INB", connection2)
-                .SetOutput("OUT", connection3);
+                .SetPort("INA", connection1)
+                .SetPort("INB", connection2)
+                .SetPort("OUT", connection3);
 
-            var result = graph.AddNode(new Register<LogicValue>())
-                .SetInput("IN", connection3);
+
+            var result = new Register<LogicValue>();
+            graph.AddNode(result).SetPort("IN", connection3);
 
             await graph.EvaluateAsync();
 

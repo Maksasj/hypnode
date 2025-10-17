@@ -16,14 +16,14 @@ namespace Hypnode.UnitTests.Logic.Gates
             var connection2 = graph.CreateConnection<LogicValue>();
 
             graph.AddNode(new PulseValue<LogicValue>(value))
-                .SetOutput("OUT", connection1);
+                .SetPort("OUT", connection1);
 
             graph.AddNode(new NotGate())
-                .SetInput("IN", connection1)
-                .SetOutput("OUT", connection2);
+                .SetPort("IN", connection1)
+                .SetPort("OUT", connection2);
 
-            var result = graph.AddNode(new Register<LogicValue>())
-                .SetInput("IN", connection2);
+            var result = new Register<LogicValue>();
+            graph.AddNode(result).SetPort("IN", connection2);
 
             await graph.EvaluateAsync();
 

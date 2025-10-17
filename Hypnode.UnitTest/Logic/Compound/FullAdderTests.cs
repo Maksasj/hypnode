@@ -26,26 +26,26 @@ namespace Hypnode.UnitTests.Logic.Compound
             var outc = graph.CreateConnection<LogicValue>();
 
             graph.AddNode(new PulseValue<LogicValue>(a))
-                .SetOutput("OUT", ain);
+                .SetPort("OUT", ain);
 
             graph.AddNode(new PulseValue<LogicValue>(b))
-               .SetOutput("OUT", bin);
+                .SetPort("OUT", bin);
 
             graph.AddNode(new PulseValue<LogicValue>(cIn))
-                .SetOutput("OUT", cin);
+                .SetPort("OUT", cin);
 
             graph.AddNode(new FullAdder(new AsyncNodeGraph()))
-                .SetInput("INA", ain)
-                .SetInput("INB", bin)
-                .SetInput("INC", cin)
-                .SetOutput("OUTSUM", outsum)
-                .SetOutput("OUTC", outc);
+                .SetPort("INA", ain)
+                .SetPort("INB", bin)
+                .SetPort("INC", cin)
+                .SetPort("OUTSUM", outsum)
+                .SetPort("OUTC", outc);
 
-            var sumCell = graph.AddNode(new Register<LogicValue>())
-                .SetInput("IN", outsum);
+            var sumCell = new Register<LogicValue>();
+            graph.AddNode(sumCell).SetPort("IN", outsum);
 
-            var carryCell = graph.AddNode(new Register<LogicValue>())
-                .SetInput("IN", outc);
+            var carryCell = new Register<LogicValue>();
+            graph.AddNode(carryCell).SetPort("IN", outc);
 
             await graph.EvaluateAsync();
 
@@ -73,18 +73,18 @@ namespace Hypnode.UnitTests.Logic.Compound
             var outsum = graph.CreateConnection<byte>();
 
             graph.AddNode(new PulseValue<byte>(a))
-                .SetOutput("OUT", ain);
+                .SetPort("OUT", ain);
 
             graph.AddNode(new PulseValue<byte>(b))
-               .SetOutput("OUT", bin);
+               .SetPort("OUT", bin);
 
             graph.AddNode(new FullAdderByte(new AsyncNodeGraph()))
-                .SetInput("INA", ain)
-                .SetInput("INB", bin)
-                .SetOutput("OUTSUM", outsum);
+                .SetPort("INA", ain)
+                .SetPort("INB", bin)
+                .SetPort("OUTSUM", outsum);
 
-            var sumCell = graph.AddNode(new Register<byte>())
-                .SetInput("IN", outsum);
+            var sumCell = new Register<byte>();
+            graph.AddNode(sumCell).SetPort("IN", outsum);
 
             await graph.EvaluateAsync();
 

@@ -6,9 +6,10 @@ namespace Hypnode.System.IO
     {
         private Connection<bool>? inputPort = null;
 
-        public void SetInput(string portName, Connection<bool> connection)
+        public INode SetPort(string portName, IConnection connection)
         {
-            if (portName == "IN") inputPort = connection;
+            if (portName == "IN" && inputPort is Connection<bool> con) inputPort = con;
+            return this;
         }
 
         public async Task ExecuteAsync()

@@ -11,9 +11,10 @@ namespace Hypnode.System.Common
             inputPorts = [];
         }
 
-        public VoidSink<T> AddInput(Connection<T> connection)
+        public INode SetPort(string portName, IConnection connection)
         {
-            inputPorts.Add(connection);
+            if (connection is Connection<T> conn) inputPorts.Add(conn);
+
             return this;
         }
 

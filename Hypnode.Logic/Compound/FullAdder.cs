@@ -19,19 +19,14 @@ namespace Hypnode.Logic.Compound
 
         }
 
-        public FullAdder SetInput(string portName, Connection<LogicValue> connection)
+        public override INode SetPort(string portName, IConnection connection)
         {
+            if (portName == "INA" && connection is Connection<LogicValue> con0) aPort = con0;
+            if (portName == "INB" && connection is Connection<LogicValue> con1) bPort = con1;
+            if (portName == "INC" && connection is Connection<LogicValue> con2) carryIn = con2;
+            if (portName == "OUTSUM" && connection is Connection<LogicValue> con3) sum = con3;
+            if (portName == "OUTC" && connection is Connection<LogicValue> con4) carryOut = con4;
 
-            if (portName == "INA") aPort = connection;
-            if (portName == "INB") bPort = connection;
-            if (portName == "INC") carryIn = connection;
-            return this;
-        }
-
-        public FullAdder SetOutput(string portName, Connection<LogicValue> connection)
-        {
-            if (portName == "OUTSUM") sum = connection;
-            if (portName == "OUTC") carryOut = connection;
             return this;
         }
 
@@ -70,76 +65,75 @@ namespace Hypnode.Logic.Compound
 
                 // A
                 graph.AddNode(new PulseValue<LogicValue>(a))
-                    .SetOutput("OUT", AtoDemux1);
+                    .SetPort("OUT", AtoDemux1);
 
                 // Demux1
                 graph.AddNode(new Splitter<LogicValue>())
-                    .SetInput("IN", AtoDemux1)
-                    .AddOutput(Demux1toXor1)
-                    .AddOutput(Demux1toAnd2);
+                    .SetPort("IN", AtoDemux1)
+                    .SetPort("OUT", Demux1toXor1)
+                    .SetPort("OUT", Demux1toAnd2);
 
                 // B
                 graph.AddNode(new PulseValue<LogicValue>(b))
-                    .SetOutput("OUT", BtoDemux2);
+                    .SetPort("OUT", BtoDemux2);
 
                 // Demux2
                 graph.AddNode(new Splitter<LogicValue>())
-                    .SetInput("IN", BtoDemux2)
-                    .AddOutput(Demux2toXor1)
-                    .AddOutput(Demux2toAnd2);
+                    .SetPort("IN", BtoDemux2)
+                    .SetPort("OUT", Demux2toXor1)
+                    .SetPort("OUT", Demux2toAnd2);
 
                 // C
                 graph.AddNode(new PulseValue<LogicValue>(c))
-                    .SetOutput("OUT", CtoDemux3);
+                    .SetPort("OUT", CtoDemux3);
 
                 // Demux3
                 graph.AddNode(new Splitter<LogicValue>())
-                    .SetInput("IN", CtoDemux3)
-                    .AddOutput(Demux3toXor2)
-                    .AddOutput(Demux3toAnd1);
+                    .SetPort("IN", CtoDemux3)
+                    .SetPort("OUT", Demux3toXor2)
+                    .SetPort("OUT", Demux3toAnd1);
 
                 // Xor1
                 graph.AddNode(new XorGate())
-                    .SetInput("INA", Demux1toXor1)
-                    .SetInput("INB", Demux2toXor1)
-                    .SetOutput("OUT", Xor1toDemux4);
+                    .SetPort("INA", Demux1toXor1)
+                    .SetPort("INB", Demux2toXor1)
+                    .SetPort("OUT", Xor1toDemux4);
 
                 // Xor2
                 graph.AddNode(new XorGate())
-                    .SetInput("INA", Demux3toXor2)
-                    .SetInput("INB", Demux4toXor2)
-                    .SetOutput("OUT", toSum);
+                    .SetPort("INA", Demux3toXor2)
+                    .SetPort("INB", Demux4toXor2)
+                    .SetPort("OUT", toSum);
 
-                var sumCell = graph.AddNode(new Register<LogicValue>())
-                    .SetInput("IN", toSum);
+                var sumCell = new Register<LogicValue>();
+                graph.AddNode(sumCell).SetPort("IN", toSum);
 
                 // Demux4
                 graph.AddNode(new Splitter<LogicValue>())
-                    .SetInput("IN", Xor1toDemux4)
-                    .AddOutput(Demux4toXor2)
-                    .AddOutput(Demux4toAnd1);
+                    .SetPort("IN", Xor1toDemux4)
+                    .SetPort("OUT", Demux4toXor2)
+                    .SetPort("OUT", Demux4toAnd1);
 
                 // And1
                 graph.AddNode(new AndGate())
-                    .SetInput("INA", Demux4toAnd1)
-                    .SetInput("INB", Demux3toAnd1)
-                    .SetOutput("OUT", And1toOr);
+                    .SetPort("INA", Demux4toAnd1)
+                    .SetPort("INB", Demux3toAnd1)
+                    .SetPort("OUT", And1toOr);
 
                 // And2
                 graph.AddNode(new AndGate())
-                    .SetInput("INB", Demux2toAnd2)
-                    .SetInput("INA", Demux1toAnd2)
-                    .SetOutput("OUT", And2toOr);
+                    .SetPort("INB", Demux2toAnd2)
+                    .SetPort("INA", Demux1toAnd2)
+                    .SetPort("OUT", And2toOr);
 
                 // Or
                 graph.AddNode(new OrGate())
-                    .SetInput("INB", And1toOr)
-                    .SetInput("INA", And2toOr)
-                    .SetOutput("OUT", toCarryOut); // OUT
+                    .SetPort("INB", And1toOr)
+                    .SetPort("INA", And2toOr)
+                    .SetPort("OUT", toCarryOut); // OUT
 
-                // Printer
-                var carryCell = graph.AddNode(new Register<LogicValue>())
-                    .SetInput("IN", toCarryOut);
+                var carryCell = new Register<LogicValue>();
+                graph.AddNode(carryCell).SetPort("IN", toCarryOut);
 
                 await graph.EvaluateAsync();
 

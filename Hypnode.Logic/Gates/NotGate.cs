@@ -7,15 +7,11 @@ namespace Hypnode.Logic.Gates
         private Connection<LogicValue>? inputPort = null;
         private Connection<LogicValue>? outputPort = null;
 
-        public NotGate SetInput(string portName, Connection<LogicValue> connection)
+        public INode SetPort(string portName, IConnection connection)
         {
-            if (portName == "IN") inputPort = connection;
-            return this;
-        }
+            if (portName == "IN" && connection is Connection<LogicValue> con0) inputPort = con0;
+            if (portName == "OUT" && connection is Connection<LogicValue> con1) outputPort = con1;
 
-        public NotGate SetOutput(string portName, Connection<LogicValue> connection)
-        {
-            if (portName == "OUT") outputPort = connection;
             return this;
         }
 
