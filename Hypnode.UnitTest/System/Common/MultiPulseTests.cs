@@ -6,18 +6,18 @@ using Moq;
 
 namespace Hypnode.UnitTests.System.Common
 {
-    public abstract class PulseTests<TGraph> where TGraph : INodeGraph, new()
+    public abstract class MultiPulseTests<TGraph> where TGraph : INodeGraph, new()
     {
         [TestCase(LogicValue.False)]
         [TestCase(LogicValue.True)]
-        public async Task TestPulse_CorrectValue(LogicValue value)
+        public async Task TestMultiPulse_SingleElement_CorrectValue(LogicValue value)
         {
             var graph = new TGraph();
 
-            var pulse = graph.AddNode(new PulseValue<LogicValue>(value));
+            var multiPulse = graph.AddNode(new MultiPulseValue<LogicValue>([value]));
             var result = graph.AddNode(new Register<LogicValue>());
 
-            graph.AddConnection<LogicValue>(pulse, "OUT", result, "IN");
+            graph.AddConnection<LogicValue>(multiPulse, "OUT", result, "IN");
 
             await graph.EvaluateAsync();
 
@@ -28,14 +28,14 @@ namespace Hypnode.UnitTests.System.Common
         [TestCase(100)]
         [TestCase(20000)]
         [TestCase(-100)]
-        public async Task TestPulse_SendCloseExecuteOnce(int value)
+        public async Task TestMultiPulse_SingleElement_SendCloseExecuteOnce(int value)
         {
             var graph = new TGraph();
 
             var connection = new Mock<Connection<int>>();
-            var pulse = graph.AddNode(new PulseValue<int>(value));
+            var multiPulse = graph.AddNode(new MultiPulseValue<int>([value]));
 
-            pulse.SetPort("OUT", connection.Object);
+            multiPulse.SetPort("OUT", connection.Object);
 
             await graph.EvaluateAsync();
 
@@ -45,7 +45,7 @@ namespace Hypnode.UnitTests.System.Common
     }
 
     [TestFixture]
-    public class AsyncNodeGraph_PulseTests : PulseTests<AsyncNodeGraph>
+    public class AsyncNodeGraph_MultiPulseTests : MultiPulseTests<AsyncNodeGraph>
     {
 
     }

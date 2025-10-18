@@ -9,7 +9,7 @@ namespace Hypnode.System.Math
 
         public INode SetPort(string portName, IConnection connection)
         {
-            if (portName == "INA" && connection is Connection<int> con0) inputPort = con0;
+            if (portName == "IN" && connection is Connection<int> con0) inputPort = con0;
             if (portName == "OUT" && connection is Connection<int> con1) outputPort = con1;
 
             return this;
@@ -20,12 +20,10 @@ namespace Hypnode.System.Math
             if (inputPort is null)
                 throw new InvalidOperationException("Input port is not set");
 
-            while (true)
-            {
-                var packet = inputPort.Receive();
-                var result = packet * packet;
-                outputPort?.Send(result);
-            }
+            while (inputPort.TryReceive(out var packet))
+                outputPort?.Send(packet * packet);
+
+            outputPort?.Close();
         }
     }
 }
