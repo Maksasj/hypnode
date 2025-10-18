@@ -14,9 +14,9 @@ namespace Hypnode.UnitTests.Logic.Utils
         [TestCase(0b11111111, LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True)]
         [TestCase(0b01010101, LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True)]
         [TestCase(0b10101010, LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False, LogicValue.True, LogicValue.False)]
-        public async Task TestByteMultiplexer_CorrectValues(byte expected, LogicValue b7, LogicValue b6, LogicValue b5, LogicValue b4, LogicValue b3, LogicValue b2, LogicValue b1, LogicValue b0)
+        public async Task TestByteSplitterOut_CorrectValues(byte expected, LogicValue b7, LogicValue b6, LogicValue b5, LogicValue b4, LogicValue b3, LogicValue b2, LogicValue b1, LogicValue b0)
         {
-            var graph = new AsyncNodeGraph();
+            var graph = new TGraph();
 
             var b0n = graph.AddNode(new PulseValue<LogicValue>(b0));
             var b1n = graph.AddNode(new PulseValue<LogicValue>(b1));

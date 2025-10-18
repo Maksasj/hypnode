@@ -11,7 +11,7 @@ namespace Hypnode.UnitTests.System.Common
         [TestCase(LogicValue.True)]
         public async Task TestPulse_CorrectValue(LogicValue value)
         {
-            var graph = new AsyncNodeGraph();
+            var graph = new TGraph();
 
             var pulse = graph.AddNode(new PulseValue<LogicValue>(value));
             var result = graph.AddNode(new Register<LogicValue>());

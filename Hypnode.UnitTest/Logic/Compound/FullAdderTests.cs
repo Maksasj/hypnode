@@ -18,7 +18,7 @@ namespace Hypnode.UnitTests.Logic.Compound
         [TestCase(LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True, LogicValue.True)]
         public async Task TestAdderCompound_CorrectValues(LogicValue a, LogicValue b, LogicValue cIn, LogicValue sum, LogicValue cOut)
         {
-            var graph = new AsyncNodeGraph();
+            var graph = new TGraph();
             var ain = graph.CreateConnection<LogicValue>();
             var bin = graph.CreateConnection<LogicValue>();
             var cin = graph.CreateConnection<LogicValue>();
@@ -67,7 +67,7 @@ namespace Hypnode.UnitTests.Logic.Compound
         [TestCase(0b11111111, 0b00000000)]
         public async Task TestAdderByteCompound_CorrectValues(byte a, byte b)
         {
-            var graph = new AsyncNodeGraph();
+            var graph = new TGraph();
             var ain = graph.CreateConnection<byte>();
             var bin = graph.CreateConnection<byte>();
 
@@ -79,7 +79,7 @@ namespace Hypnode.UnitTests.Logic.Compound
             graph.AddNode(new PulseValue<byte>(b))
                .SetPort("OUT", bin);
 
-            graph.AddNode(new FullAdderByte(new AsyncNodeGraph()))
+            graph.AddNode(new FullAdderByte(new TGraph()))
                 .SetPort("INA", ain)
                 .SetPort("INB", bin)
                 .SetPort("OUTSUM", outsum);

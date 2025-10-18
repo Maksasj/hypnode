@@ -12,7 +12,7 @@ namespace Hypnode.UnitTests.Logic.Gates
         [TestCase(LogicValue.True, LogicValue.False)]
         public async Task TestNot_CorrectValue(LogicValue value, LogicValue expect)
         {
-            var graph = new AsyncNodeGraph();
+            var graph = new TGraph();
             var connection1 = graph.CreateConnection<LogicValue>();
             var connection2 = graph.CreateConnection<LogicValue>();
 
